@@ -9,10 +9,10 @@ url: 'http://capecchi.github.io'
 author:
   name: 'Bill Capecchi'
   email: william.capecchi@gmail.com
-  twitter_username: joshgerdes
-  facebook_username: joshgerdes
+  #twitter_username: 
+  facebook_username: bill.capecchi
   github_username:  capecchi
-  linkedin_username:  joshgerdes
+  linkedin_username:  william-capecchi
 
 defaults:
   -
