@@ -1,17 +1,17 @@
 # Site settings
-title: Jekyll-Uno
-description: 'Jekyll-Uno - a minimal, responsive theme for Jekyll'
-url: 'http://joshgerdes.com/jekyll-uno'
+title: Bill Capecchi
+description: 'PhD Physicist and Data Scientist'
+url: 'http://capecchi.github.io'
 baseurl: '/jekyll-uno/'
 # google_analytics: 'UA-XXXXXX-X'
 # disqus_shortname: 'your-disqus-name'
 
 author:
-  name: 'Josh Gerdes'
-  email: josh@joshgerdes.com
+  name: 'Bill Capecchi'
+  email: william.capecchi@gmail.com
   twitter_username: joshgerdes
   facebook_username: joshgerdes
-  github_username:  joshgerdes
+  github_username:  capecchi
   linkedin_username:  joshgerdes
 
 defaults:
