@@ -1,16 +1,14 @@
-{% include base.html %}
 <span class="mobile btn-mobile-menu">
   <i class="icon icon-list btn-mobile-menu__icon"></i>
   <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
 </span>
   
-<!--<header class="panel-cover" style="background-image: url({{ "images/cover.jpg" | prepend: site.baseurl }})">-->
-<header class="panel-cover" style="background-image: url({{ "images/cover.jpg" | prepend: site.url }})">
+<header class="panel-cover" style="background-image: url({{ "images/cover.jpg" | prepend: site.baseurl }})">
   <div class="panel-main">
 
     <div class="panel-main__inner panel-inverted">
     <div class="panel-main__content">
-        <a href="{{ site.url }}" title="link to home of {{ site.title }}"> <!--site.baseurl to site to base to site.url-->
+        <a href="{{ site.baseurl }}" title="link to home of {{ site.title }}">
           <img src="{{ "images/profile.jpg" | prepend: site.baseurl }}" class="user-image" alt="My Profile Photo">
           <h1 class="panel-cover__title panel-title">{{ site.title }}</h1>
         </a>
