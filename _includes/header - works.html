@@ -3,13 +3,15 @@
   <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
 </span>
   
-<header class="panel-cover" style="background-image: url({{ "images/cover.jpg" | prepend: site.baseurl }})">
+<header class="panel-cover" style="background-image: url({{ "images/cover.jpg" | prepend: site.baseurl | prepend: site.url }})">
   <div class="panel-main">
 
     <div class="panel-main__inner panel-inverted">
     <div class="panel-main__content">
-        <a href="{{ site.baseurl }}" title="link to home of {{ site.title }}">
-          <img src="{{ "images/profile.jpg" | prepend: site.baseurl }}" class="user-image" alt="My Profile Photo">
+        <!--<a href="{{ "css/mane.css" | prepend: site.baseurl | prepend: site.url }}" title="a link to the past {{ site.title }}">-->
+        <a href="{{ site.url }}" title="link to home of {{ site.title }}">
+          <img src="{{ "images/bill_phinished_200px.jpg" | prepend: site.baseurl | prepend: site.url }}" 
+               class="user-image" alt="My Profile Photo">
           <h1 class="panel-cover__title panel-title">{{ site.title }}</h1>
         </a>
         <hr class="panel-cover__divider">
