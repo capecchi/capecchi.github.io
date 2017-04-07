@@ -2,7 +2,7 @@
 title: Bill Capecchi
 description: 'PhD Physicist and Data Scientist'
 url: 'http://capecchi.github.io'
-#baseurl: ''
+baseurl: ''
 # baseurl: '/jekyll-uno/' #old
 # google_analytics: 'UA-XXXXXX-X'
 # disqus_shortname: 'your-disqus-name'
