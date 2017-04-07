@@ -1,8 +1,8 @@
 # Site settings
 title: Bill Capecchi
 description: 'PhD Physicist and Data Scientist'
-url: 'http://capecchi.github.io'
-baseurl: 'http://capecchi.github.io'
+url: 'http://capecchi.github.io/'
+baseurl: 'http://capecchi.github.io/'
 # baseurl: '/jekyll-uno/' #old
 # google_analytics: 'UA-XXXXXX-X'
 # disqus_shortname: 'your-disqus-name'
