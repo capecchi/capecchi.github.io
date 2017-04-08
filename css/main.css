@@ -13,10 +13,16 @@ pre.highlight code,
   white-space: pre-wrap;
 }
 
-.btn, 
+.btn,
 .navigation__item a {
   margin: 5px 0;
   white-space: nowrap;
+}
+
+.internal_nav li {
+  width: 10em;
+  margin: 5px 0;
+  white-space: pre;
 }
 
 .pagination__page-number {

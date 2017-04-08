@@ -1646,8 +1646,6 @@ input[type="tel"] {
 			display: block;
 			width: 100%; }
 			.cover-navigation .navigation li {
-				/*text-align: center;
-			  display: inline-block;*/
 				width: 80%;
 				margin-bottom: .4em; }
 		.cover-navigation.navigation--social {
