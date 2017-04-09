@@ -5,4 +5,4 @@ date: 2017-04-06
 project: true
 ---
 
-More projects coming soon! Check back often as I upload past and current projects onto the site!
+More stuff coming soon! Check back often as I upload past and current projects onto the site!
