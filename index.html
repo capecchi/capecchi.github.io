@@ -22,3 +22,24 @@ layout: default
   {% endif %}
 
 </div>
+
+
+<!--PROJECTS-->
+<div class="main-post-list">
+  <ol class="post-list">
+    {% for project in paginator.project %}
+    {% if post.project %}
+      <li>
+        <h2 class="post-list__post-title post-title"><a href="{{ site.baseurl }}{{ project.url | remove_first: '/' }}" title="{{ project.title }}">{{ post.title }}</a></h2>
+        <p class="excerpt">{{ project.excerpt | remove: '<p>' | remove: '</p>' }}&hellip;</p>
+        <div class="post-list__meta"><time datetime="{{ project.date | date: "%-d %b %Y" }}" class="post-list__meta--date date">{{ project.date | date: "%-d %b %Y" }}</time> &#8226; <span class="post-meta__tags">on {% for tag in post.tags %}<a href="{{ site.baseurl }}tags/#{{ tag }}">{{ tag }}</a> {% endfor %}</span></div>
+        <hr class="post-list__divider">
+      </li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+  <hr class="post-list__divider ">
+  {% if paginator.previous_page or paginator.next_page %}
+      {% include pagination.html %}
+  {% endif %}
+</div>
