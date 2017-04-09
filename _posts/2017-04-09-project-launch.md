@@ -1,8 +1,8 @@
 ---
-#layout: post
+layout: post
 title: "Project Launch!"
 date: 2017-04-06
 project: true
 ---
 
-Setting up project section.
+More projects coming soon! Check back often as I upload past and current projects onto the site!
