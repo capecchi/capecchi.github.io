@@ -17,22 +17,8 @@
         <p class="panel-cover__description">{{ site.description }}</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
-        <!--testing
-        <div class="navigation-wrapper">
-          <nav class="cover-navigation">
-              <ul class="navigation">
-                <li class="navigation__item">
-                  <a href="{{site.baseurl}}" class="blog-button">
-                    TESTING
-                  </a>
-                </li>
-              </ul>
-            </nav>
-        </div>
-      -->
-
         <div class="navigation-wrapper"> <!--BLOG and PROJECTS buttons -->
-          <nav class="cover-navigation navigation--social">
+          <nav class="cover-navigation">
             <ul class="navigation internal_nav">
               <li class="navigation__item"><a href="{{ site.baseurl }}posts"
                 title="link to {{ site.title }} posts" class="blog-button">Posts</a></li>
@@ -40,7 +26,8 @@
                   title="link to {{ site.title }} projects" class="blog-button">Projects</a></li>
             </ul>
           </nav>
-        </div>
+          <hr>
+        <!--</div>
 
         <div class="navigation-wrapper"> <!--SOCIAL ICON buttons -->
           <nav class="cover-navigation navigation--social">
