@@ -17,7 +17,8 @@
         <p class="panel-cover__description">{{ site.description }}</p>
         <hr class="panel-cover__divider panel-cover__divider--secondary">
 
-        <div class="navigation-wrapper"> <!--BLOG and PROJECTS buttons -->
+        <div class="navigation-wrapper">
+          <!--BLOG and PROJECTS buttons -->
           <nav class="cover-navigation">
             <ul class="navigation internal_nav">
               <li class="navigation__item"><a href="{{ site.baseurl }}posts"
@@ -27,17 +28,10 @@
             </ul>
           </nav>
           <hr>
-        <!--</div>
-
-        <div class="navigation-wrapper"> <!--SOCIAL ICON buttons -->
+          <!--SOCIAL ICON buttons -->
           <nav class="cover-navigation navigation--social">
             <ul class="navigation">
 
-              <li class="nagivation__item">
-                <a href="{{site.baseurl}}" class="blog-button">
-                  t
-                </a>
-              </li>
             {% if site.author.twitter_username %}
               <!-- Twitter -->
               <li class="navigation__item">
