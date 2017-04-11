@@ -15,7 +15,7 @@ Data does not tell its own story. My graduate thesis project, towards which I wo
 
 A few weeks ago I found a database of air quality measurements from locations around the world. The data, available at [OpenAQ](https://openaq-data.s3.amazonaws.com/index.html), offers almost daily data beginning in June of 2015. I decided to create a map to visualize this data to get a sense of what the mountain of spreadsheets had to show. I had never built a web scraper before, nor done much coding in Python, so I took this as an opportunity to learn a few new skills in the process.
 
-The key to writing a program to download the right files comes down to getting an array of the file names. Here we use the Python package BeautifulSoup to parse the page. In this case, the CSV files were given as <key> elements in the site HTML, making them easy to pluck out.
+The key to writing a program to download the right files comes down to getting an array of the file names. Here we use the Python package BeautifulSoup to parse the page. In this case, the CSV files were given <key> tags in the site HTML, making them easy to pluck out.
 ```py
 def find_csvs(url):
 
