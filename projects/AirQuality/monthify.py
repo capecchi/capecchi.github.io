@@ -24,8 +24,9 @@ def main(test=False,
             month_csvs.append(y+'-'+m)
 
     if test: month_csvs = os.listdir(webdirec+'monthly_csvs/')
-    if reverse: month_csvs = month_csvs.reverse()
-
+    print(month_csvs)
+    if reverse: month_csvs = month_csvs[::-1]
+    print(month_csvs)
     for ym in month_csvs: #for each month
         fsav = webdirec+'monthly_csvs/'+ym+'.csv'
         if test:
@@ -47,7 +48,7 @@ def main(test=False,
 
             #update each unique entry with average of monthly measurements from that location
             for r in unique_rows:
-                #print(r+1,'/',len(unique_rows))
+                print(r+1,'/',len(unique_rows))
                 multiple_records = all_month_data[ all_month_data[sub[0]] == month_data[sub[0]].iloc[r] ]
                 multiple_records = multiple_records[ multiple_records[sub[1]] == month_data[sub[1]].iloc[r] ]
                 multiple_records = multiple_records[ multiple_records[sub[2]] == month_data[sub[2]].iloc[r] ]
@@ -62,4 +63,4 @@ def main(test=False,
     month_master = pd.concat(pd.read_csv(webdirec+'monthly_csvs/'+f,encoding='latin-1') for f in month_csvs)
     month_master.to_csv(webdirec+'month_master.csv',index=False)
     print('Saved:: month_master.csv')
-main()
+#main()
