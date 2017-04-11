@@ -30,7 +30,7 @@ def main(test=False,
         if test:
             fsav = webdirec+'monthly_csvs/'+ym
         if os.path.isfile(fsav):
-                print(fsav," already exhists")
+                print(fsav," already exists")
         else: #compile daily data for this month
             relevant = []
             for file in csvs: #find daily csv files from that month
@@ -58,7 +58,8 @@ def main(test=False,
             month_data.to_csv(fsav,index=False)
             print('Saved:: /monthly/'+ym+'.csv') #end of if file not present
 
-    month_master = pd.concat(pd.read_csv(webdirec+'monthly_csvs/'+f,encoding='latin-1') for f in month_csvs)
+    month_master = pd.concat(pd.read_csv(webdirec+'monthly_csvs/'+f+'.csv',
+                                         encoding='latin-1') for f in month_csvs)
     month_master.to_csv(webdirec+'month_master.csv',index=False)
     print('Saved:: month_master.csv')
 #main()
