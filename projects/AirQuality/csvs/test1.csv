@@ -1,0 +1,7 @@
+location,city,country,utc,local,parameter,value,unit,latitude,longitude,attribution
+Beijing US Embassy,Beijing,CN,2015-07-18T00:00:00.000Z,2015-07-18T08:00:00+08:00,pm25,41,µg/m³,39.95,116.47,
+Anand Vihar,Delhi,IN,2015-07-18T00:10:00.000Z,2015-07-18T05:40:00+05:30,so2,1,µg/m³,28.6508,77.3152,
+Anand Vihar,Delhi,IN,2015-07-18T00:10:00.000Z,2015-07-18T05:40:00+05:30,no2,3.2,µg/m³,28.6508,77.3152,
+Mandir Marg,Delhi,IN,2015-07-18T00:10:00.000Z,2015-07-18T05:40:00+05:30,pm25,83,µg/m³,28.6341,77.2005,
+RK Puram,Delhi,IN,2015-07-18T00:10:00.000Z,2015-07-18T05:40:00+05:30,no2,5.9,µg/m³,28.5648,77.1744,
+Anand Vihar,Delhi,IN,2015-07-18T00:10:00.000Z,2015-07-18T05:40:00+05:30,no2,49,µg/m³,28.6508,77.3152,
