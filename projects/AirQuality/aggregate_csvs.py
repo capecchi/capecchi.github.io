@@ -22,8 +22,7 @@ def main(test=False):
     compsav = web_direc+'static_scanned'
     if os.path.isfile(compsav+'.npy'):
         scanned = np.load(compsav+'.npy')
-        print(scanned)
-        build = pd.read_csv(web_direc+'static_master.csv')
+        build = pd.read_csv(web_direc+'static_master.csv',encoding='latin-1')
     else: scanned = []
         
     build = pd.DataFrame(columns=static_cols)
@@ -62,5 +61,6 @@ def main(test=False):
         build['value'].set_value(r,av,takeable=True)
 
     build.to_csv(web_direc+'static_master.csv',index=False)
+    os.remove(compsav+'.npy')
     print('Saved:: static_master.csv')
     
