@@ -58,11 +58,11 @@
 <div id='map'></div>
 
 <div class='map-overlay top'>
-    <!--<div class='map-overlay-inner'>
+    <div class='map-overlay-inner'>
         <h2>Pollutant Concentrations</h2>
-        <label id='month'></label>
-        <input id='slider' type='range' min='0' max='11' step='1' value='0' />
-    </div>-->
+        <label id='parameter'></label>
+        <input id='slider' type='range' min='0' max='5' step='1' value='0' />
+    </div>
     <div class='map-overlay-inner'>
         <div id='legend' class='legend'>
             <div class='bar'></div>
@@ -71,7 +71,7 @@
     </div>
 </div>
 
-<script src='//d3js.org/d3.v3.min.js' charset='utf-8'></script>
+<script src='http://d3js.org/d3.v3.min.js' charset='utf-8'></script>
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2FwZWNjaGkiLCJhIjoiY2owNzV0YzdzMHFiYzJxbHNnbTJuZ2h3diJ9.ArYGu-QKz3D8D0oZLyvgSA';
 var map = new mapboxgl.Map({
@@ -82,28 +82,22 @@ var map = new mapboxgl.Map({
 });
 
 var params = [
+    'so2',
     'no2',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
+    'co',
+    'o3',
+    'pm10',
+    'pm25'
 ];
 
-function filterBy(month) {
+function filterBy(parameter) {
 
-    var filters = ['==', 'month', month];
+    var filters = ['==', 'parameter', parameter];
     map.setFilter('earthquake-circles', filters);
     map.setFilter('earthquake-labels', filters);
 
     // Set the label to the month
-    document.getElementById('month').textContent = months[month];
+    document.getElementById('parameter').textContent = params[parameter];
 }
 
 map.on('load', function() {
@@ -120,25 +114,25 @@ map.on('load', function() {
     // Any request method (library or otherwise) you wish.
     //d3.json('https://www.mapbox.com/mapbox-gl-js/assets/data/significant-earthquakes-2015.geojson', function(err, data) {
     //    if (err) throw err;
-      d3.csv('/projects/AirQuality/static_master.csv',function(d) {
+      d3.csv('static_master.csv',function(d) {
         return {
           city : d.city,
           country : d.country,
           parameter : d.parameter,
           value : +d.value,
-          latitude : +d.latitude
+          latitude : +d.latitude,
           longitude : +d.longitude
         };
-      } function(data) {
+      }, function(data) {
         console.log(data[0]);
-      });
+      //});
 
         // Create a month property value based on time
         // used to filter against.
-        data.features = data.features.map(function(d) {
-            d.properties.month = new Date(d.properties.time).getMonth();
-            return d;
-        });
+        //data.features = data.features.map(function(d) {
+        //    d.properties.month = new Date(d.properties.time).getMonth();
+        //    return d;
+      //});
 
         map.addSource('pollution', {
             'type': 'geojson',
@@ -146,9 +140,9 @@ map.on('load', function() {
         });
 
         map.addLayer({
-            'id': 'earthquake-circles',
+            'id': 'pollution-circles',
             'type': 'circle',
-            'source': 'earthquakes',
+            'source': 'pollution',
             'paint': {
                 'circle-color': {
                     property: 'mag',
@@ -169,11 +163,11 @@ map.on('load', function() {
         });
 
         map.addLayer({
-            'id': 'earthquake-labels',
+            'id': 'pollution-labels',
             'type': 'symbol',
-            'source': 'earthquakes',
+            'source': 'pollution',
             'layout': {
-                'text-field': '{mag}m',
+                'text-field': '{value}ug/m^3',
                 'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
                 'text-size': 12
             },
@@ -187,8 +181,8 @@ map.on('load', function() {
         filterBy(0);
 
         document.getElementById('slider').addEventListener('input', function(e) {
-            var month = parseInt(e.target.value, 10);
-            filterBy(month);
+            var params = parseInt(e.target.value, 10);
+            filterBy(parameter);
         });
     });
 });
