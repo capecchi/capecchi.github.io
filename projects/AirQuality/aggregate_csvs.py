@@ -62,5 +62,6 @@ def main(test=False):
         build['value'].set_value(r,av,takeable=True)
 
     build.to_csv(web_direc+'static_master.csv',index=False)
+    os.remove(compsav+'.npy')
     print('Saved:: static_master.csv')
     
