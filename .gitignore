@@ -4,4 +4,4 @@ _site
 *.sublime-project
 *.sublime-workspace
 .DS_Store
-/projects/AirQuality/csvs
+/projects/AirQuality/csvs #don't sync daily csv files to remote
