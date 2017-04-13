@@ -1,0 +1,380 @@
+{
+   "type": "FeatureCollection",
+   "features": [
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 113.32,23.12 ]
+    },
+    "properties": {
+    "location":"Guangzhou",
+    "city":"Guangzhou",
+    "country":"CN",
+    "parameter":"pm25",
+    "value":-172661,
+    "num_records":1501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 116.47,39.95 ]
+    },
+    "properties": {
+    "location":"Beijing US Embassy",
+    "city":"Beijing",
+    "country":"CN",
+    "parameter":"pm25",
+    "value":84486,
+    "num_records":1501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 123.42,41.78 ]
+    },
+    "properties": {
+    "location":"Shenyang",
+    "city":"Shenyang",
+    "country":"CN",
+    "parameter":"pm25",
+    "value":43607,
+    "num_records":1500
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 104.07,30.63 ]
+    },
+    "properties": {
+    "location":"Chengdu",
+    "city":"Chengdu",
+    "country":"CN",
+    "parameter":"pm25",
+    "value":77408,
+    "num_records":1501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 121.44,31.21 ]
+    },
+    "properties": {
+    "location":"Shanghai",
+    "city":"Shanghai",
+    "country":"CN",
+    "parameter":"pm25",
+    "value":-27470,
+    "num_records":1501
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.89,-34.42 ]
+    },
+    "properties": {
+    "location":"Wollongong",
+    "city":"Illawarra",
+    "country":"AU",
+    "parameter":"co",
+    "value":661,
+    "num_records":6122
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 151.67,-32.90 ]
+    },
+    "properties": {
+    "location":"Wallsend",
+    "city":"Lower Hunter",
+    "country":"AU",
+    "parameter":"o3",
+    "value":75.11,
+    "num_records":5029
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.67,-32.20 ]
+    },
+    "properties": {
+    "location":"Wyong",
+    "city":"Central Coast",
+    "country":"AU",
+    "parameter":"so2",
+    "value":0.11,
+    "num_records":6047
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.85,-33.66 ]
+    },
+    "properties": {
+    "location":"Vineyard",
+    "city":"Sydney North-west",
+    "country":"AU",
+    "parameter":"so2",
+    "value":1328.62,
+    "num_records":4295
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 147.36,-35.10 ]
+    },
+    "properties": {
+    "location":"Wagga Wagga Nth",
+    "city":"South-west Slopes",
+    "country":"AU",
+    "parameter":"pm10",
+    "value":15989,
+    "num_records":2345
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.91,-33.79 ]
+    },
+    "properties": {
+    "location":"Prospect",
+    "city":"Sydney North-west",
+    "country":"AU",
+    "parameter":"o3",
+    "value":128.17,
+    "num_records":5291
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 151.15,-32.53 ]
+    },
+    "properties": {
+    "location":"Singleton",
+    "city":"Upper Hunter - Singleton",
+    "country":"AU",
+    "parameter":"pm10",
+    "value":121775.5,
+    "num_records":4213
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.77,-33.80 ]
+    },
+    "properties": {
+    "location":"St Marys",
+    "city":"Sydney North-west",
+    "country":"AU",
+    "parameter":"o3",
+    "value":117.15,
+    "num_records":3370
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.75,-33.62 ]
+    },
+    "properties": {
+    "location":"Richmond",
+    "city":"Sydney North-west",
+    "country":"AU",
+    "parameter":"pm10",
+    "value":134867.9,
+    "num_records":5153
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 151.16,-33.87 ]
+    },
+    "properties": {
+    "location":"Rozelle",
+    "city":"Sydney East",
+    "country":"AU",
+    "parameter":"co",
+    "value":526.1,
+    "num_records":5276
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.91,-31.11 ]
+    },
+    "properties": {
+    "location":"Tamworth",
+    "city":"North-west Slopes",
+    "country":"AU",
+    "parameter":"pm10",
+    "value":13659.8,
+    "num_records":1712
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 151.76,-32.93 ]
+    },
+    "properties": {
+    "location":"Newcastle",
+    "city":"Lower Hunter",
+    "country":"AU",
+    "parameter":"no2",
+    "value":11.78,
+    "num_records":4859
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.89,-32.27 ]
+    },
+    "properties": {
+    "location":"Muswellbrook",
+    "city":"Upper Hunter - Muswellbrook",
+    "country":"AU",
+    "parameter":"pm25",
+    "value":35575.3,
+    "num_records":4083
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.91,-33.93 ]
+    },
+    "properties": {
+    "location":"Liverpool",
+    "city":"Sydney South-west",
+    "country":"AU",
+    "parameter":"o3",
+    "value":46.48,
+    "num_records":4162
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 151.24,-33.93 ]
+    },
+    "properties": {
+    "location":"Randwick",
+    "city":"Sydney East",
+    "country":"AU",
+    "parameter":"o3",
+    "value":113.17,
+    "num_records":4152
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.50,-34.05 ]
+    },
+    "properties": {
+    "location":"Oakdale",
+    "city":"Sydney South-west",
+    "country":"AU",
+    "parameter":"no2",
+    "value":6.78,
+    "num_records":3347
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.80,-34.07 ]
+    },
+    "properties": {
+    "location":"Campbelltown West",
+    "city":"Sydney South-west",
+    "country":"AU",
+    "parameter":"no2",
+    "value":7.7,
+    "num_records":4599
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 151.15,-33.78 ]
+    },
+    "properties": {
+    "location":"Lindfield",
+    "city":"Sydney East",
+    "country":"AU",
+    "parameter":"no2",
+    "value":28.07,
+    "num_records":4283
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.82,-34.48 ]
+    },
+    "properties": {
+    "location":"Kembla Grange",
+    "city":"Illawarra",
+    "country":"AU",
+    "parameter":"so2",
+    "value":1331.65,
+    "num_records":4240
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ 150.69,-34.04 ]
+    },
+    "properties": {
+    "location":"Camden",
+    "city":"Sydney South-west",
+    "country":"AU",
+    "parameter":"o3",
+    "value":66.59,
+    "num_records":4156
+    }
+  }
+]
+}
