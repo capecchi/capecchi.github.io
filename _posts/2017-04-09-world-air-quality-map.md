@@ -8,7 +8,7 @@ project: true
 tags: scraper pollution Mapbox
 ---
 
-[![image](/images/posts/AirQuality_thumbnail.png)](/projects/AirQuality/World_Data/AQmap_static.html)
+[![image](/images/posts/AirQuality_thumbnail.png)](/projects/AirQuality/World_Data/index.html)
 <!--(/projects/AirQuality/AQmap_static.html)-->
 ***click the map for an interactive version***
 
