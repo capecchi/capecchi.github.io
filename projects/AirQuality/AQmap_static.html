@@ -155,7 +155,7 @@ map.on('load', function() {
                 },
                 'circle-opacity': 0.75,
                 'circle-radius': {
-                    property: 'value',
+                    property: 100, //'value'
                     stops: [
                         [6, 20],
                         [8, 40]
@@ -183,7 +183,7 @@ map.on('load', function() {
         filterBy(0);
 
         document.getElementById('slider').addEventListener('input', function(e) {
-            var params = parseInt(e.target.value, 10);
+            var parameter = parseInt(e.target.value, 10);
             filterBy(parameter);
         });
     });
