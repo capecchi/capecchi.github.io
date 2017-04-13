@@ -112,19 +112,21 @@ map.on('load', function() {
     //
     // Here we're using d3 to help us make the ajax request but you can use
     // Any request method (library or otherwise) you wish.
-    d3.json('https://www.williamcapecchi/projects/AirQuality/static_temp.geojson', function(err, data) {
-        if (err) throw err;
-    //  d3.csv('static_master.csv',function(d) {
-     //   return {
-      //    city : d.city,
-       //   country : d.country,
-        //  parameter : d.parameter,
-         // value : +d.value,
-          //latitude : +d.latitude,
-          //longitude : +d.longitude
-        //};
-      //}, function(data) {
-       // console.log(data[0]);
+    d3.json('https://www.williamcapecchi.com/projects/AirQuality/static_temp.geojson', function(err, data) {
+      if (err) throw err;
+
+
+//      d3.csv('static_master.csv',function(d) {
+//        return {
+//          city : d.city,
+//          country : d.country,
+//          parameter : d.parameter,
+//          value : +d.value,
+//          latitude : +d.latitude,
+//          longitude : +d.longitude
+//        };
+//      }, function(data) {
+//        console.log(data[0]);
       //});
 
         // Create a month property value based on time
