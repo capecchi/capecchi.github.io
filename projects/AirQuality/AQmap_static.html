@@ -78,7 +78,7 @@ var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/light-v9',
     center: [31.4606, 20.7927],
-    zoom: 0.5
+    zoom: 1 //original = 0.5
 });
 
 var params = [
@@ -147,7 +147,7 @@ map.on('load', function() {
             'source': 'pollution',
             'paint': {
                 'circle-color': {
-                    property: 'mag',
+                    property: 'value',
                     stops: [
                         [6, '#FCA107'],
                         [8, '#7F3121']
@@ -155,7 +155,7 @@ map.on('load', function() {
                 },
                 'circle-opacity': 0.75,
                 'circle-radius': {
-                    property: 'mag',
+                    property: 'value',
                     stops: [
                         [6, 20],
                         [8, 40]
