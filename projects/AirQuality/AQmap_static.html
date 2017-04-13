@@ -97,7 +97,8 @@ function filterBy(parameter) {
     map.setFilter('pollution-labels', filters);
 
     // Set the label to the month
-    document.getElementById('parameter').textContent = parameter;
+    document.getElementById('parameter').innerHTML = parameter;
+    //document.getElementById('parameter').textContent = parameter;
 }
 
 map.on('load', function() {
