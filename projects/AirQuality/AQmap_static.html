@@ -59,7 +59,7 @@
 
 <div class='map-overlay top'>
     <div class='map-overlay-inner'>
-        <h2>Pollutantania Concentrations</h2>
+        <h2>Pollutant Concentrations</h2>
         <label id='parameter'></label>
         <input id='slider' type='range' min='0' max='5' step='1' value='0' />
     </div>
@@ -90,15 +90,15 @@ var params = [
     'pm25'
 ];
 
-function filterBy(parameter) {
+function filterBy(iparam) {
 
-    var filters = ['==', 'parameter', parameter];
+    var filters = ['==', 'parameter', params[iparam]];
     map.setFilter('pollution-circles', filters);
     map.setFilter('pollution-labels', filters);
 
     // Set the label to the month
-    document.getElementById('parameter').innerHTML = parameter;
-    //document.getElementById('parameter').textContent = parameter;
+    //document.getElementById('parameter').innerHTML = parameter;
+    document.getElementById('parameter').textContent = params[iparam];
 }
 
 map.on('load', function() {
@@ -184,8 +184,8 @@ map.on('load', function() {
         filterBy(0);
 
         document.getElementById('slider').addEventListener('input', function(e) {
-            var parameter = parseInt(e.target.value, 10);
-            filterBy(parameter);
+            var iparam = parseInt(e.target.value, 10);
+            filterBy(iparam);
         });
     });
 });
