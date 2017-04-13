@@ -113,11 +113,11 @@ map.on('load', function() {
     //
     // Here we're using d3 to help us make the ajax request but you can use
     // Any request method (library or otherwise) you wish.
-    d3.json('https://www.mapbox.com/studio/datasets/capecchi/cj1gmtkr1005r32o0yx67ptoq/', function(err, data) {
-      if (err) throw err;
-
-    //d3.json('https://www.williamcapecchi.com/projects/AirQuality/static_temp_small.geojson', function(err, data) {
+    //d3.json('https://www.mapbox.com/studio/datasets/capecchi/cj1gmtkr1005r32o0yx67ptoq/', function(err, data) {
     //  if (err) throw err;
+
+    d3.json('https://www.williamcapecchi.com/projects/AirQuality/static_temp_small.geojson', function(data) {
+      //if (err) throw err;
 
 
 //      d3.csv('static_master.csv',function(d) {
