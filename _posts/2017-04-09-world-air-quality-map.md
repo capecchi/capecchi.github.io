@@ -9,7 +9,7 @@ tags: scraper pollution Mapbox
 ---
 
 [![image](/images/posts/AirQuality_thumbnail.png)](/projects/AirQuality/AQmap_static.html)
-**make this interactive**
+***click the map for an interactive version***
 
 Data does not tell its own story. My graduate thesis project, towards which I worked meticulously for over five years, essentially boils down to around 8 billion numbers in various arrays. The mere record of these numbers would surely not have persuaded my thesis committee to grant me my PhD. The point is, of course, not that I *have* the numbers, but what the numbers mean: These numbers, in this arrangement, arriving in this order means-- something. It's a human task to turn data into information.
 
@@ -32,3 +32,5 @@ def find_csvs(url):
         return csv_names
 ```
 After some slight string editing we're returned a string array of CSV names and can download them easily.
+
+Now having the data on hand, the question becomes how best to present it. In this case I chose two different presentations, arising from what I consider two natural questions about the dataset. First, how does air quality differ from place to place? And second, how does it vary in time? To answer the first question, the data was aggregated into a single file. For the second, I chose to group the data by month- this choice was made to increase the amount of data present each month (as not all locations reported data daily) while still maintaining an appreciable number of temporal bins over which to view changes in the data.
