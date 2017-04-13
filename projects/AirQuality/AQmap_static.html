@@ -81,7 +81,7 @@ var map = new mapboxgl.Map({
     zoom: 1 //original = 0.5
 });
 
-var params = [
+var params_long = [
     'Sulfer Dioxide (SO2)',
     'Nitrogen Dioxide (NO<sub>2</sub>)',
     'Carbon Monoxide (CO)',
@@ -89,6 +89,15 @@ var params = [
     'Particle Matter <10 um',
     'Particle Matter <2.5 um'
 ];
+
+var params = [
+  'so2',
+  'no2',
+  'co',
+  'o3',
+  'pm10',
+  'pm25'
+]
 
 function filterBy(iparam) {
 
@@ -98,7 +107,7 @@ function filterBy(iparam) {
 
     // Set the label to the month
     //document.getElementById('parameter').innerHTML = parameter;
-    document.getElementById('parameter').textContent = params[iparam];
+    document.getElementById('parameter').textContent = params_long[iparam];
 }
 
 map.on('load', function() {
