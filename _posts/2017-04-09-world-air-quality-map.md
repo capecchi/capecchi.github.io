@@ -3,12 +3,12 @@ layout: post
 title: World Air Quality Map
 date: 2017-04-09
 excerpt: Mapping air quality data from around the world.
-image: /images/posts/AirQuality_thumbnail.png
+image: /images/posts/aggregate_data.png
 project: true
 tags: scraper pollution Mapbox
 ---
 
-[![image](/images/posts/AirQuality_thumbnail.png)](/projects/AirQuality/World_Data)
+[![image](/images/posts/aggregate_data.png)](/projects/AirQuality/World_Data)
 <!--(/projects/AirQuality/AQmap_static.html)-->
 ***click the map for an interactive version***
 
