@@ -3,6 +3,10 @@
 
 /* Modifications */
 
+img.post-image {
+  width: 100%;
+}
+
 pre.highlight,
 .highlight pre {
   padding: 10px;
