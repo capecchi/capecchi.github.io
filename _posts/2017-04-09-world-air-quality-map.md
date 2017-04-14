@@ -5,7 +5,7 @@ date: 2017-04-09
 excerpt: Mapping air quality data from around the world.
 image: /images/posts/aggregate_data.png
 project: true
-tags: scraper pollution Mapbox
+tags: Mapbox web-scraper pollution geojson
 ---
 
 [![image](/images/posts/aggregate_data.png)](/projects/AirQuality/World_Data)

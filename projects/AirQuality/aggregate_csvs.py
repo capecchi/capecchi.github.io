@@ -19,10 +19,10 @@ def main(test=False):
 
     if test: daily_csvs = ['test1.csv','test2.csv']
 
-    compsav = web_direc+'static_scanned2'
+    compsav = web_direc+'static_scanned'
     if os.path.isfile(compsav+'.npy'):
         scanned = np.load(compsav+'.npy')
-        build = pd.read_csv(web_direc+'static_master2.csv',encoding='latin-1')
+        build = pd.read_csv(web_direc+'static_master.csv',encoding='latin-1')
     else: scanned = []
         
     build = pd.DataFrame(columns=static_cols)
@@ -46,9 +46,9 @@ def main(test=False):
                         irow = dup.index(True) #index of duplicate row
                         #add 1 to #records for this location
                         #print(build.iloc[irow])
-                        add_rec = build['num_records'].iloc[irow] + 1
-                        build['num_records'].set_value(irow,add_rec,takeable=True)
-                        new_val = build['value'].iloc[irow]+ro['value'].iloc[0]
+                        num_rec = build['num_records'].iloc[irow] + 1
+                        build['num_records'].set_value(irow,num_rec,takeable=True)
+                        new_val = build['value'].iloc[irow]*((num_rec-1.0)/num_rec)+ro['value'].iloc[0]*(1.0/num_rec)
                         build['value'].set_value(irow,new_val,takeable=True)
                     else: #row is not repeated, new location/param, keep as appended
                         build = build_temp
@@ -56,14 +56,14 @@ def main(test=False):
             scanned = np.append(scanned,d)
             #print(scanned)
             np.save(compsav,scanned)
-            build.to_csv(web_direc+'static_master2.csv',index=False)
+            build.to_csv(web_direc+'static_master.csv',index=False)
             
     brows = np.arange(len(build))
     for r in brows: #go through and divide by #records
         av = build['value'].iloc[r]/build['num_records'].iloc[r]
         build['value'].set_value(r,av,takeable=True)
 
-    build.to_csv(web_direc+'static_master2.csv',index=False)
+    build.to_csv(web_direc+'static_master.csv',index=False)
     os.remove(compsav+'.npy')
-    print('Saved:: static_master2.csv')
+    print('Saved:: static_master.csv')
     
