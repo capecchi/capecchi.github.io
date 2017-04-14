@@ -17,16 +17,17 @@
 <!--12/20 originalfont size-->
 <style>
 .map-overlay {
-    font: 15x/24px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font: 15px/24px Helvetica, Arial, 'Helvetica Neue', sans-serif;
     position: absolute;
     width: 30%;
-    bottom: 50;
+    bottom: 5em;
     left: 0;
     padding: 10px;
 }
 
 .map-overlay .map-overlay-inner {
-    background-color: rgba(79,79,79,.7);
+    color: #fff;
+    background-color: rgba(21,21,21,.8);
     box-shadow:0 1px 2px rgba(0, 0, 0, 0.20);
     border-radius: 3px;
     padding: 10px;
@@ -34,6 +35,7 @@
 }
 
 .map-overlay h2 {
+    color: #fff;
     line-height: 24px;
     display: block;
     margin: 0 0 10px;
@@ -59,7 +61,7 @@
 
 <div class='map-overlay top'>
     <div class='map-overlay-inner'>
-        <h2>Pollutant Average Since Juuuune 2015</h2>
+        <h2>Pollutant Average Since June 2015</h2>
         <label id='parameter'></label>
         <input id='slider' type='range' min='0' max='5' step='1' value='0' />
     </div>
@@ -83,8 +85,8 @@ var map = new mapboxgl.Map({
 //twosup = 2
 //twosup = twosup.sup()
 var params_long = [
-    'Sulfer Dioxide (SO2)',
     'Nitrogen Dioxide (NO2)',
+    'Sulfer Dioxide (SO2)',
     'Carbon Monoxide (CO)',
     'Ozone (O3)',
     'Particle Matter <10 \u03BCm',
@@ -92,8 +94,8 @@ var params_long = [
 ];
 
 var params = [
-  'so2',
   'no2',
+  'so2',
   'co',
   'o3',
   'pm10',
