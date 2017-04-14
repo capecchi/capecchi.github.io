@@ -10,7 +10,7 @@ tags: scraper pollution Mapbox
 
 [![image](/images/posts/aggregate_data.png)](/projects/AirQuality/World_Data)
 <!--(/projects/AirQuality/AQmap_static.html)-->
-***click the map for an interactive version (NOTE: data for this project is still being processed- the data presented above is not accurate- yet)***
+***click the map for an interactive version (NOTE: data for this project is still being processed. The data presented above is not accurate- yet)***
 
 Data does not tell its own story. My graduate thesis project, towards which I worked meticulously for over five years, essentially boils down to around 8 billion numbers in various arrays. The mere record of these numbers would surely not have persuaded my thesis committee to grant me my PhD. The point is, of course, not that I *have* the numbers, but what the numbers mean: These numbers, in this arrangement, arriving in this order means-- something. It's a human task to turn data into information.
 
