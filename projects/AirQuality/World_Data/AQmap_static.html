@@ -77,8 +77,8 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiY2FwZWNjaGkiLCJhIjoiY2owNzV0YzdzMHFiYzJxbHNnb
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/light-v9',
-    center: [-100, 38.],
-    zoom: 4 //original = 0.5
+    center: [-105, 38.],
+    zoom: 3.5 //original = 0.5
 });
 //twosup = 2
 //twosup = twosup.sup()
@@ -184,7 +184,7 @@ map.on('load', function() {
             'type': 'symbol',
             'source': 'pollution',
             'layout': {
-                'text-field': '{value}ug/m^3',
+                'text-field': '{value}',
                 'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
                 'text-size': 12
             },
