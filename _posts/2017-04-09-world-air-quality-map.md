@@ -70,16 +70,16 @@ This process keeps a running average of the concentration of each pollutant for 
 
 A similar routine is run to produce the monthly-averaged data, with an added stipulation that rows are only combined if they have the same parameter, location, and *year-month*.
 
-I created the map visualization using the Mapbox API which required converting the data into a geojson file format, accomplished using this online [converter tool](http://www.convertcsv.com/csv-to-geojson.htm). The style was formatted following this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/). The visualization of the aggregate data (above) required a simple filter applied to the slider setting that selected only the data for the pollutant selected (mainly to avoid the overlapping icons that would result from displaying multiple pollutant records for a single location). In order to show the change in concentrations with time, I added a second slider/filter. Two event listeners are added that update the variables <code>iparam</code> and <code>iym</code> whenever a slider is moved.
-```
+I created the map visualization using the Mapbox API which required converting the data into a geojson file format, accomplished using this online [converter tool](http://www.convertcsv.com/csv-to-geojson.htm). The style was formatted following this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/). The visualization of the aggregate data (above) required a simple filter applied to the slider setting that selected only the data for the pollutant selected (mainly to avoid the overlapping icons that would result from displaying multiple pollutant records for a single location). In order to show the change in concentrations with time, I added a second slider/filter. Two event listeners are added that update the variables `iparam` and `iym` whenever a slider is moved.
+```javascript
 document.getElementById('slider1').addEventListener('input', function(e) {
     var iparam = parseInt(e.target.value, 10);
     var iym = parseInt(document.getElementById('slider2').value);
     filterBy(iparam,iym);
 });
 ```
-These variables are passed to a function that applies the filters to the map and only displays the relevant data.
-```
+These variables are passed to a function `filterBy` that applies the filters to the map and displays only the relevant data.
+```javascript
 function filterBy(iparam,iym) {
 
     var filter1 = ['==', 'parameter', params[iparam]];
@@ -87,6 +87,10 @@ function filterBy(iparam,iym) {
 
     map.setFilter('pollution-circles', ["all",filter1,filter2]);
     map.setFilter('pollution-labels', ["all",filter1,filter2]);
+  }
 ```
+The resulting map is shown below and provides a visual means for understanding how the data varies in time for each location.
 [![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_monthly_data)
 ***click the map for interactive version***
+
+So here we have both maps working, giving us a visual understanding of the two questions posed earlier- one to show how concentrations vary around the world, another to show how those levels vary with time.
