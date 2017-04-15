@@ -85,21 +85,23 @@ var map = new mapboxgl.Map({
 //twosup = 2
 //twosup = twosup.sup()
 var params_long = [
+    'Particle Matter <10 \u03BCm',
+    'Particle Matter <2.5 \u03BCm',
     'Nitrogen Dioxide (NO2)',
     'Sulfer Dioxide (SO2)',
     'Carbon Monoxide (CO)',
     'Ozone (O3)',
-    'Particle Matter <10 \u03BCm',
-    'Particle Matter <2.5 \u03BCm'
+    'Black Carbon (BC)'
 ];
 
 var params = [
+  'pm10',
+  'pm25',
   'no2',
   'so2',
   'co',
   'o3',
-  'pm10',
-  'pm25'
+  'bc'
 ]
 
 function filterBy(iparam) {
