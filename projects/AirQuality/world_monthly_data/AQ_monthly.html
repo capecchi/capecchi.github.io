@@ -260,12 +260,11 @@ map.on('load', function() {
             var iym = document.getElementById('slider2').value
             filterBy(iparam,iym);
 
-        }
+        });
         document.getElementById('slider2').addEventListener('input', function(e) {
             var iym = parseInt(e.target.value,10);
             var iparam = document.getElementById('slider1').value
             filterBy(iparam,iym);
-        }
         });
     });
 });
