@@ -68,7 +68,7 @@
     <div class='map-overlay-inner'>
         <div id='legend' class='legend'>
             <div class='bar'></div>
-            <div>Concentration (&mu;g/m<sup>3</sup>)</div>
+            <div>Koncentration (&mu;g/m<sup>3</sup>)</div>
         </div>
     </div>
 </div>
@@ -163,19 +163,20 @@ map.on('load', function() {
             'type': 'circle',
             'source': 'pollution',
             'paint': {
+                'circle-stroke-color': #000,
                 'circle-color': {
                     property: 'value',
                     stops: [
-                        [6, '#68aeff'],
-                        [8, '#25123d']
+                        [0, '#68aeff'],
+                        [100, '#25123d']
                     ]
                 },
                 'circle-opacity': 0.75,
                 'circle-radius': {
                     property: 'value',
                     stops: [
-                        [6, 20],
-                        [8, 40]
+                        [0, 35],
+                        [100, 40]
                     ]
                 }
             }
