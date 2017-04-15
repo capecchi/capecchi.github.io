@@ -48,14 +48,16 @@ for d in daily_csvs: #go through every daily csv file
         ro = df.iloc[r:r+1]
         if ro['value'].iloc[0] >= 0: #ignore negative values
             build_temp = pd.concat([build,ro],ignore_index=True)
-            dup = list(build_temp.duplicated(subset=['parameter','latitude','longitude'],keep=False))
+            dup = list(build_temp.duplicated(subset=\
+                  ['parameter','latitude','longitude'],keep=False))
             if dup[-1] == True: #repeat location/param
                 irow = dup.index(True) #index of duplicate row
                 #add 1 to #records for this location
                 num_rec = build['num_records'].iloc[irow] + 1
                 build['num_records'].set_value(irow,num_rec,takeable=True)
                 #compute running average
-                new_val = build['value'].iloc[irow]*((num_rec-1.0)/num_rec)+ro['value'].iloc[0]*(1.0/num_rec)
+                new_val = build['value'].iloc[irow]*((num_rec-1.0)/num_rec)+\
+                          ro['value'].iloc[0]*(1.0/num_rec)
                 build['value'].set_value(irow,new_val,takeable=True)
             else: #row is not repeated, new location/param, keep as appended
                 build = build_temp
