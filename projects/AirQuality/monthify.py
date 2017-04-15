@@ -11,7 +11,8 @@ def main(test=False,
                 csvs.append(file)
         return csvs
 
-    direc = "C:/Python34/Air_Quality/csv/"
+    localdirec = "C:/Python34/Air_Quality/csv/"
+    direc = localdirec
     webdirec = "C:/Users/Owner/Documents/GitHub/capecchi.github.io/projects/AirQuality/"
     col_names = ['location','city','country','utc','local','parameter','value','latitude','longitude']
     csvs = csv_list(direc)
@@ -23,10 +24,10 @@ def main(test=False,
         if y+'-'+m not in month_csvs:
             month_csvs.append(y+'-'+m+'.csv')
 
-    if test: month_csvs = os.listdir(webdirec+'monthly_csvs/')
+    if test: month_csvs = os.listdir(localdirec+'monthly_csvs/')
     if reverse: month_csvs = month_csvs[::-1]
     for ym in month_csvs: #for each month
-        fsav = webdirec+'monthly_csvs/'+ym
+        fsav = localdirec+'monthly_csvs/'+ym
         if os.path.isfile(fsav):
                 print(fsav," already exists")
         else: #compile daily data for this month
@@ -69,6 +70,6 @@ def main(test=False,
         temp['year-month'].set_value(r,ym,takeable=True)
     print(temp[0:1])
     month_master = temp
-    month_master.to_csv(webdirec+'month_master.csv',index=False)
+    month_master.to_csv(localdirec+'month_master.csv',index=False)
     print('Saved:: month_master.csv')
 #main()

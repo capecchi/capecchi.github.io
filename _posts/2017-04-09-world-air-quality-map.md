@@ -66,9 +66,11 @@ for d in daily_csvs: #go through every daily csv file
     np.save('static_scanned',scanned) #track scanned files
     build.to_csv('static_master.csv',index=False) #save running averages
 ```
-This process keeps a running average of the concentration of each pollutant for each location. Two steps included above are needed in order to clean the data. First, there are entries lacking latitude/longitude information; these are avoided with a simple call to drop any rows containing <code>NaN</code> values. Second, there are numerous entries throughout the dataset that contain negative concentrations (which obviously do not reflect the actual pollutant levels). OpenAQ responded to my query regarding this by stating that they archive the raw data recorded by each location and do not correct for any instrument drift or periods of instrument malfunction (values of -999). This being the case, for the purposes of this visualization we simply ignore negative values. A similar routine is run to produce the monthly-averaged data, with an added stipulation that rows are only combined if they have the same parameter, location, and *year-month*.
-With the monthly and aggregated data in CSV format, I convert to a geojson file using an online [converter](http://www.convertcsv.com/csv-to-geojson.htm).
+This process keeps a running average of the concentration of each pollutant for each location. Two steps included above are needed in order to clean the data. First, there are entries lacking latitude/longitude information; these are avoided with a simple call to drop any rows containing <code>NaN</code> values. Second, there are numerous entries throughout the dataset that contain negative concentrations (which obviously do not reflect the actual pollutant levels). OpenAQ responded to my query regarding this by stating that they archive the raw data recorded by each location and do not correct for any instrument drift or periods of instrument malfunction. This being the case, for the purposes of this visualization we simply ignore negative values.
+
+A similar routine is run to produce the monthly-averaged data, with an added stipulation that rows are only combined if they have the same parameter, location, and *year-month*.
+With the monthly and aggregated data in CSV format, I [converted](http://www.convertcsv.com/csv-to-geojson.htm) to the usable .geojson file format for visualization.
 
 To produce the interactive map visualization, I followed this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/), filtering to show one pollutant parameter at a time. To visualize the change in pollutant concentrations with time, we can add another slider to the plot that filters based on year/month.
-[![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_monthly_data)
+[![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_monthly_datapoop)
 ***click the map for interactive version***
