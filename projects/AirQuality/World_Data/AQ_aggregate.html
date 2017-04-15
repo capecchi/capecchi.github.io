@@ -68,7 +68,7 @@
     <div class='map-overlay-inner'>
         <div id='legend' class='legend'>
             <div class='bar'></div>
-            <div>Koncentration (&mu;g/m<sup>3</sup>)</div>
+            <div>Concentration (&mu;g/m<sup>3</sup>)</div>
         </div>
     </div>
 </div>
@@ -129,7 +129,7 @@ map.on('load', function() {
     //  if (err) throw err;
 
     //d3.json('https://www.williamcapecchi.com/projects/AirQuality/static_temp_small.geojson', function(data) {
-    d3.json('http://www.williamcapecchi.com/projects/AirQuality/static_temp.geojson', function(data) {
+    d3.json('http://www.williamcapecchi.com/projects/AirQuality/static_master.geojson', function(data) {
       //if (err) throw err;
 
 
@@ -163,7 +163,7 @@ map.on('load', function() {
             'type': 'circle',
             'source': 'pollution',
             'paint': {
-                'circle-stroke-color': #000,
+                //'circle-stroke-color': #000,
                 'circle-color': {
                     property: 'value',
                     stops: [
@@ -175,7 +175,7 @@ map.on('load', function() {
                 'circle-radius': {
                     property: 'value',
                     stops: [
-                        [0, 35],
+                        [0, 5],
                         [100, 40]
                     ]
                 }
