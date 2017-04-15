@@ -69,8 +69,24 @@ for d in daily_csvs: #go through every daily csv file
 This process keeps a running average of the concentration of each pollutant for each location. Two steps included above are needed in order to clean the data. First, there are entries lacking latitude/longitude information; these are avoided with a simple call to drop any rows containing <code>NaN</code> values. Second, there are numerous entries throughout the dataset that contain negative concentrations (which obviously do not reflect the actual pollutant levels). OpenAQ responded to my query regarding this by stating that they archive the raw data recorded by each location and do not correct for any instrument drift or periods of instrument malfunction. This being the case, for the purposes of this visualization we simply ignore negative values.
 
 A similar routine is run to produce the monthly-averaged data, with an added stipulation that rows are only combined if they have the same parameter, location, and *year-month*.
-With the monthly and aggregated data in CSV format, I [converted](http://www.convertcsv.com/csv-to-geojson.htm) to the usable .geojson file format for visualization.
 
-To produce the interactive map visualization, I followed this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/), filtering to show one pollutant parameter at a time. To visualize the change in pollutant concentrations with time, we can add another slider to the plot that filters based on year/month.
+I created the map visualization using the Mapbox API which required converting the data into a geojson file format, accomplished using this online [converter tool](http://www.convertcsv.com/csv-to-geojson.htm). The style was formatted following this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/). The visualization of the aggregate data (above) required a simple filter applied to the slider setting that selected only the data for the pollutant selected (mainly to avoid the overlapping icons that would result from displaying multiple pollutant records for a single location). In order to show the change in concentrations with time, I added a second slider/filter. Two event listeners are added that update the variables <code>iparam</code> and <code>iym</code> whenever a slider is moved.
+```
+document.getElementById('slider1').addEventListener('input', function(e) {
+    var iparam = parseInt(e.target.value, 10);
+    var iym = parseInt(document.getElementById('slider2').value);
+    filterBy(iparam,iym);
+});
+```
+These variables are passed to a function that applies the filters to the map and only displays the relevant data.
+```
+function filterBy(iparam,iym) {
+
+    var filter1 = ['==', 'parameter', params[iparam]];
+    var filter2 = ['==', 'year-month',ym[iym]];
+
+    map.setFilter('pollution-circles', ["all",filter1,filter2]);
+    map.setFilter('pollution-labels', ["all",filter1,filter2]);
+```
 [![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_monthly_data)
 ***click the map for interactive version***
