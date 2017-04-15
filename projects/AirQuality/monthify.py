@@ -21,14 +21,12 @@ def main(test=False,
         y=f[:4]
         m=f[5:7]
         if y+'-'+m not in month_csvs:
-            month_csvs.append(y+'-'+m)
+            month_csvs.append(y+'-'+m+'.csv')
 
     if test: month_csvs = os.listdir(webdirec+'monthly_csvs/')
     if reverse: month_csvs = month_csvs[::-1]
     for ym in month_csvs: #for each month
-        fsav = webdirec+'monthly_csvs/'+ym+'.csv'
-        if test:
-            fsav = webdirec+'monthly_csvs/'+ym
+        fsav = webdirec+'monthly_csvs/'+ym
         if os.path.isfile(fsav):
                 print(fsav," already exists")
         else: #compile daily data for this month
@@ -37,6 +35,8 @@ def main(test=False,
                 if ym in file:
                     relevant.append(file)
             all_month_data = pd.concat(pd.read_csv(direc+r,usecols=col_names) for r in relevant)#create one month dataframe
+            all_month_data.dropna(axis=0,inplace=True) #drop any rows with NaN values
+            all_month_data = all_month_data[all_month_data.value >= 0] #keep only positive values
             #drop duplicates
             sub =['parameter','latitude','longitude']
             subv =['parameter','latitude','longitude','value']
@@ -56,10 +56,19 @@ def main(test=False,
                 month_data['month'].set_value(r,ym[5:7],takeable=True)
 
             month_data.to_csv(fsav,index=False)
-            print('Saved:: /monthly/'+ym+'.csv') #end of if file not present
+            print('Saved:: /monthly/'+ym) #end of if file not present
 
-    month_master = pd.concat(pd.read_csv(webdirec+'monthly_csvs/'+f+'.csv',
+    month_master = pd.concat(pd.read_csv(webdirec+'monthly_csvs/'+f,\
                                          encoding='latin-1') for f in month_csvs)
+    temp = month_master.drop('month',axis=1)
+    print(temp[0:1])
+    temp = temp.rename(columns={"year":"year-month"})
+    print(temp[0:1])
+    for r in np.arange(len(temp)): #change month values to year-month values
+        ym = month_master['year'].iloc[r]*100+month_master['month'].iloc[r]
+        temp['year-month'].set_value(r,ym,takeable=True)
+    print(temp[0:1])
+    month_master = temp
     month_master.to_csv(webdirec+'month_master.csv',index=False)
     print('Saved:: month_master.csv')
 #main()

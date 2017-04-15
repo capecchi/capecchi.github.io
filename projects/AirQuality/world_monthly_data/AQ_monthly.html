@@ -1,0 +1,275 @@
+<!--EXAMPLE TAKEN FROM::
+ https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/ -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.35.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.35.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+<!--12/20 originalfont size-->
+<style>
+.map-overlay {
+    font: 15px/24px Helvetica, Arial, 'Helvetica Neue', sans-serif;
+    position: absolute;
+    width: 30%;
+    bottom: 2em;
+    left: 0;
+    padding: 10px;
+}
+
+.map-overlay .map-overlay-inner {
+    color: #fff;
+    background-color: rgba(21,21,21,.8);
+    box-shadow:0 1px 2px rgba(0, 0, 0, 0.20);
+    border-radius: 3px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.map-overlay h2 {
+    color: #fff;
+    line-height: 24px;
+    display: block;
+    margin: 0 0 10px;
+}
+
+.map-overlay .legend .bar {
+    height: 10px;
+    width: 100%;
+    background: linear-gradient(to right, #00a5ff, #870091);
+}
+
+.map-overlay input {
+    background-color: transparent;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    margin: 0;
+    cursor: ew-resize;
+}
+</style>
+
+<div id='map'></div>
+
+<div class='map-overlay top'>
+    <div class='map-overlay-inner'>
+        <h2>Pollutant Average Since June 2015</h2>
+        <label id='parameter'></label>
+        <input id='slider1' type='range' min='0' max='5' step='1' value='0' />
+        <label id='year-month'></label>
+        <input id='slider2' type='range' min='0' max='21' step='1' value='0' />
+    </div>
+    <div class='map-overlay-inner'>
+        <div id='legend' class='legend'>
+            <div class='bar'></div>
+            <div>Concentration (&mu;g/m<sup>3</sup>)</div>
+        </div>
+    </div>
+</div>
+
+<script src='http://d3js.org/d3.v3.min.js' charset='utf-8'></script>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiY2FwZWNjaGkiLCJhIjoiY2owNzV0YzdzMHFiYzJxbHNnbTJuZ2h3diJ9.ArYGu-QKz3D8D0oZLyvgSA';
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/light-v9',
+    center: [-107, 39.],
+    zoom: 3.6 //original = 0.5
+});
+
+var ym_long = [
+  'June 2015',
+  'July 2015',
+  'August 2015',
+  'September 2015',
+  'October 2015',
+  'November 2015',
+  'December 2015',
+  'January 2016',
+  'February 2016',
+  'March 2016',
+  'April 2016',
+  'May 2016',
+  'June 2016',
+  'July 2016',
+  'August 2016',
+  'September 2016',
+  'October 2016',
+  'November 2016',
+  'December 2016',
+  'January 2017',
+  'February 2017',
+  'March 2017'
+];
+
+var ym = [
+  201506,
+  201507,
+  201508,
+  201509,
+  201510,
+  201511,
+  201512,
+  201601,
+  201602,
+  201603,
+  201604,
+  201605,
+  201606,
+  201607,
+  201608,
+  201609,
+  201610,
+  201611,
+  201612,
+  201701,
+  201702,
+  201703
+]
+
+var params_long = [
+    'Particle Matter <10 \u03BCm',
+    'Particle Matter <2.5 \u03BCm',
+    'Nitrogen Dioxide (NO2)',
+    'Sulfer Dioxide (SO2)',
+    'Carbon Monoxide (CO)',
+    'Ozone (O3)',
+    'Black Carbon (BC)'
+];
+
+var params = [
+  'pm10',
+  'pm25',
+  'no2',
+  'so2',
+  'co',
+  'o3',
+  'bc'
+]
+
+function filterBy(iparam,iym) {
+
+    var filter1 = ['==', 'parameter', params[iparam]];
+    var filter2 = ['==', 'ym',ym[iym]];
+
+    map.setFilter('pollution-circles', ["all",filter1,filter2]);
+    map.setFilter('pollution-labels', ["all",filter1,filter2]);
+
+    // Set the labels to the parameter and year-month
+    document.getElementById('parameter').textContent = params_long[iparam];
+    document.getElementById('year-month').textContent = ym[iym];
+}
+
+map.on('load', function() {
+
+    // Data courtesy of http://earthquake.usgs.gov/
+    // Query for significant earthquakes in 2015 URL request looked like this:
+    // http://earthquake.usgs.gov/fdsnws/event/1/query
+    //    ?format=geojson
+    //    &starttime=2015-01-01
+    //    &endtime=2015-12-31
+    //    &minmagnitude=6'
+    //
+    // Here we're using d3 to help us make the ajax request but you can use
+    // Any request method (library or otherwise) you wish.
+    //d3.json('https://www.mapbox.com/studio/datasets/capecchi/cj1gmtkr1005r32o0yx67ptoq/', function(err, data) {
+    //  if (err) throw err;
+
+    //d3.json('https://www.williamcapecchi.com/projects/AirQuality/static_temp_small.geojson', function(data) {
+    d3.json('http://www.williamcapecchi.com/projects/AirQuality/month_master.geojson', function(data) {
+      //if (err) throw err;
+
+
+//      d3.csv('static_master.csv',function(d) {
+//        return {
+//          city : d.city,
+//          country : d.country,
+//          parameter : d.parameter,
+//          value : +d.value,
+//          latitude : +d.latitude,
+//          longitude : +d.longitude
+//        };
+//      }, function(data) {
+//        console.log(data[0]);
+      //});
+
+        // Create a month property value based on time
+        // used to filter against.
+        //data.features = data.features.map(function(d) {
+        //    d.properties.month = new Date(d.properties.time).getMonth();
+        //    return d;
+      //});
+
+        map.addSource('pollution', {
+            'type': 'geojson',
+            'data': data
+        });
+
+        map.addLayer({
+            'id': 'pollution-circles',
+            'type': 'circle',
+            'source': 'pollution',
+            'paint': {
+                //'circle-stroke-color': #000,
+                'circle-color': {
+                    property: 'value',
+                    stops: [
+                        [0, '#00a5ff'],
+                        [100, '#870091']
+                    ]
+                },
+                'circle-opacity': 0.75,
+                'circle-radius': {
+                    property: 'value',
+                    stops: [
+                        [0, 5],
+                        [100, 40]
+                    ]
+                }
+            }
+        });
+
+        map.addLayer({
+            'id': 'pollution-labels',
+            'type': 'symbol',
+            'source': 'pollution',
+            'layout': {
+                'text-field': '{value}',
+                'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                'text-size': 12
+            },
+            'paint': {
+                'text-color': 'rgba(0,0,0,0.5)'
+            }
+        });
+
+        // Set filter to first month of the year
+        // 0 = January
+        filterBy(0);
+
+        document.getElementById('slider1').addEventListener('input', function(e) {
+            var iparam = parseInt(e.target.value, 10);
+            var iym = document.getElementById('slider2').value
+            filterBy(iparam,iym);
+
+        }
+        document.getElementById('slider2').addEventListener('input', function(e) {
+            var iym = parseInt(e.target.value,10);
+            var iparam = document.getElementById('slider1').value
+            filterBy(iparam,iym);
+        }
+        });
+    });
+});
+</script>
+
+</body>
+</html>
