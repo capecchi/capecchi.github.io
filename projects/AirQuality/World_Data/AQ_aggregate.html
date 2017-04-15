@@ -20,7 +20,7 @@
     font: 15px/24px Helvetica, Arial, 'Helvetica Neue', sans-serif;
     position: absolute;
     width: 30%;
-    bottom: 5em;
+    bottom: 2em;
     left: 0;
     padding: 10px;
 }
@@ -44,7 +44,7 @@
 .map-overlay .legend .bar {
     height: 10px;
     width: 100%;
-    background: linear-gradient(to right, #68aeff, #25123d);
+    background: linear-gradient(to right, #00a5ff, #870091);
 }
 
 .map-overlay input {
@@ -79,8 +79,8 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiY2FwZWNjaGkiLCJhIjoiY2owNzV0YzdzMHFiYzJxbHNnb
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/light-v9',
-    center: [-105, 38.],
-    zoom: 3.8 //original = 0.5
+    center: [-107, 39.],
+    zoom: 3.6 //original = 0.5
 });
 //twosup = 2
 //twosup = twosup.sup()
@@ -169,8 +169,8 @@ map.on('load', function() {
                 'circle-color': {
                     property: 'value',
                     stops: [
-                        [0, '#68aeff'],
-                        [100, '#25123d']
+                        [0, '#00a5ff'],
+                        [100, '#870091']
                     ]
                 },
                 'circle-opacity': 0.75,
