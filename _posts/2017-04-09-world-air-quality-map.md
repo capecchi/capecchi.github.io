@@ -66,11 +66,11 @@ for d in daily_csvs: #go through every daily csv file
     np.save('static_scanned',scanned) #track scanned files
     build.to_csv('static_master.csv',index=False) #save running averages
 ```
-This process keeps a running average of the concentration of each pollutant for each location. Two steps included above are needed in order to clean the data. First, there are entries lacking latitude/longitude information; these are avoided with a simple call to drop any rows containing <code>NaN</code> values. Second, there are numerous entries throughout the dataset that contain negative concentrations (which obviously do not reflect the actual pollutant levels). OpenAQ responded to my query regarding this by stating that they archive the raw data recorded by each location and do not correct for any instrument drift or periods of instrument malfunction. This being the case, for the purposes of this visualization we simply ignore negative values.
+This process keeps a running average of the concentration of each pollutant for each location. Two steps included above are needed in order to clean the data. First, there are entries lacking latitude/longitude information; these are avoided with a simple call to drop any rows containing `NaN` values. Second, there are numerous entries throughout the dataset that contain negative concentrations (which obviously do not reflect the actual pollutant levels). OpenAQ responded to my query regarding this by stating that they archive the raw data recorded by each location and do not correct for any instrument drift or periods of instrument malfunction. This being the case, for the purposes of this visualization we simply ignore negative values.
 
 A similar routine is run to produce the monthly-averaged data, with an added stipulation that rows are only combined if they have the same parameter, location, and *year-month*.
 
-I created the map visualization using the Mapbox API which required converting the data into a geojson file format, accomplished using this online [converter tool](http://www.convertcsv.com/csv-to-geojson.htm). The style was formatted following this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/). The visualization of the aggregate data (above) required a simple filter applied to the slider setting that selected only the data for the pollutant selected (mainly to avoid the overlapping icons that would result from displaying multiple pollutant records for a single location). In order to show the change in concentrations with time, I added a second slider/filter. Two event listeners are added that update the variables `iparam` and `iym` whenever a slider is moved.
+I created the map visualization using the Mapbox API which required converting the data into a geojson file format, accomplished using this online [converter tool](http://www.convertcsv.com/csv-to-geojson.htm). The style was formatted following this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/). The visualization of the aggregate data (above) required a simple filter applied to the slider setting that selected only the data for the pollutant selected (mainly to avoid the overlapping icons that would result from displaying multiple pollutant records at each location). In order to show the change in concentrations with time, I added a second slider/filter. Two event listeners are added that update the variables `iparam` and `iym` whenever a slider is moved.
 ```javascript
 document.getElementById('slider1').addEventListener('input', function(e) {
     var iparam = parseInt(e.target.value, 10);
@@ -89,7 +89,7 @@ function filterBy(iparam,iym) {
     map.setFilter('pollution-labels', ["all",filter1,filter2]);
   }
 ```
-The resulting map is shown below and provides a visual means for understanding how the data varies in time for each location.
+The resulting map is shown below and shows how pollutant concentrations vary in time for each location.
 [![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_monthly_data)
 ***click the map for interactive version***
 
