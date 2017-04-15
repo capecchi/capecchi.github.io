@@ -34,20 +34,22 @@ def main(test=False):
             df = pd.read_csv(local_direc+d,usecols=csv_cols)
             add = pd.DataFrame({'num_records':np.ones(len(df),dtype=np.int)})
             df = pd.concat([df,add],axis=1) #add num_records column of 1s
+            df.dropna(axis=0,inplace=True) #drop any rows with NaN values
             rows = np.arange(len(df))
             for r in rows:
                 ro = df.iloc[r:r+1]
-                if ro['value'].iloc[0] < 0:
-                    print('skipping negative value in ',d)
-                else:
+                #if ro['value'].iloc[0] < 0:
+                #    print('skipping negative value in ',d)
+                #else:
+                if ro['value'].iloc[0] >= 0: #ignore negative values
                     build_temp = pd.concat([build,ro],ignore_index=True)
                     dup = list(build_temp.duplicated(subset=check_cols,keep=False))
                     if dup[-1] == True: #repeat location/param
                         irow = dup.index(True) #index of duplicate row
                         #add 1 to #records for this location
-                        #print(build.iloc[irow])
                         num_rec = build['num_records'].iloc[irow] + 1
                         build['num_records'].set_value(irow,num_rec,takeable=True)
+                        #compute running average
                         new_val = build['value'].iloc[irow]*((num_rec-1.0)/num_rec)+ro['value'].iloc[0]*(1.0/num_rec)
                         build['value'].set_value(irow,new_val,takeable=True)
                     else: #row is not repeated, new location/param, keep as appended
@@ -58,10 +60,11 @@ def main(test=False):
             np.save(compsav,scanned)
             build.to_csv(web_direc+'static_master.csv',index=False)
             
-    brows = np.arange(len(build))
-    for r in brows: #go through and divide by #records
-        av = build['value'].iloc[r]/build['num_records'].iloc[r]
-        build['value'].set_value(r,av,takeable=True)
+    # DIVIDE BY #RECORDS NOT NEEDED FOR RUNNING-AVERAGE METHOD USED ABOVE
+    #brows = np.arange(len(build))
+    #for r in brows: #go through and divide by #records
+    #    av = build['value'].iloc[r]/build['num_records'].iloc[r]
+    #    build['value'].set_value(r,av,takeable=True)
 
     build.to_csv(web_direc+'static_master.csv',index=False)
     os.remove(compsav+'.npy')
