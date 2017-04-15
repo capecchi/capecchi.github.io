@@ -158,14 +158,14 @@ var params = [
 function filterBy(iparam,iym) {
 
     var filter1 = ['==', 'parameter', params[iparam]];
-    var filter2 = ['==', 'ym',ym[iym]];
+    var filter2 = ['==', 'year-month',ym[iym]];
 
     map.setFilter('pollution-circles', ["all",filter1,filter2]);
     map.setFilter('pollution-labels', ["all",filter1,filter2]);
 
     // Set the labels to the parameter and year-month
     document.getElementById('parameter').textContent = params_long[iparam];
-    document.getElementById('year-month').textContent = ym[iym];
+    document.getElementById('year-month').textContent = ym_long[iym];
 }
 
 map.on('load', function() {
@@ -253,17 +253,17 @@ map.on('load', function() {
 
         // Set filter to first month of the year
         // 0 = January
-        filterBy(0);
+        filterBy(0,0);
 
         document.getElementById('slider1').addEventListener('input', function(e) {
             var iparam = parseInt(e.target.value, 10);
-            var iym = document.getElementById('slider2').value
+            var iym = parseInt(document.getElementById('slider2').value);
             filterBy(iparam,iym);
 
         });
         document.getElementById('slider2').addEventListener('input', function(e) {
             var iym = parseInt(e.target.value,10);
-            var iparam = document.getElementById('slider1').value
+            var iparam = parseInt(document.getElementById('slider1').value);
             filterBy(iparam,iym);
         });
     });
