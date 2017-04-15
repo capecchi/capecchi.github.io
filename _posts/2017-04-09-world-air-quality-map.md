@@ -72,5 +72,5 @@ A similar routine is run to produce the monthly-averaged data, with an added sti
 With the monthly and aggregated data in CSV format, I [converted](http://www.convertcsv.com/csv-to-geojson.htm) to the usable .geojson file format for visualization.
 
 To produce the interactive map visualization, I followed this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/), filtering to show one pollutant parameter at a time. To visualize the change in pollutant concentrations with time, we can add another slider to the plot that filters based on year/month.
-[![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_monthly_datapoop)
+[![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_monthly_data)
 ***click the map for interactive version***
