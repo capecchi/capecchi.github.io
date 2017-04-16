@@ -3,8 +3,6 @@ layout: post
 title: America By Train
 date: 2016-03-15
 excerpt: A three week rail journey around the states
-image: /images/posts/aggregate_data.png
-project: false
 tags: Carto
 ---
 
