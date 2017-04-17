@@ -48,23 +48,23 @@ for ym in month_csvs: #for each month
             relevant.append(file)
 
     #create one dataframe for the month, dropping duplicates to create unique parameter/lat/long entries
-    all_month_data = pd.concat(pd.read_csv(csvdirec+r,usecols=col_names) for r in relevant)
+    all_month = pd.concat(pd.read_csv(csvdirec+r,usecols=col_names) for r in relevant)
     #drop duplicates
     sub =['parameter','latitude','longitude']
-    month_data = all_month_data.drop_duplicates(subset=sub)
-    unique_rows = np.arange(len(month_data['location']))
+    month = all_month.drop_duplicates(subset=sub)
+    unique_rows = np.arange(len(month['location']))
 
     #update each unique entry with average of monthly measurements from that location
     for r in unique_rows:
-        multiple_records = all_month_data[ all_month_data[sub[0]] == month_data[sub[0]].iloc[r] ]
-        multiple_records = multiple_records[ multiple_records[sub[1]] == month_data[sub[1]].iloc[r] ]
-        multiple_records = multiple_records[ multiple_records[sub[2]] == month_data[sub[2]].iloc[r] ]
-        av_val = np.mean(multiple_records['value'])
-        month_data['value'].set_value(r,av_val,takeable=True)
-        month_data['year-month'].set_value(r,ym[:7],takeable=True)
-        month_data['num_records'].set_value(r,len(multiple_records),takeable=True)
+        mrec = all_month[ all_month[sub[0]] == month[sub[0]].iloc[r] ]
+        mrec = mrec[ mrec[sub[1]] == month[sub[1]].iloc[r] ]
+        mrec = mrec[ mrec[sub[2]] == month[sub[2]].iloc[r] ]
+        av_val = np.mean(mrec['value'])
+        month['value'].set_value(r,av_val,takeable=True)
+        month['year-month'].set_value(r,ym[:7],takeable=True)
+        month['num_records'].set_value(r,len(mrec),takeable=True)
 
-    month_data.to_csv(fsav,index=False)
+    month.to_csv(fsav,index=False)
 ```
 This process creates one file for each month, accomplished in two steps. First, a dataframe is created that only consists of unique parameter/location pairs (`month_data` in the above code). Then all the records taken that month of that parameter at that location are assembled (`multiple_records` above). This is used to compute the average recorded value for the month and the value is updated in the `month_data` dataframe. By also keeping track of how many records were used to compute each monthly average, I can then find the aggregate-average by combining the monthly files and compute the weighted average of the monthly values for each parameter and location.
 
@@ -82,7 +82,7 @@ In addition to using a color scale to show the levels of concentrations, the rad
     ]
 }
 ```
-Thus a concentration of 0 &mu;g/m<sup>3</sup> results in a 5 pixel radius and increases to 40 pixels at a concentration of 100. A look at the raw data explains my choice for these settings.
+Thus a value (concentration) of 0 results in a 5 pixel radius and increases to 40 pixels at a value of 100. A look at the raw data explains my choice for these settings.
 
 Plotting the raw data (simply versus index) gives the plot shown below. It is clear that there is a huge range in the values, due mostly to a small number of outliers with values way above the majority of the dataset.
 ![figure](/images/posts/AQ_data1.png)
@@ -90,7 +90,7 @@ If I were to set the marker radius to the maximum value in the data, the majorit
 ![figure](/images/posts/AQ_data2.png)
 In order to aid in the decision of where to set the upper limit for marker size, it is helpful to view a histogram of the data (note that the bin sizes vary).
 ![figure](/images/posts/AQ_hist.png)
-From this it is apparent that the number of records falls off with higher concentrations as expected. Moreover, over 95% of the records fall below 100 `&mu;g/m<sup>3</sup>`. For this reason I chose 100 as the upper stop for the map marker radius.
+From this it is apparent that the number of records falls off with higher concentrations as expected. Moreover, over 95% of the records fall below a value of 100. For this reason I chose 100 as the upper stop for the map marker radius.
 
 **Creating the Maps**
 
