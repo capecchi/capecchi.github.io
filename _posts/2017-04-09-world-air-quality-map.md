@@ -87,10 +87,10 @@ Thus a concentration of 0 &mu;g/m<sup>3</sup> results in a 5 pixel radius and in
 Plotting the raw data (simply versus index) gives the plot shown below. It is clear that there is a huge range in the values, due mostly to a small number of outliers with values way above the majority of the dataset.
 ![figure](/images/posts/AQ_data1.png)
 If I were to set the marker radius to the maximum value in the data, the majority of the data would have nearly identically sized markers (all essentially the minimum marker size), drastically reducing the amount of information conveyed in the visualization. Ignoring some of the outliers and zooming in, the data takes on a more reasonable look with a larger number of points spread across this range.
-![image](/images/posts/AQ_data2.png)
+![figure](/images/posts/AQ_data2.png)
 In order to aid in the decision of where to set the upper limit for marker size, it is helpful to view a histogram of the data (note that the bin sizes vary).
-![image](/images/posts/AQ_hist.png)
-From this it is apparent that the number of records falls off with higher concentrations as expected. Moreover, over 95% of the records fall below 100 &mu;g/m<sup>3</sup>. For this reason I chose 100 as the upper stop for the map marker radius.
+![figure](/images/posts/AQ_hist.png)
+From this it is apparent that the number of records falls off with higher concentrations as expected. Moreover, over 95% of the records fall below 100 `&mu;g/m<sup>3</sup>`. For this reason I chose 100 as the upper stop for the map marker radius.
 
 **Creating the Maps**
 
