@@ -62,4 +62,12 @@ def main(test=False,
                                          encoding='latin-1') for f in month_csvs)
     month_master.to_csv(webdirec+'month_master.csv',index=False)
     print('Saved:: month_master.csv')
+
+    params = ['pm10','pm25','no2','so2','co','o3','bc']
+
+    for p in params:
+        param_df = month_master[ month_master['parameter'] == p ]
+        param_df.to_csv(webdirec+p+'_master.csv',index=False)
+        
+
 #main()

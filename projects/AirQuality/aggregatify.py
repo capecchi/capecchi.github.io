@@ -10,7 +10,7 @@ def main():
 
     month_csvs = os.listdir(mdirec)
     #month_csvs = month_csvs[:2] #for testing
-    all_data = pd.concat(pd.read_csv(mdirec+f,usecols=col_names) for f in month_csvs)
+    all_data = pd.concat(pd.read_csv(mdirec+f,usecols=col_names,encoding='latin-1') for f in month_csvs)
 
     #drop duplicates
     data = all_data.drop_duplicates(subset=sub)

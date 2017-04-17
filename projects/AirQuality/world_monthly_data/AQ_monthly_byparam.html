@@ -120,12 +120,18 @@ var ym = [
 ]
 
 var params_long = [
+    'Particle Matter <10 \u03BCm',
+    'Particle Matter <2.5 \u03BCm',
     'Nitrogen Dioxide (NO2)',
-    'Carbon Monoxide (CO)'
+    'Sulfer Dioxide (SO2)',
+    'Carbon Monoxide (CO)',
+    'Ozone (O3)',
+    'Black Carbon (BC)'
 ];
 
 var params = [
-  'no2','co'
+  'pm10','pm25','no2','so2',
+  'co','o3','bc'
 ]
 
 function filterBy(iparam,iym) {
@@ -133,10 +139,20 @@ function filterBy(iparam,iym) {
     var filter1 = ['==', 'parameter', params[iparam]];
     var filter2 = ['==', 'year-month',ym[iym]];
 
-    map.setFilter('co-circles', ["all",filter1,filter2]);
-    map.setFilter('co-labels', ["all",filter1,filter2]);
+    map.setFilter('pm10-circles', ["all",filter1,filter2]);
+    map.setFilter('pm10-labels', ["all",filter1,filter2]);
+    map.setFilter('pm25-circles', ["all",filter1,filter2]);
+    map.setFilter('pm25-labels', ["all",filter1,filter2]);
     map.setFilter('no2-circles', ["all",filter1,filter2]);
     map.setFilter('no2-labels', ["all",filter1,filter2]);
+    map.setFilter('so2-circles', ["all",filter1,filter2]);
+    map.setFilter('so2-labels', ["all",filter1,filter2]);
+    map.setFilter('co-circles', ["all",filter1,filter2]);
+    map.setFilter('co-labels', ["all",filter1,filter2]);
+    map.setFilter('o3-circles', ["all",filter1,filter2]);
+    map.setFilter('o3-labels', ["all",filter1,filter2]);
+    map.setFilter('bc-circles', ["all",filter1,filter2]);
+    map.setFilter('bc-labels', ["all",filter1,filter2]);
 
     // Set the labels to the parameter and year-month
     document.getElementById('parameter').textContent = params_long[iparam];
@@ -145,12 +161,13 @@ function filterBy(iparam,iym) {
 
 map.on('load', function() {
 
-  map.addLayer({
-          'id': 'co-circles',
+//PM10************************************
+    map.addLayer({
+          'id': 'pm10-circles',
           'type': 'circle',
           'source': {
               'type': 'geojson',
-              'data': 'http://www.williamcapecchi.com/projects/AirQuality/co_master.geojson'
+              'data': 'http://www.williamcapecchi.com/projects/AirQuality/pm10_master.geojson'
           },
           'paint': {
           //'circle-stroke-color': #000,
@@ -171,13 +188,12 @@ map.on('load', function() {
                 }
             }
         });
-
     map.addLayer({
-            'id': 'co-labels',
+            'id': 'pm10-labels',
             'type': 'symbol',
             'source': {
                 'type': 'geojson',
-                'data':'http://www.williamcapecchi.com/projects/AirQuality/co_master.geojson'
+                'data':'http://www.williamcapecchi.com/projects/AirQuality/pm10_master.geojson'
             },
             'layout': {
                 'text-field': '{value}',
@@ -189,49 +205,270 @@ map.on('load', function() {
             }
         });
 
-        map.addLayer({
-                'id': 'no2-circles',
-                'type': 'circle',
-                'source': {
-                    'type': 'geojson',
-                    'data': 'http://www.williamcapecchi.com/projects/AirQuality/no2_master.geojson'
+//PM25************************************
+    map.addLayer({
+          'id': 'pm25-circles',
+          'type': 'circle',
+          'source': {
+              'type': 'geojson',
+              'data': 'http://www.williamcapecchi.com/projects/AirQuality/pm25_master.geojson'
+          },
+          'paint': {
+          //'circle-stroke-color': #000,
+                'circle-color': {
+                    property: 'value',
+                    stops: [
+                        [0, '#00a5ff'],
+                        [100, '#870091']
+                    ]
                 },
-                'paint': {
-                //'circle-stroke-color': #000,
-                      'circle-color': {
-                          property: 'value',
-                          stops: [
-                              [0, '#00a5ff'],
-                              [100, '#870091']
-                          ]
-                      },
-                      'circle-opacity': 0.75,
-                      'circle-radius': {
-                          property: 'value',
-                          stops: [
-                              [0, 5],
-                              [100, 40]
-                          ]
-                      }
-                  }
-              });
+                'circle-opacity': 0.75,
+                'circle-radius': {
+                    property: 'value',
+                    stops: [
+                        [0, 5],
+                        [100, 40]
+                    ]
+                }
+            }
+        });
+    map.addLayer({
+            'id': 'pm25-labels',
+            'type': 'symbol',
+            'source': {
+                'type': 'geojson',
+                'data':'http://www.williamcapecchi.com/projects/AirQuality/pm25_master.geojson'
+            },
+            'layout': {
+                'text-field': '{value}',
+                'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                'text-size': 12
+            },
+            'paint': {
+                'text-color': 'rgba(0,0,0,0.5)'
+            }
+        });
 
-          map.addLayer({
-                  'id': 'no2-labels',
-                  'type': 'symbol',
+//NO2************************************
+            map.addLayer({
+                  'id': 'no2-circles',
+                  'type': 'circle',
                   'source': {
                       'type': 'geojson',
-                      'data':'http://www.williamcapecchi.com/projects/AirQuality/no2_master.geojson'
-                  },
-                  'layout': {
-                      'text-field': '{value}',
-                      'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                      'text-size': 12
+                      'data': 'http://www.williamcapecchi.com/projects/AirQuality/no2_master.geojson'
                   },
                   'paint': {
-                      'text-color': 'rgba(0,0,0,0.5)'
-                  }
-              });
+                  //'circle-stroke-color': #000,
+                        'circle-color': {
+                            property: 'value',
+                            stops: [
+                                [0, '#00a5ff'],
+                                [100, '#870091']
+                            ]
+                        },
+                        'circle-opacity': 0.75,
+                        'circle-radius': {
+                            property: 'value',
+                            stops: [
+                                [0, 5],
+                                [100, 40]
+                            ]
+                        }
+                    }
+                });
+            map.addLayer({
+                    'id': 'no2-labels',
+                    'type': 'symbol',
+                    'source': {
+                        'type': 'geojson',
+                        'data':'http://www.williamcapecchi.com/projects/AirQuality/no2_master.geojson'
+                    },
+                    'layout': {
+                        'text-field': '{value}',
+                        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                        'text-size': 12
+                    },
+                    'paint': {
+                        'text-color': 'rgba(0,0,0,0.5)'
+                    }
+                });
+
+//SO2************************************
+            map.addLayer({
+                  'id': 'so2-circles',
+                  'type': 'circle',
+                  'source': {
+                      'type': 'geojson',
+                      'data': 'http://www.williamcapecchi.com/projects/AirQuality/so2_master.geojson'
+                  },
+                  'paint': {
+                  //'circle-stroke-color': #000,
+                        'circle-color': {
+                            property: 'value',
+                            stops: [
+                                [0, '#00a5ff'],
+                                [100, '#870091']
+                            ]
+                        },
+                        'circle-opacity': 0.75,
+                        'circle-radius': {
+                            property: 'value',
+                            stops: [
+                                [0, 5],
+                                [100, 40]
+                            ]
+                        }
+                    }
+                });
+            map.addLayer({
+                    'id': 'so2-labels',
+                    'type': 'symbol',
+                    'source': {
+                        'type': 'geojson',
+                        'data':'http://www.williamcapecchi.com/projects/AirQuality/so2_master.geojson'
+                    },
+                    'layout': {
+                        'text-field': '{value}',
+                        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                        'text-size': 12
+                    },
+                    'paint': {
+                        'text-color': 'rgba(0,0,0,0.5)'
+                    }
+                });
+
+//CO************************************
+                    map.addLayer({
+                          'id': 'co-circles',
+                          'type': 'circle',
+                          'source': {
+                              'type': 'geojson',
+                              'data': 'http://www.williamcapecchi.com/projects/AirQuality/co_master.geojson'
+                          },
+                          'paint': {
+                          //'circle-stroke-color': #000,
+                                'circle-color': {
+                                    property: 'value',
+                                    stops: [
+                                        [0, '#00a5ff'],
+                                        [100, '#870091']
+                                    ]
+                                },
+                                'circle-opacity': 0.75,
+                                'circle-radius': {
+                                    property: 'value',
+                                    stops: [
+                                        [0, 5],
+                                        [100, 40]
+                                    ]
+                                }
+                            }
+                        });
+                    map.addLayer({
+                            'id': 'co-labels',
+                            'type': 'symbol',
+                            'source': {
+                                'type': 'geojson',
+                                'data':'http://www.williamcapecchi.com/projects/AirQuality/co_master.geojson'
+                            },
+                            'layout': {
+                                'text-field': '{value}',
+                                'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                                'text-size': 12
+                            },
+                            'paint': {
+                                'text-color': 'rgba(0,0,0,0.5)'
+                            }
+                        });
+
+//O3************************************
+    map.addLayer({
+      'id': 'o3-circles',
+      'type': 'circle',
+      'source': {
+        'type': 'geojson',
+        'data': 'http://www.williamcapecchi.com/projects/AirQuality/o3_master.geojson'
+      },
+      'paint': {
+        //'circle-stroke-color': #000,
+        'circle-color': {
+          property: 'value',
+          stops: [
+            [0, '#00a5ff'],
+            [100, '#870091']
+          ]
+        },
+        'circle-opacity': 0.75,
+        'circle-radius': {
+          property: 'value',
+          stops: [
+            [0, 5],
+            [100, 40]
+          ]
+        }
+      }
+    });
+    map.addLayer({
+      'id': 'o3-labels',
+      'type': 'symbol',
+      'source': {
+        'type': 'geojson',
+        'data':'http://www.williamcapecchi.com/projects/AirQuality/o3_master.geojson'
+      },
+      'layout': {
+        'text-field': '{value}',
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+        'text-size': 12
+      },
+      'paint': {
+        'text-color': 'rgba(0,0,0,0.5)'
+      }
+    });
+
+//BC************************************
+    map.addLayer({
+      'id': 'bc-circles',
+      'type': 'circle',
+      'source': {
+          'type': 'geojson',
+          'data': 'http://www.williamcapecchi.com/projects/AirQuality/bc.geojson'
+      },
+      'paint': {
+        //'circle-stroke-color': #000,
+        'circle-color': {
+          property: 'value',
+          stops: [
+            [0, '#00a5ff'],
+            [100, '#870091']
+          ]
+        },
+        'circle-opacity': 0.75,
+        'circle-radius': {
+          property: 'value',
+          stops: [
+            [0, 5],
+            [100, 40]
+          ]
+        }
+      }
+    });
+    map.addLayer({
+      'id': 'bc-labels',
+      'type': 'symbol',
+      'source': {
+          'type': 'geojson',
+          'data':'http://www.williamcapecchi.com/projects/AirQuality/bc_master.geojson'
+      },
+      'layout': {
+        'text-field': '{value}',
+        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+        'text-size': 12
+      },
+      'paint': {
+        'text-color': 'rgba(0,0,0,0.5)'
+      }
+    });
+//******************
 
         // Set filter to first month of the year, first parameter in list
         filterBy(0,0);

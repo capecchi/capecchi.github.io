@@ -1,0 +1,2405 @@
+{
+   "type": "FeatureCollection",
+   "features": [
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2016-03",
+    "num_records":438,
+    "parameter":"bc",
+    "value":0.4011415525114155
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-03",
+    "num_records":206,
+    "parameter":"bc",
+    "value":0.949611650485437
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2016-03",
+    "num_records":453,
+    "parameter":"bc",
+    "value":0.7371743929359823
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -85.96833000000002,41.656944 ]
+    },
+    "properties": {
+    "location":"Elkhart-Prairie St.",
+    "city":"Elkhart-Goshen",
+    "country":"US",
+    "year-month":"2016-03",
+    "num_records":427,
+    "parameter":"bc",
+    "value":0.8227868852459015
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-03",
+    "num_records":139,
+    "parameter":"bc",
+    "value":0.9135251798561153
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-03",
+    "num_records":139,
+    "parameter":"bc",
+    "value":0.26208633093525185
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-03",
+    "num_records":139,
+    "parameter":"bc",
+    "value":0.27805755395683457
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.5772,38.0133 ]
+    },
+    "properties": {
+    "location":"Evansville-Buena Vis",
+    "city":"Evansville",
+    "country":"US",
+    "year-month":"2016-03",
+    "num_records":332,
+    "parameter":"bc",
+    "value":0.3328012048192771
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2016-03",
+    "num_records":442,
+    "parameter":"bc",
+    "value":0.13574660633484162
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -85.96833000000002,41.656944 ]
+    },
+    "properties": {
+    "location":"Elkhart-Prairie St.",
+    "city":"Elkhart-Goshen",
+    "country":"US",
+    "year-month":"2016-04",
+    "num_records":639,
+    "parameter":"bc",
+    "value":0.985414710485133
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.5772,38.0133 ]
+    },
+    "properties": {
+    "location":"Evansville-Buena Vis",
+    "city":"Evansville",
+    "country":"US",
+    "year-month":"2016-04",
+    "num_records":644,
+    "parameter":"bc",
+    "value":0.4342080745341615
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2016-04",
+    "num_records":653,
+    "parameter":"bc",
+    "value":0.5047166921898928
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-04",
+    "num_records":595,
+    "parameter":"bc",
+    "value":0.9952436974789916
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2016-04",
+    "num_records":675,
+    "parameter":"bc",
+    "value":0.06666666666666668
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2016-04",
+    "num_records":590,
+    "parameter":"bc",
+    "value":0.6192033898305085
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-04",
+    "num_records":30,
+    "parameter":"bc",
+    "value":0.2503333333333333
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-04",
+    "num_records":30,
+    "parameter":"bc",
+    "value":1.227
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-04",
+    "num_records":30,
+    "parameter":"bc",
+    "value":0.28233333333333344
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.5772,38.0133 ]
+    },
+    "properties": {
+    "location":"Evansville-Buena Vis",
+    "city":"Evansville",
+    "country":"US",
+    "year-month":"2016-05",
+    "num_records":287,
+    "parameter":"bc",
+    "value":0.3569337979094077
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2016-05",
+    "num_records":700,
+    "parameter":"bc",
+    "value":0.5730428571428572
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -85.96833000000002,41.656944 ]
+    },
+    "properties": {
+    "location":"Elkhart-Prairie St.",
+    "city":"Elkhart-Goshen",
+    "country":"US",
+    "year-month":"2016-05",
+    "num_records":697,
+    "parameter":"bc",
+    "value":1.0860114777618364
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2016-05",
+    "num_records":652,
+    "parameter":"bc",
+    "value":0.7691411042944786
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2016-05",
+    "num_records":720,
+    "parameter":"bc",
+    "value":0.022222222222222227
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-05",
+    "num_records":531,
+    "parameter":"bc",
+    "value":0.9744067796610169
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-05",
+    "num_records":3,
+    "parameter":"bc",
+    "value":1.5633333333333337
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-05",
+    "num_records":3,
+    "parameter":"bc",
+    "value":0.8133333333333334
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-05",
+    "num_records":3,
+    "parameter":"bc",
+    "value":0.6
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -85.96833000000002,41.656944 ]
+    },
+    "properties": {
+    "location":"Elkhart-Prairie St.",
+    "city":"Elkhart-Goshen",
+    "country":"US",
+    "year-month":"2016-06",
+    "num_records":666,
+    "parameter":"bc",
+    "value":1.1601501501501499
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2016-06",
+    "num_records":668,
+    "parameter":"bc",
+    "value":0.5834730538922156
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2016-06",
+    "num_records":710,
+    "parameter":"bc",
+    "value":0.8382957746478874
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2016-06",
+    "num_records":692,
+    "parameter":"bc",
+    "value":0.02890173410404624
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-06",
+    "num_records":651,
+    "parameter":"bc",
+    "value":1.0146236559139783
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-06",
+    "num_records":1,
+    "parameter":"bc",
+    "value":1.21
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-06",
+    "num_records":1,
+    "parameter":"bc",
+    "value":0.14
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-06",
+    "num_records":1,
+    "parameter":"bc",
+    "value":0.13
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":724,
+    "parameter":"bc",
+    "value":0.016574585635359115
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":668,
+    "parameter":"bc",
+    "value":0.6535479041916168
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":600,
+    "parameter":"bc",
+    "value":0.9768666666666668
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -85.96833000000002,41.656944 ]
+    },
+    "properties": {
+    "location":"Elkhart-Prairie St.",
+    "city":"Elkhart-Goshen",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":667,
+    "parameter":"bc",
+    "value":1.2318590704647678
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":690,
+    "parameter":"bc",
+    "value":0.8593623188405798
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.5772,38.0133 ]
+    },
+    "properties": {
+    "location":"Evansville-Buena Vis",
+    "city":"Evansville",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":619,
+    "parameter":"bc",
+    "value":0.5368982229402263
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":150,
+    "parameter":"bc",
+    "value":0.5292
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":152,
+    "parameter":"bc",
+    "value":0.5095394736842106
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":152,
+    "parameter":"bc",
+    "value":1.7523684210526316
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.784217,37.687526 ]
+    },
+    "properties": {
+    "location":"Livermore - Rincon",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":138,
+    "parameter":"bc",
+    "value":0.5832608695652175
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.282402,37.8148 ]
+    },
+    "properties": {
+    "location":"Oakland West",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":139,
+    "parameter":"bc",
+    "value":0.4737410071942446
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.849892,37.338202 ]
+    },
+    "properties": {
+    "location":"San Jose - Knox Ave",
+    "city":"San Jose-Sunnyvale-Santa Clara",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":139,
+    "parameter":"bc",
+    "value":1.0229496402877698
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.302741,37.864767 ]
+    },
+    "properties": {
+    "location":"Berkeley Aquatic Par",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-07",
+    "num_records":134,
+    "parameter":"bc",
+    "value":1.0073134328358209
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":668,
+    "parameter":"bc",
+    "value":0.4233532934131736
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":637,
+    "parameter":"bc",
+    "value":1.1194191522762953
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.849892,37.338202 ]
+    },
+    "properties": {
+    "location":"San Jose - Knox Ave",
+    "city":"San Jose-Sunnyvale-Santa Clara",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":538,
+    "parameter":"bc",
+    "value":0.7891635687732342
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":653,
+    "parameter":"bc",
+    "value":1.9837519142419604
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.784217,37.687526 ]
+    },
+    "properties": {
+    "location":"Livermore - Rincon",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":639,
+    "parameter":"bc",
+    "value":0.4204694835680751
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":669,
+    "parameter":"bc",
+    "value":0.010463378176382659
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.282402,37.8148 ]
+    },
+    "properties": {
+    "location":"Oakland West",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":487,
+    "parameter":"bc",
+    "value":0.3206776180698152
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.5772,38.0133 ]
+    },
+    "properties": {
+    "location":"Evansville-Buena Vis",
+    "city":"Evansville",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":649,
+    "parameter":"bc",
+    "value":0.5494607087827427
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.302741,37.864767 ]
+    },
+    "properties": {
+    "location":"Berkeley Aquatic Par",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":628,
+    "parameter":"bc",
+    "value":0.9988375796178344
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":654,
+    "parameter":"bc",
+    "value":1.0657339449541283
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":636,
+    "parameter":"bc",
+    "value":0.6215251572327044
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":661,
+    "parameter":"bc",
+    "value":0.3957791225416036
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -85.96833000000002,41.656944 ]
+    },
+    "properties": {
+    "location":"Elkhart-Prairie St.",
+    "city":"Elkhart-Goshen",
+    "country":"US",
+    "year-month":"2016-08",
+    "num_records":664,
+    "parameter":"bc",
+    "value":1.327710843373494
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":712,
+    "parameter":"bc",
+    "value":1.9249719101123597
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.849892,37.338202 ]
+    },
+    "properties": {
+    "location":"San Jose - Knox Ave",
+    "city":"San Jose-Sunnyvale-Santa Clara",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":576,
+    "parameter":"bc",
+    "value":0.9667013888888891
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":683,
+    "parameter":"bc",
+    "value":1.108784773060029
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -85.96833000000002,41.656944 ]
+    },
+    "properties": {
+    "location":"Elkhart-Prairie St.",
+    "city":"Elkhart-Goshen",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":594,
+    "parameter":"bc",
+    "value":1.3075420875420876
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":701,
+    "parameter":"bc",
+    "value":0.049928673323823114
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.784217,37.687526 ]
+    },
+    "properties": {
+    "location":"Livermore - Rincon",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":691,
+    "parameter":"bc",
+    "value":0.5479594790159189
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.302741,37.864767 ]
+    },
+    "properties": {
+    "location":"Berkeley Aquatic Par",
+    "city":"ALAMEDA",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":669,
+    "parameter":"bc",
+    "value":1.1602242152466369
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":710,
+    "parameter":"bc",
+    "value":0.389943661971831
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.282402,37.8148 ]
+    },
+    "properties": {
+    "location":"Oakland West",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":557,
+    "parameter":"bc",
+    "value":0.5610412926391383
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":684,
+    "parameter":"bc",
+    "value":0.8525584795321637
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":708,
+    "parameter":"bc",
+    "value":0.4019350282485876
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.5772,38.0133 ]
+    },
+    "properties": {
+    "location":"Evansville-Buena Vis",
+    "city":"Evansville",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":685,
+    "parameter":"bc",
+    "value":0.7959999999999999
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2016-09",
+    "num_records":600,
+    "parameter":"bc",
+    "value":0.9772666666666668
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.302741,37.864767 ]
+    },
+    "properties": {
+    "location":"Berkeley Aquatic Par",
+    "city":"ALAMEDA",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":504,
+    "parameter":"bc",
+    "value":1.1578373015873016
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":739,
+    "parameter":"bc",
+    "value":0.9095399188092016
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -85.96833000000002,41.656944 ]
+    },
+    "properties": {
+    "location":"Elkhart-Prairie St.",
+    "city":"Elkhart-Goshen",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":696,
+    "parameter":"bc",
+    "value":1.0602442528735634
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":738,
+    "parameter":"bc",
+    "value":1.8118021680216805
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":699,
+    "parameter":"bc",
+    "value":1.143333333333333
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":634,
+    "parameter":"bc",
+    "value":0.6692271293375395
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":738,
+    "parameter":"bc",
+    "value":0.4086856368563686
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.784217,37.687526 ]
+    },
+    "properties": {
+    "location":"Livermore - Rincon",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":703,
+    "parameter":"bc",
+    "value":0.5394310099573257
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":737,
+    "parameter":"bc",
+    "value":0.4355495251017639
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.5772,38.0133 ]
+    },
+    "properties": {
+    "location":"Evansville-Buena Vis",
+    "city":"Evansville",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":705,
+    "parameter":"bc",
+    "value":0.6460992907801418
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.282402,37.8148 ]
+    },
+    "properties": {
+    "location":"Oakland West",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":702,
+    "parameter":"bc",
+    "value":0.6220940170940171
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.849892,37.338202 ]
+    },
+    "properties": {
+    "location":"San Jose - Knox Ave",
+    "city":"San Jose-Sunnyvale-Santa Clara",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":610,
+    "parameter":"bc",
+    "value":0.8819016393442624
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2016-10",
+    "num_records":436,
+    "parameter":"bc",
+    "value":0.18577981651376144
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":712,
+    "parameter":"bc",
+    "value":1.0467275280898876
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":713,
+    "parameter":"bc",
+    "value":2.0175315568022443
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.849892,37.338202 ]
+    },
+    "properties": {
+    "location":"San Jose - Knox Ave",
+    "city":"San Jose-Sunnyvale-Santa Clara",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":665,
+    "parameter":"bc",
+    "value":1.2553834586466164
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":685,
+    "parameter":"bc",
+    "value":1.4896058394160585
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -85.96833000000002,41.656944 ]
+    },
+    "properties": {
+    "location":"Elkhart-Prairie St.",
+    "city":"Elkhart-Goshen",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":680,
+    "parameter":"bc",
+    "value":1.1834117647058824
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.5772,38.0133 ]
+    },
+    "properties": {
+    "location":"Evansville-Buena Vis",
+    "city":"Evansville",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":658,
+    "parameter":"bc",
+    "value":0.5893920972644378
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.282402,37.8148 ]
+    },
+    "properties": {
+    "location":"Oakland West",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":638,
+    "parameter":"bc",
+    "value":0.8879310344827587
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.784217,37.687526 ]
+    },
+    "properties": {
+    "location":"Livermore - Rincon",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":586,
+    "parameter":"bc",
+    "value":0.9300682593856656
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":714,
+    "parameter":"bc",
+    "value":0.6013585434173669
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":694,
+    "parameter":"bc",
+    "value":0.7881844380403458
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":558,
+    "parameter":"bc",
+    "value":0.8143189964157705
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":714,
+    "parameter":"bc",
+    "value":0.4363165266106443
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.302741,37.864767 ]
+    },
+    "properties": {
+    "location":"Berkeley Aquatic Par",
+    "city":"ALAMEDA",
+    "country":"US",
+    "year-month":"2016-11",
+    "num_records":220,
+    "parameter":"bc",
+    "value":1.4873181818181818
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -85.96833000000002,41.656944 ]
+    },
+    "properties": {
+    "location":"Elkhart-Prairie St.",
+    "city":"Elkhart-Goshen",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":433,
+    "parameter":"bc",
+    "value":0.5657736720554273
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":698,
+    "parameter":"bc",
+    "value":0.9590544412607452
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.849892,37.338202 ]
+    },
+    "properties": {
+    "location":"San Jose - Knox Ave",
+    "city":"San Jose-Sunnyvale-Santa Clara",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":650,
+    "parameter":"bc",
+    "value":1.3768307692307693
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":578,
+    "parameter":"bc",
+    "value":1.5957958477508654
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":705,
+    "parameter":"bc",
+    "value":0.371531914893617
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":655,
+    "parameter":"bc",
+    "value":0.34984732824427484
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.5772,38.0133 ]
+    },
+    "properties": {
+    "location":"Evansville-Buena Vis",
+    "city":"Evansville",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":688,
+    "parameter":"bc",
+    "value":0.4635465116279069
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.282402,37.8148 ]
+    },
+    "properties": {
+    "location":"Oakland West",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":575,
+    "parameter":"bc",
+    "value":1.1429739130434782
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":729,
+    "parameter":"bc",
+    "value":0.6901234567901234
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":723,
+    "parameter":"bc",
+    "value":1.1770401106500692
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.784217,37.687526 ]
+    },
+    "properties": {
+    "location":"Livermore - Rincon",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":644,
+    "parameter":"bc",
+    "value":0.9799068322981366
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":705,
+    "parameter":"bc",
+    "value":0.4820851063829788
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.302741,37.864767 ]
+    },
+    "properties": {
+    "location":"Berkeley Aquatic Par",
+    "city":"ALAMEDA",
+    "country":"US",
+    "year-month":"2016-12",
+    "num_records":501,
+    "parameter":"bc",
+    "value":1.4599001996007983
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.5772,38.0133 ]
+    },
+    "properties": {
+    "location":"Evansville-Buena Vis",
+    "city":"Evansville",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":698,
+    "parameter":"bc",
+    "value":0.40183381088825215
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.282402,37.8148 ]
+    },
+    "properties": {
+    "location":"Oakland West",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":574,
+    "parameter":"bc",
+    "value":0.7102961672473869
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":706,
+    "parameter":"bc",
+    "value":0.32788951841359776
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":691,
+    "parameter":"bc",
+    "value":0.7416208393632417
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":713,
+    "parameter":"bc",
+    "value":0.6563394109396915
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.849892,37.338202 ]
+    },
+    "properties": {
+    "location":"San Jose - Knox Ave",
+    "city":"San Jose-Sunnyvale-Santa Clara",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":629,
+    "parameter":"bc",
+    "value":0.9072337042925278
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":629,
+    "parameter":"bc",
+    "value":1.0898410174880764
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.302741,37.864767 ]
+    },
+    "properties": {
+    "location":"Berkeley Aquatic Par",
+    "city":"ALAMEDA",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":515,
+    "parameter":"bc",
+    "value":1.1301941747572817
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -85.96833000000002,41.656944 ]
+    },
+    "properties": {
+    "location":"Elkhart-Prairie St.",
+    "city":"Elkhart-Goshen",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":484,
+    "parameter":"bc",
+    "value":0.7827272727272728
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":710,
+    "parameter":"bc",
+    "value":1.4669999999999996
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":718,
+    "parameter":"bc",
+    "value":0.5138857938718663
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":715,
+    "parameter":"bc",
+    "value":0.42797202797202794
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.784217,37.687526 ]
+    },
+    "properties": {
+    "location":"Livermore - Rincon",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2017-01",
+    "num_records":636,
+    "parameter":"bc",
+    "value":0.6563364779874215
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2017-02",
+    "num_records":639,
+    "parameter":"bc",
+    "value":0.3211737089201878
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2017-02",
+    "num_records":616,
+    "parameter":"bc",
+    "value":2.507775974025974
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2017-02",
+    "num_records":647,
+    "parameter":"bc",
+    "value":0.4041576506955178
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.302741,37.864767 ]
+    },
+    "properties": {
+    "location":"Berkeley Aquatic Par",
+    "city":"ALAMEDA",
+    "country":"US",
+    "year-month":"2017-02",
+    "num_records":289,
+    "parameter":"bc",
+    "value":0.9337024221453284
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.5772,38.0133 ]
+    },
+    "properties": {
+    "location":"Evansville-Buena Vis",
+    "city":"Evansville",
+    "country":"US",
+    "year-month":"2017-02",
+    "num_records":503,
+    "parameter":"bc",
+    "value":0.641093439363817
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.282402,37.8148 ]
+    },
+    "properties": {
+    "location":"Oakland West",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2017-02",
+    "num_records":546,
+    "parameter":"bc",
+    "value":0.5246336996336995
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2017-02",
+    "num_records":639,
+    "parameter":"bc",
+    "value":0.1784037558685446
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.784217,37.687526 ]
+    },
+    "properties": {
+    "location":"Livermore - Rincon",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2017-02",
+    "num_records":559,
+    "parameter":"bc",
+    "value":0.5079427549194993
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2017-02",
+    "num_records":646,
+    "parameter":"bc",
+    "value":0.9910371517027864
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2017-02",
+    "num_records":645,
+    "parameter":"bc",
+    "value":1.4563410852713183
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.849892,37.338202 ]
+    },
+    "properties": {
+    "location":"San Jose - Knox Ave",
+    "city":"San Jose-Sunnyvale-Santa Clara",
+    "country":"US",
+    "year-month":"2017-02",
+    "num_records":601,
+    "parameter":"bc",
+    "value":0.6464226289517471
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2017-02",
+    "num_records":605,
+    "parameter":"bc",
+    "value":1.0274049586776859
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.282402,37.8148 ]
+    },
+    "properties": {
+    "location":"Oakland West",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2017-03",
+    "num_records":255,
+    "parameter":"bc",
+    "value":0.7799607843137254
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.302741,37.864767 ]
+    },
+    "properties": {
+    "location":"Berkeley Aquatic Par",
+    "city":"ALAMEDA",
+    "country":"US",
+    "year-month":"2017-03",
+    "num_records":249,
+    "parameter":"bc",
+    "value":1.1782730923694775
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -86.1147,39.8108 ]
+    },
+    "properties": {
+    "location":"Indpls-Washington Pa",
+    "city":"Indianapolis",
+    "country":"US",
+    "year-month":"2017-03",
+    "num_records":266,
+    "parameter":"bc",
+    "value":1.561691729323308
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.415,41.8081 ]
+    },
+    "properties": {
+    "location":"Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2017-03",
+    "num_records":269,
+    "parameter":"bc",
+    "value":0.2101115241635688
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.368007,38.613804 ]
+    },
+    "properties": {
+    "location":"Arden Arcade - Del P",
+    "city":"Sacramento--Arden-Arcade--Roseville",
+    "country":"US",
+    "year-month":"2017-03",
+    "num_records":233,
+    "parameter":"bc",
+    "value":0.4163090128755365
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.36170200000002,41.840302 ]
+    },
+    "properties": {
+    "location":"E Providence",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2017-03",
+    "num_records":273,
+    "parameter":"bc",
+    "value":0.20549450549450549
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -71.417457,41.829495 ]
+    },
+    "properties": {
+    "location":"Near Road",
+    "city":"Providence-New Bedford-Fall River",
+    "country":"US",
+    "year-month":"2017-03",
+    "num_records":273,
+    "parameter":"bc",
+    "value":1.053076923076923
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.849892,37.338202 ]
+    },
+    "properties": {
+    "location":"San Jose - Knox Ave",
+    "city":"San Jose-Sunnyvale-Santa Clara",
+    "country":"US",
+    "year-month":"2017-03",
+    "num_records":252,
+    "parameter":"bc",
+    "value":0.8513888888888891
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -122.263376,37.793624 ]
+    },
+    "properties": {
+    "location":"Laney College",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2017-03",
+    "num_records":253,
+    "parameter":"bc",
+    "value":0.4151778656126482
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.3047,41.6067 ]
+    },
+    "properties": {
+    "location":"Gary-IITRI",
+    "city":"Chicago-Naperville-Joliet",
+    "country":"US",
+    "year-month":"2017-03",
+    "num_records":271,
+    "parameter":"bc",
+    "value":0.5449446494464945
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -121.784217,37.687526 ]
+    },
+    "properties": {
+    "location":"Livermore - Rincon",
+    "city":"San Francisco-Oakland-Fremont",
+    "country":"US",
+    "year-month":"2017-03",
+    "num_records":259,
+    "parameter":"bc",
+    "value":0.5970656370656371
+    }
+  },
+  {
+    "type": "Feature",
+    "geometry": {
+       "type": "Point",
+       "coordinates":  [ -87.5772,38.0133 ]
+    },
+    "properties": {
+    "location":"Evansville-Buena Vis",
+    "city":"Evansville",
+    "country":"US",
+    "year-month":"2017-03",
+    "num_records":208,
+    "parameter":"bc",
+    "value":0.6156730769230769
+    }
+  }
+]
+}
