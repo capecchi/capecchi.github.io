@@ -113,6 +113,7 @@ function filterBy(iparam,iym) {
     map.setFilter('pollution-labels', ["all",filter1,filter2]);
   }
 ```
+
 The resulting map is shown below and shows how pollutant concentrations vary in time for each location.
 [![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_monthly_data)
 ***click the map for interactive version***

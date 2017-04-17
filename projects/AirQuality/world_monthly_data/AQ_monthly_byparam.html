@@ -120,18 +120,12 @@ var ym = [
 ]
 
 var params_long = [
-    'Particle Matter <10 \u03BCm',
-    'Particle Matter <2.5 \u03BCm',
     'Nitrogen Dioxide (NO2)',
-    'Sulfer Dioxide (SO2)',
-    'Carbon Monoxide (CO)',
-    'Ozone (O3)',
-    'Black Carbon (BC)'
+    'Carbon Monoxide (CO)'
 ];
 
 var params = [
-  'pm10','pm25','no2','so2',
-  'co','o3','bc'
+  'no2','co'
 ]
 
 function filterBy(iparam,iym) {
@@ -139,8 +133,10 @@ function filterBy(iparam,iym) {
     var filter1 = ['==', 'parameter', params[iparam]];
     var filter2 = ['==', 'year-month',ym[iym]];
 
-    map.setFilter('pollution-circles', ["all",filter1,filter2]);
-    map.setFilter('pollution-labels', ["all",filter1,filter2]);
+    map.setFilter('co-circles', ["all",filter1,filter2]);
+    map.setFilter('co-labels', ["all",filter1,filter2]);
+    map.setFilter('no2-circles', ["all",filter1,filter2]);
+    map.setFilter('no2-labels', ["all",filter1,filter2]);
 
     // Set the labels to the parameter and year-month
     document.getElementById('parameter').textContent = params_long[iparam];
@@ -149,20 +145,15 @@ function filterBy(iparam,iym) {
 
 map.on('load', function() {
 
-    d3.json('http://www.williamcapecchi.com/projects/AirQuality/co_master.geojson', function(data) {
-      //if (err) throw err;
-
-        map.addSource('co_data', {
-            'type': 'geojson',
-            'data': data
-        });
-
-        map.addLayer({
-            'id': 'co-circles',
-            'type': 'circle',
-            'source': 'co-data',
-            'paint': {
-                //'circle-stroke-color': #000,
+  map.addLayer({
+          'id': 'co-circles',
+          'type': 'circle',
+          'source': {
+              'type': 'geojson',
+              'data': 'http://www.williamcapecchi.com/projects/AirQuality/co_master.geojson'
+          },
+          'paint': {
+          //'circle-stroke-color': #000,
                 'circle-color': {
                     property: 'value',
                     stops: [
@@ -181,10 +172,13 @@ map.on('load', function() {
             }
         });
 
-        map.addLayer({
+    map.addLayer({
             'id': 'co-labels',
             'type': 'symbol',
-            'source': 'co-data',
+            'source': {
+                'type': 'geojson',
+                'data':'http://www.williamcapecchi.com/projects/AirQuality/co_master.geojson'
+            },
             'layout': {
                 'text-field': '{value}',
                 'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
@@ -194,6 +188,50 @@ map.on('load', function() {
                 'text-color': 'rgba(0,0,0,0.5)'
             }
         });
+
+        map.addLayer({
+                'id': 'no2-circles',
+                'type': 'circle',
+                'source': {
+                    'type': 'geojson',
+                    'data': 'http://www.williamcapecchi.com/projects/AirQuality/no2_master.geojson'
+                },
+                'paint': {
+                //'circle-stroke-color': #000,
+                      'circle-color': {
+                          property: 'value',
+                          stops: [
+                              [0, '#00a5ff'],
+                              [100, '#870091']
+                          ]
+                      },
+                      'circle-opacity': 0.75,
+                      'circle-radius': {
+                          property: 'value',
+                          stops: [
+                              [0, 5],
+                              [100, 40]
+                          ]
+                      }
+                  }
+              });
+
+          map.addLayer({
+                  'id': 'no2-labels',
+                  'type': 'symbol',
+                  'source': {
+                      'type': 'geojson',
+                      'data':'http://www.williamcapecchi.com/projects/AirQuality/no2_master.geojson'
+                  },
+                  'layout': {
+                      'text-field': '{value}',
+                      'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                      'text-size': 12
+                  },
+                  'paint': {
+                      'text-color': 'rgba(0,0,0,0.5)'
+                  }
+              });
 
         // Set filter to first month of the year, first parameter in list
         filterBy(0,0);
@@ -209,70 +247,8 @@ map.on('load', function() {
             var iparam = parseInt(document.getElementById('slider1').value);
             filterBy(iparam,iym);
         });
-    });
-
-    d3.json('http://www.williamcapecchi.com/projects/AirQuality/no2_master.geojson', function(data) {
-      //if (err) throw err;
-
-        map.addSource('no2_data', {
-            'type': 'geojson',
-            'data': data
-        });
-
-        map.addLayer({
-            'id': 'no2-circles',
-            'type': 'circle',
-            'source': 'no2-data',
-            'paint': {
-                //'circle-stroke-color': #000,
-                'circle-color': {
-                    property: 'value',
-                    stops: [
-                        [0, '#00a5ff'],
-                        [100, '#870091']
-                    ]
-                },
-                'circle-opacity': 0.75,
-                'circle-radius': {
-                    property: 'value',
-                    stops: [
-                        [0, 5],
-                        [100, 40]
-                    ]
-                }
-            }
-        });
-
-        map.addLayer({
-            'id': 'no2-labels',
-            'type': 'symbol',
-            'source': 'no2-data',
-            'layout': {
-                'text-field': '{value}',
-                'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                'text-size': 12
-            },
-            'paint': {
-                'text-color': 'rgba(0,0,0,0.5)'
-            }
-        });
-
-        // Set filter to first month of the year, first parameter in list
-        filterBy(0,0);
-
-//        document.getElementById('slider1').addEventListener('input', function(e) {
-//            var iparam = parseInt(e.target.value, 10);
-//            var iym = parseInt(document.getElementById('slider2').value);
-//            filterBy(iparam,iym);
-//        });
-//        document.getElementById('slider2').addEventListener('input', function(e) {
-//            var iym = parseInt(e.target.value,10);
-//            var iparam = parseInt(document.getElementById('slider1').value);
-//            filterBy(iparam,iym);
-//        });
-    });
-
 });
+
 </script>
 
 </body>
