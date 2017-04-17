@@ -60,6 +60,6 @@ def main(test=False,
 
     month_master = pd.concat(pd.read_csv(localdirec+'monthly_csvs/'+f,\
                                          encoding='latin-1') for f in month_csvs)
-    month_master.to_csv(localdirec+'month_master.csv',index=False)
+    month_master.to_csv(webdirec+'month_master.csv',index=False)
     print('Saved:: month_master.csv')
 #main()
