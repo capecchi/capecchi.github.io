@@ -13,10 +13,11 @@ tags: Mapbox web-scraper pollution geojson
 
 Data does not tell its own story. My graduate thesis project, towards which I worked meticulously for over five years, essentially boils down to around 8 billion numbers in various arrays. The mere record of these numbers would surely not have persuaded my thesis committee to grant me my PhD. The point is, of course, not that I *have* the numbers, but what the numbers mean: These numbers, in this arrangement, arriving in this order means-- something. It's a human task to turn data into information.
 
-A few weeks ago I found a database of air quality measurements from locations around the world. The data, available at [OpenAQ](https://openaq-data.s3.amazonaws.com/index.html), offers almost daily data beginning in June of 2015. I decided to create a map to visualize this data to get a sense of what the mountain of spreadsheets had to show. I had never built a web scraper before, nor done much coding in Python, so I took this as an opportunity to learn a few new skills in the process.
+A few weeks ago I found a database of air quality measurements from locations around the world. The data, available at [OpenAQ](https://openaq-data.s3.amazonaws.com/index.html), offers almost daily data going back to June of 2015. I decided to create a map to visualize this data to get a sense of what the mountain of spreadsheets had to show. I had never built a web scraper before, nor done much coding in Python, so I took this as an opportunity to learn a few new skills.
 
 **Scraping and Analyzing**
-The key to writing a program to download the right files comes down to getting an array of the file names. Here we use the Python package `BeautifulSoup` to parse the page. In this case, the CSV files were given `<key>` tags in the site HTML, making them easy to pluck out.
+
+The key to writing a program to download the right files comes down to getting an array of the file names. Here I used the Python package `BeautifulSoup` to parse the page. In this case, the CSV files were given `<key>` tags in the site HTML, making them easy to pluck out.
 ```py
 def find_csvs(url):
 
@@ -32,7 +33,7 @@ def find_csvs(url):
 
         return csv_names
 ```
-After some slight string editing we're returned a string array of CSV names and can download them easily.
+After some slight string editing I'm returned a string array of CSV names and can download them easily.
 
 With the data on hand, the question becomes how best to present it. In this case I think there are two natural questions that arise. First, how does air quality differ from place to place? And second, how does it vary in time? To answer the first question, the data was aggregated into a single file, creating an average of all records taken at each location for each pollutant ("aggregate-average"). For the second, I chose to group the data by month so as to produce an average concentration per pollutant per location per month ("monthly-average")- this choice was made to increase the amount of data available (as not all locations reported data daily) while still maintaining an appreciable number of temporal bins over which to view changes concentration levels.
 
@@ -65,9 +66,33 @@ for ym in month_csvs: #for each month
 
     month_data.to_csv(fsav,index=False)
 ```
-This process creates one file for each month, accomplished in two steps. First, a dataframe is created that only consists of unique parameter/location pairs (`month_data` in the above code). Then all the records taken that month of that parameter at that location are assembled (`multiple_records` above). This is used to compute the average recorded value for the month and the value is updated in the `month_data` dataframe. By also keeping track of how many records were used to compute each monthly average, we can then find the aggregate-average by combining the monthly files and compute the weighted average of the monthly values for each parameter and location.
+This process creates one file for each month, accomplished in two steps. First, a dataframe is created that only consists of unique parameter/location pairs (`month_data` in the above code). Then all the records taken that month of that parameter at that location are assembled (`multiple_records` above). This is used to compute the average recorded value for the month and the value is updated in the `month_data` dataframe. By also keeping track of how many records were used to compute each monthly average, I can then find the aggregate-average by combining the monthly files and compute the weighted average of the monthly values for each parameter and location.
 
-A few notes are warranted on steps required to clean the data. First, there are entries lacking latitude/longitude information; these are avoided with a simple call to drop any rows containing `NaN` values. Second, there are numerous entries throughout the dataset that contain negative concentrations (which obviously do not reflect the actual pollutant levels). OpenAQ responded to my query regarding this by stating that they archive the raw data recorded by each location and do not correct for any instrument drift or periods of instrument malfunction. This being the case, for the purposes of this visualization we simply ignore negative values.
+**Data Cleaning and Considerations**
+
+There are a few things about the data that need consideration, both to clean it and to present it in a useful and appealing way. First, there are entries lacking latitude/longitude information. These are avoided with a simple call to drop any rows containing `NaN` values. Second, there are numerous entries throughout the dataset that contain negative concentrations (which obviously do not reflect the actual pollutant levels). OpenAQ responded to my query regarding this by stating that they archive the raw data recorded by each location and do not correct for any instrument drift or periods of instrument malfunction. This being the case, for the purposes of this visualization I simply ignored negative values.
+
+In addition to using a color scale to show the levels of concentrations, the radius of the circles is also set by the concentration value. This code snippet shows how this quality is set:
+```javascript
+'circle-radius': {
+    property: 'value',
+    stops: [
+        [0, 5],
+        [100, 40]
+    ]
+}
+```
+Thus a concentration of 0 &mu;g/m<sup>3</sup> results in a 5 pixel radius and increases to 40 pixels at a concentration of 100. A look at the raw data explains my choice for these settings.
+
+Plotting the raw data (simply versus index) gives the plot shown below. It is clear that there is a huge range in the values, due mostly to a small number of outliers with values way above the majority of the dataset.
+![figure](/images/posts/AQ_data1.png)
+If I were to set the marker radius to the maximum value in the data, the majority of the data would have nearly identically sized markers (all essentially the minimum marker size), drastically reducing the amount of information conveyed in the visualization. Ignoring some of the outliers and zooming in, the data takes on a more reasonable look with a larger number of points spread across this range.
+![image](/images/posts/AQ_data2.png)
+In order to aid in the decision of where to set the upper limit for marker size, it is helpful to view a histogram of the data (note that the bin sizes vary).
+![image](/images/posts/AQ_hist.png)
+From this it is apparent that the number of records falls off with higher concentrations as expected. Moreover, over 95% of the records fall below 100 &mu;g/m<sup>3</sup>. For this reason I chose 100 as the upper stop for the map marker radius.
+
+**Creating the Maps**
 
 I created the map visualization using the Mapbox API which required converting the data from CSV files into a geojson format, accomplished using this online [converter tool](http://www.convertcsv.com/csv-to-geojson.htm). The map style was formatted following this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/). The visualization of the aggregate data (above) required a simple filter applied to the slider setting that selected only the data for the pollutant selected (mainly to avoid the overlapping icons that would result from displaying multiple pollutant records at each location). In order to show the change in concentrations with time using the monthly data, I added a second slider/filter. Two event listeners are added that update the variables `iparam` and `iym` whenever a slider is moved.
 ```javascript
@@ -88,21 +113,6 @@ function filterBy(iparam,iym) {
     map.setFilter('pollution-labels', ["all",filter1,filter2]);
   }
 ```
-
-In addition to using a color scale to show the levels of concentrations, the radius of the circles is also set by the concentration value. This code snippet shows how this quality is set:
-```javascript
-'circle-radius': {
-    property: 'value',
-    stops: [
-        [0, 5],
-        [100, 40]
-    ]
-}
-```
-Thus a concentration of 0 results in a 5 pixel radius and increases to 40 pixels at a concentration of 100 &mu;g/m<sup>3</sup>. A look at the raw data explains my choice for these settings.
-
-Plotting the raw data (simply versus index) gives the plot shown below. It is clear that there is a huge range in the values, although most of the data lies close to the axis. [image](/images/posts/AQ_data1.png)
-If we were to set our marker radius to the maximum value occurring in the data, the majority of the data would have nearly identically sized marker, drastically reducing the amount of information conveyed in the visualization. Ignoring some of the outliers and zooming in, we see that the data takes on a more reasonable look with a larger number of points spread across this range. [image](/images/posts/AQ_data2.png)It is now helpful to view a histogram of the data (note that the bin size is not consistent).[image](/images/posts/AQ_hist.png) From this we can see that the number of records falls off as we go to higher concentrations as expected. Moreover, over 95% of the records fall below 100 &mu;g/m<sup>3</sup>. For this reason we choose 100 as our upper stop for the map marker radius.
 The resulting map is shown below and shows how pollutant concentrations vary in time for each location.
 [![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_monthly_data)
 ***click the map for interactive version***
