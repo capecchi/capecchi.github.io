@@ -15,7 +15,8 @@ Data does not tell its own story. My graduate thesis project, towards which I wo
 
 A few weeks ago I found a database of air quality measurements from locations around the world. The data, available at [OpenAQ](https://openaq-data.s3.amazonaws.com/index.html), offers almost daily data beginning in June of 2015. I decided to create a map to visualize this data to get a sense of what the mountain of spreadsheets had to show. I had never built a web scraper before, nor done much coding in Python, so I took this as an opportunity to learn a few new skills in the process.
 
-The key to writing a program to download the right files comes down to getting an array of the file names. Here we use the Python package BeautifulSoup to parse the page. In this case, the CSV files were given <key> tags in the site HTML, making them easy to pluck out.
+**Scraping and Analyzing**
+The key to writing a program to download the right files comes down to getting an array of the file names. Here we use the Python package `BeautifulSoup` to parse the page. In this case, the CSV files were given `<key>` tags in the site HTML, making them easy to pluck out.
 ```py
 def find_csvs(url):
 
@@ -33,43 +34,42 @@ def find_csvs(url):
 ```
 After some slight string editing we're returned a string array of CSV names and can download them easily.
 
-Now having the data on hand, the question becomes how best to present it. In this case I consider there to be two natural questions that arise. First, how does air quality differ from place to place? And second, how does it vary in time? To answer the first question, the data was aggregated into a single file, creating an average of all records taken at each location for each pollutant ("aggregate-average"). For the second, I chose to group the data by month so as to produce an average concentration per pollutant per location per month ("monthly-average")- this choice was made to increase the amount of data available (as not all locations reported data daily) while still maintaining an appreciable number of temporal bins over which to view changes concentration levels.
+With the data on hand, the question becomes how best to present it. In this case I think there are two natural questions that arise. First, how does air quality differ from place to place? And second, how does it vary in time? To answer the first question, the data was aggregated into a single file, creating an average of all records taken at each location for each pollutant ("aggregate-average"). For the second, I chose to group the data by month so as to produce an average concentration per pollutant per location per month ("monthly-average")- this choice was made to increase the amount of data available (as not all locations reported data daily) while still maintaining an appreciable number of temporal bins over which to view changes concentration levels.
 
-These monthly and aggregate averages were computed in Python. The following code snippet highlights the important aspects of the data processing:
+These monthly and aggregate averages were computed in Python, and the following code snippet highlights the important aspects of the data processing:
 ```py
-for d in daily_csvs: #go through every daily csv file
-    df = pd.read_csv(d,usecols=csv_cols)
-    add = pd.DataFrame({'num_records':np.ones(len(df),dtype=np.int)})
-    df = pd.concat([df,add],axis=1) #add num_records column of 1s
-    df.dropna(axis=0,inplace=True) #drop any rows with NaN values
-    rows = np.arange(len(df))
-    for r in rows:
-        ro = df.iloc[r:r+1]
-        if ro['value'].iloc[0] >= 0: #ignore negative values
-            build_temp = pd.concat([build,ro],ignore_index=True)
-            dup = list(build_temp.duplicated(subset=\
-                  ['parameter','latitude','longitude'],keep=False))
-            if dup[-1] == True: #repeat location/param
-                irow = dup.index(True) #index of duplicate row
-                #add 1 to #records for this location
-                num_rec = build['num_records'].iloc[irow] + 1
-                build['num_records'].set_value(irow,num_rec,takeable=True)
-                #compute running average
-                new_val = build['value'].iloc[irow]*((num_rec-1.0)/num_rec)+\
-                          ro['value'].iloc[0]*(1.0/num_rec)
-                build['value'].set_value(irow,new_val,takeable=True)
-            else: #row is not repeated, new location/param, keep as appended
-                build = build_temp
+for ym in month_csvs: #for each month
 
-    scanned = np.append(scanned,d)
-    np.save('static_scanned',scanned) #track scanned files
-    build.to_csv('static_master.csv',index=False) #save running averages
+    #find daily csv files from that month
+    relevant = []
+    for file in csvs:
+        if ym[:7] in file:
+            relevant.append(file)
+
+    #create one dataframe for the month, dropping duplicates to create unique parameter/lat/long entries
+    all_month_data = pd.concat(pd.read_csv(csvdirec+r,usecols=col_names) for r in relevant)
+    #drop duplicates
+    sub =['parameter','latitude','longitude']
+    month_data = all_month_data.drop_duplicates(subset=sub)
+    unique_rows = np.arange(len(month_data['location']))
+
+    #update each unique entry with average of monthly measurements from that location
+    for r in unique_rows:
+        multiple_records = all_month_data[ all_month_data[sub[0]] == month_data[sub[0]].iloc[r] ]
+        multiple_records = multiple_records[ multiple_records[sub[1]] == month_data[sub[1]].iloc[r] ]
+        multiple_records = multiple_records[ multiple_records[sub[2]] == month_data[sub[2]].iloc[r] ]
+        av_val = np.mean(multiple_records['value'])
+        month_data['value'].set_value(r,av_val,takeable=True)
+        month_data['year-month'].set_value(r,ym[:7],takeable=True)
+        month_data['num_records'].set_value(r,len(multiple_records),takeable=True)
+
+    month_data.to_csv(fsav,index=False)
 ```
-This process keeps a running average of the concentration of each pollutant for each location. Two steps included above are needed in order to clean the data. First, there are entries lacking latitude/longitude information; these are avoided with a simple call to drop any rows containing `NaN` values. Second, there are numerous entries throughout the dataset that contain negative concentrations (which obviously do not reflect the actual pollutant levels). OpenAQ responded to my query regarding this by stating that they archive the raw data recorded by each location and do not correct for any instrument drift or periods of instrument malfunction. This being the case, for the purposes of this visualization we simply ignore negative values.
+This process creates one file for each month, accomplished in two steps. First, a dataframe is created that only consists of unique parameter/location pairs (`month_data` in the above code). Then all the records taken that month of that parameter at that location are assembled (`multiple_records` above). This is used to compute the average recorded value for the month and the value is updated in the `month_data` dataframe. By also keeping track of how many records were used to compute each monthly average, we can then find the aggregate-average by combining the monthly files and compute the weighted average of the monthly values for each parameter and location.
 
-A similar routine is run to produce the monthly-averaged data, with an added stipulation that rows are only combined if they have the same parameter, location, and *year-month*.
+A few notes are warranted on steps required to clean the data. First, there are entries lacking latitude/longitude information; these are avoided with a simple call to drop any rows containing `NaN` values. Second, there are numerous entries throughout the dataset that contain negative concentrations (which obviously do not reflect the actual pollutant levels). OpenAQ responded to my query regarding this by stating that they archive the raw data recorded by each location and do not correct for any instrument drift or periods of instrument malfunction. This being the case, for the purposes of this visualization we simply ignore negative values.
 
-I created the map visualization using the Mapbox API which required converting the data into a geojson file format, accomplished using this online [converter tool](http://www.convertcsv.com/csv-to-geojson.htm). The style was formatted following this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/). The visualization of the aggregate data (above) required a simple filter applied to the slider setting that selected only the data for the pollutant selected (mainly to avoid the overlapping icons that would result from displaying multiple pollutant records at each location). In order to show the change in concentrations with time, I added a second slider/filter. Two event listeners are added that update the variables `iparam` and `iym` whenever a slider is moved.
+I created the map visualization using the Mapbox API which required converting the data from CSV files into a geojson format, accomplished using this online [converter tool](http://www.convertcsv.com/csv-to-geojson.htm). The map style was formatted following this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/). The visualization of the aggregate data (above) required a simple filter applied to the slider setting that selected only the data for the pollutant selected (mainly to avoid the overlapping icons that would result from displaying multiple pollutant records at each location). In order to show the change in concentrations with time using the monthly data, I added a second slider/filter. Two event listeners are added that update the variables `iparam` and `iym` whenever a slider is moved.
 ```javascript
 document.getElementById('slider1').addEventListener('input', function(e) {
     var iparam = parseInt(e.target.value, 10);
@@ -88,6 +88,21 @@ function filterBy(iparam,iym) {
     map.setFilter('pollution-labels', ["all",filter1,filter2]);
   }
 ```
+
+In addition to using a color scale to show the levels of concentrations, the radius of the circles is also set by the concentration value. This code snippet shows how this quality is set:
+```javascript
+'circle-radius': {
+    property: 'value',
+    stops: [
+        [0, 5],
+        [100, 40]
+    ]
+}
+```
+Thus a concentration of 0 results in a 5 pixel radius and increases to 40 pixels at a concentration of 100 &mu;g/m<sup>3</sup>. A look at the raw data explains my choice for these settings.
+
+Plotting the raw data (simply versus index) gives the plot shown below. It is clear that there is a huge range in the values, although most of the data lies close to the axis. [image](/images/posts/AQ_data1.png)
+If we were to set our marker radius to the maximum value occurring in the data, the majority of the data would have nearly identically sized marker, drastically reducing the amount of information conveyed in the visualization. Ignoring some of the outliers and zooming in, we see that the data takes on a more reasonable look with a larger number of points spread across this range. [image](/images/posts/AQ_data2.png)It is now helpful to view a histogram of the data (note that the bin size is not consistent).[image](/images/posts/AQ_hist.png) From this we can see that the number of records falls off as we go to higher concentrations as expected. Moreover, over 95% of the records fall below 100 &mu;g/m<sup>3</sup>. For this reason we choose 100 as our upper stop for the map marker radius.
 The resulting map is shown below and shows how pollutant concentrations vary in time for each location.
 [![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_monthly_data)
 ***click the map for interactive version***
