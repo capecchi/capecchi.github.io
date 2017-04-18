@@ -3,7 +3,7 @@ layout: post
 title: World Air Quality Map
 date: 2017-04-09
 excerpt: Mapping air quality data from around the world.
-image: /images/posts/aggregate_data.png
+image: /images/posts/monthly_data.png
 project: true
 tags: Mapbox web-scraper pollution geojson
 ---
@@ -95,40 +95,46 @@ From this it is apparent that the number of records falls off with higher concen
 **Creating the Maps**
 
 I created the map visualization using the Mapbox API which required converting the data from CSV files into a geojson format, accomplished using this online [converter tool](http://www.convertcsv.com/csv-to-geojson.htm). The map style was formatted following this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/). The visualization of the aggregate data (above) required a simple filter applied to the slider setting that displayed only the data for the pollutant selected (mainly to avoid the overlapping icons that would result from displaying multiple pollutant records at each location).
-
-In order to show the change in concentrations with time using the monthly data, I added a second slider/filter. Two event listeners are added that update the variables `iparam` and `iym` whenever a slider is moved.
 ```javascript
-document.getElementById('slider1').addEventListener('input', function(e) {
+document.getElementById('slider').addEventListener('input', function(e) {
     var iparam = parseInt(e.target.value, 10);
-    var iym = parseInt(document.getElementById('slider2').value);
-    filterBy(iparam,iym);
+    filterBy(iparam);
 });
 ```
-These variables are passed to a function `filterBy` that applies the filters to the map and displays only the relevant data.
+The variable is passed to the function `filterBy` that applies the filters to the map and displays only the relevant data.
 ```javascript
-function filterBy(iparam,iym) {
-
-    var filter1 = ['==', 'parameter', params[iparam]];
-    var filter2 = ['==', 'year-month',ym[iym]];
-
-    map.setFilter('pollution-circles', ["all",filter1,filter2]);
-    map.setFilter('pollution-labels', ["all",filter1,filter2]);
+function filterBy(iparam) {
+    var filter = ['==', 'parameter', params[iparam]];
+    map.setFilter('pollution-circles', filter);
   }
 ```
 
-Here an added concern arises for the visualization of the monthly data. A single geojson file containing all the location/parameter/month data consists of nearly 100,000 features each with country, city, and other properties. The size of this file makes it unwieldy on the website. To help with this, I created a geojson file for each of the pollutants and created a map layer for each pollutant dataset. As an added benefit, this means that different circle-radius stops can be assigned for each pollutant. Using the Air Quality Index converter from [AirNow](https://www.airnow.gov/index.cfm?action=airnow.calculator), I use an AQI level of 100 (the border between moderate and unhealthy levels) to compute the maximum circle radius for the visualization. These limits are:
+A difficulty arises, however, when trying to map the monthly data. Applying a second filter suffices (wherein one selects data of the correct month, another data of the correct parameter), but due to the size of the geojson file containing all the monthly data, these filters slow down interaction with the map considerably. Instead, separate geojson files were created for each pollutant and introduced as separate map layers. An array of menu buttons is used to toggle the visibility of these layers (while still allowing only a single parameter to be visible at once). Not only does this speed up load times, it also affords the opportunity to adjust the circle-radii individually for each parameter. So whereas the map above simply shows concentrations for the pollutants, I can add some subtlety to the monthly plot by incorporating a human factor.
 
-CO (8hr average)-9.4ppm- 10566<br>
-03 (8hr average)- 70ppm- 78680<br>
-PM2.5 (24hr average)- 35.4ppm- 37970<br>
-PM10 (24hr average)- 154ppm- 173096<br>
-SO2 (1hr average)- 75ppm- 84300<br>
-NO2 (1hr average)- 100ppm- 112400<br>
+Using the Air Quality Index converter from [AirNow](https://www.airnow.gov/index.cfm?action=airnow.calculator), I use an AQI level of 100 (the border between moderate and unhealthy levels) to compute a maximum circle radius for the each parameter. These limits are:
 
-Now having tied the numbers to actual human health factors, we change the color scale the familiar green-red scale to imply an increasing hazard towards the red.
+CO (8hr average)-9.4ppm<br>
+03 (8hr average)- 70ppm<br>
+PM2.5 (24hr average)- 35.4ppm<br>
+PM10 (24hr average)- 154ppm<br>
+SO2 (1hr average)- 75ppm<br>
+NO2 (1hr average)- 100ppm<br>
+
+For each parameter I then set the circle-radius maximum to the corresponding concentration. It is the case, though, that most of the records fall *far* below this danger level. So in order to embellish the variation at concentrations far below an unhealthy level, I set three stops for the circle-radius property. For ozone, this gives;
+```javascript
+'circle-radius': {
+  property: 'value',
+  stops: [
+    [0, 5],
+    [100,30],
+    [78680, 40] //70ppm
+  ]
+}
+```
+Now having tied the numbers to actual human health factors, we change the color scale. It's a stylistic choice, but since human health is involved, having the color red indicate danger seems appropriate, and blue and green seem like fine choices to indicate low, healthy levels.
 
 The resulting map is below and shows how pollutant concentrations vary in time for each location.
-[![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_monthly_data)
+[![image](/images/posts/monthly_data.png)](/projects/AirQuality/world_monthly_data)
 ***click the map for interactive version***
 
 So here we have both maps working, giving us a visual understanding of the two questions posed earlier- one to show how concentrations vary around the world, another to show how those levels vary with time.

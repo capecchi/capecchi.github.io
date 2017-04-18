@@ -44,7 +44,7 @@
 .map-overlay .legend .bar {
     height: 10px;
     width: 100%;
-    background: linear-gradient(to right, #00a5ff, #870091);
+    background: linear-gradient(to right,blue,green,red);
 }
 
 .map-overlay input {
@@ -200,8 +200,9 @@ map.on('load', function() {
                 'circle-color': {
                     property: 'value',
                     stops: [
-                        [0, '#00a5ff'],
-                        [100, '#870091']
+                        [0, 'blue'],
+                        [100,'green'],
+                        [173096, 'red']
                     ]
                 },
                 'circle-opacity': 0.75,
@@ -209,7 +210,8 @@ map.on('load', function() {
                     property: 'value',
                     stops: [
                         [0, 5],
-                        [100, 40]
+                        [100,30],
+                        [173096, 40]
                     ]
                 }
             }
@@ -244,8 +246,9 @@ map.on('load', function() {
                 'circle-color': {
                     property: 'value',
                     stops: [
-                        [0, '#00a5ff'],
-                        [100, '#870091']
+                      [0, 'blue'],
+                      [100,'green'],
+                      [37970, 'red']
                     ]
                 },
                 'circle-opacity': 0.75,
@@ -253,7 +256,8 @@ map.on('load', function() {
                     property: 'value',
                     stops: [
                         [0, 5],
-                        [100, 40]
+                        [100,30],
+                        [37970, 40]
                     ]
                 }
             }
@@ -288,8 +292,9 @@ map.on('load', function() {
                         'circle-color': {
                             property: 'value',
                             stops: [
-                                [0, '#00a5ff'],
-                                [100, '#870091']
+                                [0, 'blue'],
+                                [100,'green'],
+                                [112400, 'red']
                             ]
                         },
                         'circle-opacity': 0.75,
@@ -297,7 +302,8 @@ map.on('load', function() {
                             property: 'value',
                             stops: [
                                 [0, 5],
-                                [100, 40]
+                                [100,30],
+                                [112400, 40]
                             ]
                         }
                     }
@@ -332,8 +338,9 @@ map.on('load', function() {
                         'circle-color': {
                             property: 'value',
                             stops: [
-                                [0, '#00a5ff'],
-                                [100, '#870091']
+                                [0, 'blue'],
+                                [100,'green'],
+                                [84300, 'red']
                             ]
                         },
                         'circle-opacity': 0.75,
@@ -341,7 +348,8 @@ map.on('load', function() {
                             property: 'value',
                             stops: [
                                 [0, 5],
-                                [100, 40]
+                                [100,30],
+                                [84300, 40]
                             ]
                         }
                     }
@@ -376,8 +384,9 @@ map.on('load', function() {
                                 'circle-color': {
                                     property: 'value',
                                     stops: [
-                                        [0, '#00a5ff'],
-                                        [100, '#870091']
+                                        [0, 'blue'],
+                                        [100,'green'],
+                                        [10566, 'red']
                                     ]
                                 },
                                 'circle-opacity': 0.75,
@@ -385,7 +394,8 @@ map.on('load', function() {
                                     property: 'value',
                                     stops: [
                                         [0, 5],
-                                        [100, 40]
+                                        [100,30],
+                                        [10566, 40]
                                     ]
                                 }
                             }
@@ -420,8 +430,9 @@ map.on('load', function() {
         'circle-color': {
           property: 'value',
           stops: [
-            [0, '#00a5ff'],
-            [100, '#870091']
+            [0, 'blue'],
+            [100,'green'],
+            [78680, 'red']
           ]
         },
         'circle-opacity': 0.75,
@@ -429,7 +440,8 @@ map.on('load', function() {
           property: 'value',
           stops: [
             [0, 5],
-            [100, 40]
+            [100,30],
+            [78680, 40] //70ppm
           ]
         }
       }
@@ -464,8 +476,9 @@ map.on('load', function() {
         'circle-color': {
           property: 'value',
           stops: [
-            [0, '#00a5ff'],
-            [100, '#870091']
+            [0, 'blue'],
+            [100,'green'],
+            [100, 'red']
           ]
         },
         'circle-opacity': 0.75,
@@ -473,6 +486,7 @@ map.on('load', function() {
           property: 'value',
           stops: [
             [0, 5],
+            [100,30],
             [100, 40]
           ]
         }
