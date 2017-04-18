@@ -55,59 +55,17 @@
     margin: 0;
     cursor: ew-resize;
 }
-
-#menu {
-    background: #fff;
-    position: absolute;
-    z-index: 1;
-    top: 10px;
-    right: 10px;
-    border-radius: 3px;
-    width: 120px;
-    border: 1px solid rgba(0,0,0,0.4);
-    font-family: 'Open Sans', sans-serif;
-}
-
-#menu a {
-    font-size: 13px;
-    color: #404040;
-    display: block;
-    margin: 0;
-    padding: 0;
-    padding: 10px;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(0,0,0,0.25);
-    text-align: center;
-}
-
-#menu a:last-child {
-    border: none;
-}
-
-#menu a:hover {
-    background-color: #f8f8f8;
-    color: #404040;
-}
-
-#menu a.active {
-    background-color: #3887be;
-    color: #ffffff;
-}
-
-#menu a.active:hover {
-    background: #3074a4;
-}
 </style>
-
-<nav id="menu"></nav>
 
 <div id='map'></div>
 
 <div class='map-overlay top'>
     <div class='map-overlay-inner'>
-        <h2>Monthly pollutant levels</h2>
+        <h2>Pollutant Average Since June 2015</h2>
+        <label id='parameter'></label>
+        <input id='slider1' type='range' min='0' max='5' step='1' value='0' />
         <label id='year-month'></label>
-        <input id='slider' type='range' min='0' max='21' step='1' value='0' />
+        <input id='slider2' type='range' min='0' max='21' step='1' value='0' />
     </div>
     <div class='map-overlay-inner'>
         <div id='legend' class='legend'>
@@ -128,13 +86,27 @@ var map = new mapboxgl.Map({
 });
 
 var ym_long = [
-  'June 2015','July 2015','August 2015',
-  'September 2015','October 2015','November 2015',
-  'December 2015','January 2016','February 2016',
-  'March 2016','April 2016','May 2016',
-  'June 2016','July 2016','August 2016',
-  'September 2016','October 2016','November 2016',
-  'December 2016','January 2017','February 2017',
+  'June 2015',
+  'July 2015',
+  'August 2015',
+  'September 2015',
+  'October 2015',
+  'November 2015',
+  'December 2015',
+  'January 2016',
+  'February 2016',
+  'March 2016',
+  'April 2016',
+  'May 2016',
+  'June 2016',
+  'July 2016',
+  'August 2016',
+  'September 2016',
+  'October 2016',
+  'November 2016',
+  'December 2016',
+  'January 2017',
+  'February 2017',
   'March 2017'
 ];
 
@@ -162,26 +134,28 @@ var params = [
   'co','o3','bc'
 ]
 
-function filterBy(iym) {
+function filterBy(iparam,iym) {
 
-    var filters = ['==', 'year-month', ym[iym]];
+    var filter1 = ['==', 'parameter', params[iparam]];
+    var filter2 = ['==', 'year-month',ym[iym]];
 
-    map.setFilter('pm10-circles', filters);
-    map.setFilter('pm10-labels', filters);
-    map.setFilter('pm25-circles', filters);
-    map.setFilter('pm25-labels', filters);
-    map.setFilter('no2-circles', filters);
-    map.setFilter('no2-labels', filters);
-    map.setFilter('so2-circles', filters);
-    map.setFilter('so2-labels', filters);
-    map.setFilter('co-circles', filters);
-    map.setFilter('co-labels', filters);
-    map.setFilter('o3-circles', filters);
-    map.setFilter('o3-labels', filters);
-    map.setFilter('bc-circles', filters);
-    map.setFilter('bc-labels', filters);
+    map.setFilter('pm10-circles', ["all",filter1,filter2]);
+    map.setFilter('pm10-labels', ["all",filter1,filter2]);
+    map.setFilter('pm25-circles', ["all",filter1,filter2]);
+    map.setFilter('pm25-labels', ["all",filter1,filter2]);
+    map.setFilter('no2-circles', ["all",filter1,filter2]);
+    map.setFilter('no2-labels', ["all",filter1,filter2]);
+    map.setFilter('so2-circles', ["all",filter1,filter2]);
+    map.setFilter('so2-labels', ["all",filter1,filter2]);
+    map.setFilter('co-circles', ["all",filter1,filter2]);
+    map.setFilter('co-labels', ["all",filter1,filter2]);
+    map.setFilter('o3-circles', ["all",filter1,filter2]);
+    map.setFilter('o3-labels', ["all",filter1,filter2]);
+    map.setFilter('bc-circles', ["all",filter1,filter2]);
+    map.setFilter('bc-labels', ["all",filter1,filter2]);
 
     // Set the labels to the parameter and year-month
+    document.getElementById('parameter').textContent = params_long[iparam];
     document.getElementById('year-month').textContent = ym_long[iym];
 }
 
@@ -494,76 +468,23 @@ map.on('load', function() {
         'text-color': 'rgba(0,0,0,0.5)'
       }
     });
+//******************
 
-//******************
-//Start with all layers off except PM10
-    for (var i = 1; i < params.length; i++) {
-      var turnoff = params[i];
-      map.setLayoutProperty(turnoff+'-circles','visibility','none');
-      map.setLayoutProperty(turnoff+'-labels','visibility','none');
-    }
-//******************
-//FILTER
         // Set filter to first month of the year, first parameter in list
-        filterBy(0);
+        filterBy(0,0);
 
-        document.getElementById('slider').addEventListener('input', function(e) {
+        document.getElementById('slider1').addEventListener('input', function(e) {
+            var iparam = parseInt(e.target.value, 10);
+            var iym = parseInt(document.getElementById('slider2').value);
+            filterBy(iparam,iym);
+
+        });
+        document.getElementById('slider2').addEventListener('input', function(e) {
             var iym = parseInt(e.target.value,10);
-            filterBy(iym);
+            var iparam = parseInt(document.getElementById('slider1').value);
+            filterBy(iparam,iym);
         });
 });
-//******************
-//LAYER VISIBILITY
-
-        for (var i = 0; i < params.length; i++) {
-            var id1 = params[i]+'-circles';
-            var id2 = params[i]+'-lables';
-            var idlong = params_long[i]
-
-            var link = document.createElement('a');
-            link.href = '#';
-            if (params[i] == 'pm10') {
-              link.className = 'active';
-            } else {
-              link.className = '';
-            }
-            link.textContent = idlong;
-            link.id = params[i]+'btn'
-
-            link.onclick = function (e) {
-                var idlong = this.textContent;
-                e.preventDefault();
-                e.stopPropagation();
-
-                if (idlong == params_long[0]) {var clickedLayer = 'pm10'}
-                if (idlong == params_long[1]) {var clickedLayer = 'pm25'}
-                if (idlong == params_long[2]) {var clickedLayer = 'no2'}
-                if (idlong == params_long[3]) {var clickedLayer = 'so2'}
-                if (idlong == params_long[4]) {var clickedLayer = 'co'}
-                if (idlong == params_long[5]) {var clickedLayer = 'o3'}
-                if (idlong == params_long[6]) {var clickedLayer = 'bc'}
-
-                //set rest of layers to invisible
-                for (var i = 0; i < params.length; i++) {
-                    var turnoff = params[i]
-                    if (turnoff != clickedLayer) {
-                      //turnoff.className = 'active';
-                      document.getElementById(params[i]+'btn').className = '';
-                      map.setLayoutProperty(turnoff+'-circles','visibility','none')
-                      map.setLayoutProperty(turnoff+'-labels','visibility','none')
-                    }
-                }
-
-                //if clicked, set to visible
-                this.className = 'active';
-                map.setLayoutProperty(clickedLayer+'-circles', 'visibility', 'visible');
-                map.setLayoutProperty(clickedLayer+'-labels', 'visibility', 'visible');
-
-            };
-
-            var layers = document.getElementById('menu');
-            layers.appendChild(link);
-        }
 
 </script>
 

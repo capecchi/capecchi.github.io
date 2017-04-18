@@ -55,7 +55,51 @@
     margin: 0;
     cursor: ew-resize;
 }
+
+#menu {
+    background: #fff;
+    position: absolute;
+    z-index: 1;
+    top: 10px;
+    right: 10px;
+    border-radius: 3px;
+    width: 120px;
+    border: 1px solid rgba(0,0,0,0.4);
+    font-family: 'Open Sans', sans-serif;
+}
+
+#menu a {
+    font-size: 13px;
+    color: #404040;
+    display: block;
+    margin: 0;
+    padding: 0;
+    padding: 10px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0,0,0,0.25);
+    text-align: center;
+}
+
+#menu a:last-child {
+    border: none;
+}
+
+#menu a:hover {
+    background-color: #f8f8f8;
+    color: #404040;
+}
+
+#menu a.active {
+    background-color: #3887be;
+    color: #ffffff;
+}
+
+#menu a.active:hover {
+    background: #3074a4;
+}
 </style>
+
+<nav id="menu"></nav>
 
 <div id='map'></div>
 
@@ -84,27 +128,13 @@ var map = new mapboxgl.Map({
 });
 
 var ym_long = [
-  'June 2015',
-  'July 2015',
-  'August 2015',
-  'September 2015',
-  'October 2015',
-  'November 2015',
-  'December 2015',
-  'January 2016',
-  'February 2016',
-  'March 2016',
-  'April 2016',
-  'May 2016',
-  'June 2016',
-  'July 2016',
-  'August 2016',
-  'September 2016',
-  'October 2016',
-  'November 2016',
-  'December 2016',
-  'January 2017',
-  'February 2017',
+  'June 2015','July 2015','August 2015',
+  'September 2015','October 2015','November 2015',
+  'December 2015','January 2016','February 2016',
+  'March 2016','April 2016','May 2016',
+  'June 2016','July 2016','August 2016',
+  'September 2016','October 2016','November 2016',
+  'December 2016','January 2017','February 2017',
   'March 2017'
 ];
 
@@ -115,6 +145,21 @@ var ym = [
   '2016-06','2016-07','2016-08','2016-09',
   '2016-10','2016-11','2016-12','2017-01',
   '2017-02','2017-03'
+]
+
+var params_long = [
+    'Particle Matter <10 \u03BCm',
+    'Particle Matter <2.5 \u03BCm',
+    'Nitrogen Dioxide (NO2)',
+    'Sulfer Dioxide (SO2)',
+    'Carbon Monoxide (CO)',
+    'Ozone (O3)',
+    'Black Carbon (BC)'
+];
+
+var params = [
+  'pm10','pm25','no2','so2',
+  'co','o3','bc'
 ]
 
 function filterBy(iym) {
@@ -449,8 +494,16 @@ map.on('load', function() {
         'text-color': 'rgba(0,0,0,0.5)'
       }
     });
-//******************
 
+//******************
+//Start with all layers off except PM10
+    for (var i = 1; i < params.length; i++) {
+      var turnoff = params[i];
+      map.setLayoutProperty(turnoff+'-circles','visibility','none');
+      map.setLayoutProperty(turnoff+'-labels','visibility','none');
+    }
+//******************
+//FILTER
         // Set filter to first month of the year, first parameter in list
         filterBy(0);
 
@@ -459,6 +512,58 @@ map.on('load', function() {
             filterBy(iym);
         });
 });
+//******************
+//LAYER VISIBILITY
+
+        for (var i = 0; i < params.length; i++) {
+            var id1 = params[i]+'-circles';
+            var id2 = params[i]+'-lables';
+            var idlong = params_long[i]
+
+            var link = document.createElement('a');
+            link.href = '#';
+            if (params[i] == 'pm10') {
+              link.className = 'active';
+            } else {
+              link.className = '';
+            }
+            link.textContent = idlong;
+            link.id = params[i]+'btn'
+
+            link.onclick = function (e) {
+                var idlong = this.textContent;
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (idlong == params_long[0]) {var clickedLayer = 'pm10'}
+                if (idlong == params_long[1]) {var clickedLayer = 'pm25'}
+                if (idlong == params_long[2]) {var clickedLayer = 'no2'}
+                if (idlong == params_long[3]) {var clickedLayer = 'so2'}
+                if (idlong == params_long[4]) {var clickedLayer = 'co'}
+                if (idlong == params_long[5]) {var clickedLayer = 'o3'}
+                if (idlong == params_long[6]) {var clickedLayer = 'bc'}
+
+                //set rest of layers to invisible
+                for (var i = 0; i < params.length; i++) {
+                    var turnoff = params[i]
+                    if (turnoff != clickedLayer) {
+                      //turnoff.className = 'active';
+                      document.getElementById(params[i]+'btn').className = '';
+                      map.setLayoutProperty(turnoff+'-circles','visibility','none')
+                      map.setLayoutProperty(turnoff+'-labels','visibility','none')
+                    }
+                }
+
+                //if clicked, set to visible
+                this.className = 'active';
+                map.setLayoutProperty(clickedLayer+'-circles', 'visibility', 'visible');
+                map.setLayoutProperty(clickedLayer+'-labels', 'visibility', 'visible');
+
+            };
+
+            var layers = document.getElementById('menu');
+            layers.appendChild(link);
+        }
 
 </script>
 
