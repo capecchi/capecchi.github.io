@@ -70,7 +70,7 @@ This process creates one file for each month, accomplished in two steps. First, 
 
 **Data Cleaning and Considerations**
 
-There are a few things about the data that need consideration, both to clean it and to present it in a useful and appealing way. First, there are entries lacking latitude/longitude information. These are avoided with a simple call to drop any rows containing `NaN` values. Second, there are numerous entries throughout the dataset that contain negative concentrations (which obviously do not reflect the actual pollutant levels). OpenAQ responded to my query regarding this by stating that they archive the raw data recorded by each location and do not correct for any instrument drift or periods of instrument malfunction. This being the case, for the purposes of this visualization I simply ignored negative values.
+There are a few things about the data that need consideration, both to clean it and to present it in a useful and appealing way. First, there are entries lacking latitude/longitude information. These are avoided with a simple call to drop any rows containing `NaN` values. Second, there are numerous entries throughout the dataset that contain negative concentrations (which obviously do not reflect the actual pollutant levels). OpenAQ responded to my query regarding this by stating that they archive the raw data recorded by each location and do not correct for any instrument drift or periods of instrument malfunction. This being the case, for the purposes of this visualization I simply ignored negative values. The last cleaning step is a simple unit conversion, converting from 'parts-per-million' to 'µg/m³' as needed to create a uniform dataset.
 
 In addition to using a color scale to show the levels of concentrations, the radius of the circles is also set by the concentration value. This code snippet shows how this quality is set:
 ```javascript
@@ -114,7 +114,18 @@ function filterBy(iparam,iym) {
   }
 ```
 
-The resulting map is shown below and shows how pollutant concentrations vary in time for each location.
+Here an added concern arises for the visualization of the monthly data. A single geojson file containing all the location/parameter/month data consists of nearly 100,000 features each with country, city, and other properties. The size of this file makes it unwieldy on the website. Instead, I created a geojson file for each of the pollutants and created a map layer for each pollutant dataset. This has the added benefit of allowing different circle-radius settings for each pollutant based on the hazard level for each. Using the Air Quality Index converter from [AirNow](https://www.airnow.gov/index.cfm?action=airnow.calculator), I use an AQI level of 100 (the border between moderate and unhealthy levels) to compute the maximum circle radius for the visualization. These limits are:
+
+CO (8hr average)-9.4ppm- 10566<br>
+03 (8hr average)- 70ppm- 78680<br>
+PM2.5 (24hr average)- 35.4ppm- 37970<br>
+PM10 (24hr average)- 154ppm- 173096<br>
+SO2 (1hr average)- 75ppm- 84300<br>
+NO2 (1hr average)- 100ppm- 112400<br>
+
+Now having tied the numbers to actual human health factors, we change the color scale the familiar green-red scale to imply an increasing hazard towards the red.
+
+The resulting map is below and shows how pollutant concentrations vary in time for each location.
 [![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_monthly_data)
 ***click the map for interactive version***
 

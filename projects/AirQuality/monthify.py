@@ -11,10 +11,9 @@ def main(test=False,
                 csvs.append(file)
         return csvs
 
-    localdirec = "C:/Python34/Air_Quality/"
-    csvdirec = localdirec+'csv/'
-    webdirec = "C:/Users/Owner/Documents/GitHub/capecchi.github.io/projects/AirQuality/"
-    col_names = ['location','city','country','utc','local','parameter','value','latitude','longitude']
+    direc = "C:/Python34/Air_Quality/"
+    csvdirec = direc+'csv/'
+    col_names = ['location','city','country','utc','local','parameter','value','unit','latitude','longitude']
     csvs = csv_list(csvdirec)
 
     month_csvs = []
@@ -23,10 +22,10 @@ def main(test=False,
         if ym+'.csv' not in month_csvs:
             month_csvs.append(ym+'.csv')
 
-    if test: month_csvs = os.listdir(localdirec+'monthly_csvs/')
+    if test: month_csvs = os.listdir(direc+'monthly_csvs/')
     if reverse: month_csvs = month_csvs[::-1]
     for ym in month_csvs: #for each month
-        fsav = localdirec+'monthly_csvs/'+ym
+        fsav = direc+'monthly_csvs/'+ym
         if os.path.isfile(fsav):
                 print(fsav," already exists")
         else: #compile daily data for this month
@@ -37,6 +36,13 @@ def main(test=False,
             all_month_data = pd.concat(pd.read_csv(csvdirec+r,usecols=col_names) for r in relevant)#create one month dataframe
             all_month_data.dropna(axis=0,inplace=True) #drop any rows with NaN values
             all_month_data = all_month_data[all_month_data.value >= 0] #keep only positive values
+            wrong = all_month_data[ all_month_data['unit'] == 'ppm' ]
+            if len(wrong) != 0:
+                right = all_month_data[ all_month_data['unit'] != 'ppm' ]
+                wrong['value'] = wrong['value']*1145.0
+                all_month_data = pd.concat([right,wrong],axis=0)
+            all_month_data = all_month_data.drop('unit',axis=1)
+
             #drop duplicates
             sub =['parameter','latitude','longitude']
             month_data = all_month_data.drop_duplicates(subset=sub)
@@ -58,16 +64,16 @@ def main(test=False,
             print('Saved:: /monthly/'+ym) #end of if file not present
 
 
-    month_master = pd.concat(pd.read_csv(localdirec+'monthly_csvs/'+f,\
+    month_master = pd.concat(pd.read_csv(direc+'monthly_csvs/'+f,\
                                          encoding='latin-1') for f in month_csvs)
-    month_master.to_csv(webdirec+'month_master.csv',index=False)
+    month_master.to_csv(direc+'month_master.csv',index=False)
     print('Saved:: month_master.csv')
 
     params = ['pm10','pm25','no2','so2','co','o3','bc']
 
     for p in params:
         param_df = month_master[ month_master['parameter'] == p ]
-        param_df.to_csv(webdirec+p+'_master.csv',index=False)
+        param_df.to_csv(direc+p+'_master.csv',index=False)
         
 
 #main()
