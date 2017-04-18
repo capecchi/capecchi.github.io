@@ -94,7 +94,9 @@ From this it is apparent that the number of records falls off with higher concen
 
 **Creating the Maps**
 
-I created the map visualization using the Mapbox API which required converting the data from CSV files into a geojson format, accomplished using this online [converter tool](http://www.convertcsv.com/csv-to-geojson.htm). The map style was formatted following this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/). The visualization of the aggregate data (above) required a simple filter applied to the slider setting that selected only the data for the pollutant selected (mainly to avoid the overlapping icons that would result from displaying multiple pollutant records at each location). In order to show the change in concentrations with time using the monthly data, I added a second slider/filter. Two event listeners are added that update the variables `iparam` and `iym` whenever a slider is moved.
+I created the map visualization using the Mapbox API which required converting the data from CSV files into a geojson format, accomplished using this online [converter tool](http://www.convertcsv.com/csv-to-geojson.htm). The map style was formatted following this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/). The visualization of the aggregate data (above) required a simple filter applied to the slider setting that displayed only the data for the pollutant selected (mainly to avoid the overlapping icons that would result from displaying multiple pollutant records at each location).
+
+In order to show the change in concentrations with time using the monthly data, I added a second slider/filter. Two event listeners are added that update the variables `iparam` and `iym` whenever a slider is moved.
 ```javascript
 document.getElementById('slider1').addEventListener('input', function(e) {
     var iparam = parseInt(e.target.value, 10);
@@ -114,7 +116,7 @@ function filterBy(iparam,iym) {
   }
 ```
 
-Here an added concern arises for the visualization of the monthly data. A single geojson file containing all the location/parameter/month data consists of nearly 100,000 features each with country, city, and other properties. The size of this file makes it unwieldy on the website. Instead, I created a geojson file for each of the pollutants and created a map layer for each pollutant dataset. This has the added benefit of allowing different circle-radius settings for each pollutant based on the hazard level for each. Using the Air Quality Index converter from [AirNow](https://www.airnow.gov/index.cfm?action=airnow.calculator), I use an AQI level of 100 (the border between moderate and unhealthy levels) to compute the maximum circle radius for the visualization. These limits are:
+Here an added concern arises for the visualization of the monthly data. A single geojson file containing all the location/parameter/month data consists of nearly 100,000 features each with country, city, and other properties. The size of this file makes it unwieldy on the website. To help with this, I created a geojson file for each of the pollutants and created a map layer for each pollutant dataset. As an added benefit, this means that different circle-radius stops can be assigned for each pollutant. Using the Air Quality Index converter from [AirNow](https://www.airnow.gov/index.cfm?action=airnow.calculator), I use an AQI level of 100 (the border between moderate and unhealthy levels) to compute the maximum circle radius for the visualization. These limits are:
 
 CO (8hr average)-9.4ppm- 10566<br>
 03 (8hr average)- 70ppm- 78680<br>
