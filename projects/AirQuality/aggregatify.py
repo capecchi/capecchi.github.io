@@ -3,8 +3,8 @@ def main():
     import pandas as pd
     import numpy as np
 
-    mdirec = 'C:/Python34/Air_Quality/monthly_csvs/'
-    webdirec = "C:/Users/Owner/Documents/GitHub/capecchi.github.io/projects/AirQuality/"
+    direc = 'C:/Python34/Air_Quality/'
+    mdirec = direc+'monthly_csvs/'
     col_names = ['location','city','country','num_records','parameter','value','latitude','longitude']
     sub =['parameter','latitude','longitude']
 
@@ -36,6 +36,6 @@ def main():
         data['num_records'].set_value(r,total_rec,takeable=True)
 
     aggregate_master = data
-    fsav = webdirec+'aggregate_master.csv'
+    fsav = direc+'aggregate_master.csv'
     aggregate_master.to_csv(fsav,index=False)
     print('Saved:: aggregate_master.csv')
