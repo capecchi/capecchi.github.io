@@ -3,7 +3,7 @@ layout: post
 title: 4D Visualization of Time Series Analysis
 date: 2017-04-25
 excerpt: MACD time series analysis with comments on 4D data visualization
-image: /images/posts/small_3d_scan.png
+image: /images/posts/macd_small_3d_scan.png
 project: true
 tags: time-series optimization 4D-visualization
 ---
@@ -22,41 +22,23 @@ Steps to the analysis are as follows:
 3. Compute EMA(c) of the MACD time series
 4. Calculate a 'Histogram' = MACD - Signal
 
-Below is an excerpt from the data representing this analysis, done with (a,b,c) = (12,26,9)
+As each EMA value depends upon the one preceding it, the first EMA value is computed as an average of the closing price over a period matching the time window parameter. An example of the results of this analysis is shown below.
+![image](/images/posts/macd_time_series.png)
+These time series are then used as trading indicators, with 'buy' and 'sell' signals triggered by some event in the data (a zero-crossing, for example, or a certain drop in price or volume).
 
-Time | Open | High | Low | Close | Volume | EMA(a) | EMA(b) | MACD | EMA(c) | Histogram
------|------|------|-----|-------|--------|--------|--------|------|--------|----------
-1040 | 112.869 | 112.898 | 112.350 | 112.350 | 103.979 | 109.486				
+The client provided me with roughly three years of stock price data for two stocks. This included an 'open', 'close', 'high', and 'low' price and 'volume' for each entry, with entries at 5 minute intervals between 9:30 am and 4:00 pm. The goal of hiring me for this project was to optimize the time window parameters (a,b,c) to maximize an investor's return on investment (ROI). To assess the 'goodness' of a set of parameters, I model how an initial investment would change given the client's buy/sell criteria applied to the signals generated for those parameters.
 
-1050	113.533	113.937	113.388	113.388	277.277	110.0861667				
-1055	112.927	112.927	112.927	112.927	34.6596	110.5232179				
-1100	113.129	113.533	113.129	113.533	69.3193	110.9862613				
-1105	113.417	113.417	113.417	113.417	34.6596	111.3602211				
-1110	113.244	113.616	113.244	113.616	207.958	111.707264				
-1115	113.388	113.388	113.244	113.244	69.3192	111.943685				
-1120	113.042	113.443	111.542	111.542	277.277	111.8818873				
-1125	110.793	110.793	110.244	110.590	277.277	111.6831354				
-1140	111.513	111.744	111.513	111.744	103.979	111.6924992				
-1145	111.859	111.859	111.859	111.859	34.6596	111.7181147				
-1150	112.321	112.321	112.321	112.321	34.6596	111.8108663				
-1155	112.580	112.580	112.552	112.552	77.9842	111.9248868				
-1205	112.494	112.494	112.465	112.465	69.3192	112.0079812				
-1210	112.754	112.754	112.754	112.754	34.6596	112.1227533	111.145	0.977291763		
-1215	112.465	112.465	112.465	112.465	34.6596	112.1754066	111.2432051	0.932201512		
-1220	112.321	112.321	111.109	111.109	138.638	112.0113441	111.233264	0.778080072		
-1225	111.196	111.224	111.196	111.224	69.3192	111.8902142	111.2325778	0.657636437		
-1230	111.773	111.773	111.773	111.773	34.6596	111.8721813	111.2726091	0.599572204		
-1235	112.811	112.811	112.811	112.811	34.6596	112.0166149	111.3865639	0.630050972		
-1240	112.725	112.725	112.725	112.725	34.6596	112.1255972	111.4857074	0.639889881		
-1245	112.379	112.379	112.379	112.379	34.6596	112.1645823	111.5518772	0.612705096		
-1300	113.273	113.533	112.984	112.984	242.617	112.2906465	111.6579604	0.632686189	0.717790458	-0.085104269
-1305	113.244	113.273	113.244	113.273	69.3192	112.4417778	111.7775929	0.664184924	0.707069351	-0.042884428
-1315	113.763	114.340	113.763	114.340	1005.13	112.733812	111.9674009	0.76641117	0.718937715	0.047473455
+For this work the three year dataset was broken up into a 2-year 'in-sample' and 1-year 'out-sample' set. This allowed us to perform the optimization on the in-sample and see how it would perform on data for which it was not optimized. The following two plots show examples of the results on a small (and hopefully digestible) scale.
 
+![image](/images/posts/macd_a_scan.png)
+*Scan of a parameter on in/out-sample data*
+After scanning over a single parameter we apply investment model to calculate the ROI for each value of *a* on both the in- and out-sample data. The optimization on the in-sample data (green marker) gives an ROI of 1.5, falling to 1.36 when applied to the out-sample data. While not a bad return, it is noticeably not the best we could have done with the out-sample data.
 
-
-The client provided me with roughly three years of stock price data for two stocks. This included an 'open', 'close', 'high', and 'low' price and 'volume' for each entry, with entries at 5 minute intervals between 9:30 am and 4:00 pm.
-
-
-![image](/images/posts/small_3d_scan.png)
+![image](/images/posts/macd_small_3d_scan.png)
 *Small scan of (a,b,c) parameters*
+We now scan over all three parameters, given the constraint that *c <= a < b*. By allowing variation in all three parameters, we are able to increase the ROI on in-sample data up to 3.08 with optimized parameters of (a,b,c) = (5,9,4). Applied to the out-sample data however, the ROI falls to 0.93.
+
+The actual analysis was conducted over a much larger parameter array, but what is presented above suffices to illustrate the motivation for the second portion of this post.
+
+**The Visualization of 4-dimensional Data**
+(coming soon)
