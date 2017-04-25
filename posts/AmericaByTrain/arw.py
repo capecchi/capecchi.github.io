@@ -17,7 +17,7 @@ def main(newdata=False):
                        'MARTINEZ','NILES','COAST','SANTA BARBARA','VENTURA']
     sunset_limited = ['ALHAMBRA','YUMA','GILA','LORDSBURG','VALENTINE',
                       'SANDERSON','DEL RIO','GLIDDEN','LAFAYETTE']
-    crescent = ['NO & NE','AGS SOUTH','ATLANTA NORTH','ATLANTA SOUTH',
+    crescent = ['NO & NE','AGS SOUTH','EAST END','ATLANTA NORTH','ATLANTA SOUTH',
                 'NORCROSS','GREENVILLE-ATLANTA','SALISBURY-GREENVILLE',
                 'MONTVIEW-SALISBURY','ALEXANDRIA-MONTVIEW','MID-ATLANTIC']
     #cr_id = [207390,
@@ -28,26 +28,24 @@ def main(newdata=False):
     col = ['latitude','longitude','subdiv']
     eb = open(local+'empire_builder.geojson','w')
     eb.write('{"type":"FeatureCollection",\n"features": [\n')
-    #eb.write('{"type":"LineString",\n')
-    #eb.write('"coordinates":[\n')
-    #cs = open(local+'coast_starlight.geojson','w')
-    #cs.write('{"type":"LineString",\n')
-    #cs.write('"coordinates":[\n')
-    #sl = open(local+'sunset_limited.geojson','w')
-    #sl.write('{"type":"LineString",\n')
-    #sl.write('"coordinates":[\n')
-    #cr = open(local+'crescent.geojson','w')
-    #cr.write('{"type":"LineString",\n')
-    #cr.write('"coordinates":[\n')
-    #cl = open(local+'capitol_limited.geojson','w')
-    #cl.write('{"type":"LineString",\n')
-    #cl.write('"coordinates":[\n')
-
+    cs = open(local+'coast_starlight.geojson','w')
+    cs.write('{"type":"FeatureCollection",\n"features": [\n')
+    sl = open(local+'sunset_limited.geojson','w')
+    sl.write('{"type":"FeatureCollection",\n"features": [\n')
+    cr = open(local+'crescent.geojson','w')
+    cr.write('{"type":"FeatureCollection",\n"features": [\n')
+    cl = open(local+'capitol_limited.geojson','w')
+    cl.write('{"type":"FeatureCollection",\n"features": [\n')
+    
 
     i = 1
     nn = len(data['features'])
 
-    subtally = 0
+    ebsubtally = 0
+    cssubtally = 0
+    slsubtally = 0
+    crsubtally = 0
+    clsubtally = 0
     for feature in data['features']:
         print(i,'/',nn)
         i += 1
@@ -55,12 +53,12 @@ def main(newdata=False):
         if sub in empire_builder:
             ebtally = 0
             cc = feature['geometry']['coordinates']
-            if subtally == 0:
-                subtally = 1
+            if ebsubtally == 0:
+                ebsubtally = 1
             else:
                 eb.write(',\n')
-                subtally += 1
             eb.write('{"type":"Feature",\n')
+            eb.write('"properties":{},\n')
             eb.write('"geometry": {\n"type": "LineString",\n')
             eb.write('"coordinates": [\n')
             for pair in cc:
@@ -69,10 +67,108 @@ def main(newdata=False):
                     ebtally = 1
                 else:
                     eb.write(',\n'+str(pair))
-            eb.write(']\n') #end of pair list
-            eb.write('}\n') #end of geometry
-            eb.write('}\n') #end of feature
+            eb.write(']\n}\n}\n') #end of pair list, geometry, feature
+
+        if sub in coast_starlight:
+            cstally = 0
+            cc = feature['geometry']['coordinates']
+            if cssubtally == 0:
+                cssubtally = 1
+            else:
+                cs.write(',\n')
+            cs.write('{"type":"Feature",\n')
+            cs.write('"properties":{},\n')
+            cs.write('"geometry": {\n"type": "LineString",\n')
+            cs.write('"coordinates": [\n')
+            for pair in cc:
+                if cstally == 0:
+                    cs.write(str(pair))
+                    cstally = 1
+                else:
+                    cs.write(',\n'+str(pair))
+            cs.write(']\n}\n}\n') #end of pair list, geometry, feature
+
+        if sub in sunset_limited:
+            sltally = 0
+            cc = feature['geometry']['coordinates']
+            if slsubtally == 0:
+                slsubtally = 1
+            else:
+                sl.write(',\n')
+            sl.write('{"type":"Feature",\n')
+            sl.write('"properties":{},\n')
+            sl.write('"geometry": {\n"type": "LineString",\n')
+            sl.write('"coordinates": [\n')
+            for pair in cc:
+                if sltally == 0:
+                    sl.write(str(pair))
+                    sltally = 1
+                else:
+                    sl.write(',\n'+str(pair))
+            sl.write(']\n}\n}\n') #end of pair list, geometry, feature
+
+        if sub in crescent:
+            crtally = 0
+            cc = feature['geometry']['coordinates']
+            if crsubtally == 0:
+                crsubtally = 1
+            else:
+                cr.write(',\n')
+            cr.write('{"type":"Feature",\n')
+            cr.write('"properties":{},\n')
+            cr.write('"geometry": {\n"type": "LineString",\n')
+            cr.write('"coordinates": [\n')
+            for pair in cc:
+                if crtally == 0:
+                    cr.write(str(pair))
+                    crtally = 1
+                else:
+                    cr.write(',\n'+str(pair))
+            cr.write(']\n}\n}\n') #end of pair list, geometry, feature
+
+        if sub in capitol_limited:
+            cltally = 0
+            cc = feature['geometry']['coordinates']
+            check = cc[0]
+             #must be west of Philly and not SW of Fort Wayne
+            if check[0] < -75:
+                westofphilly = True
+            else:
+                westofphilly = False
+            if check[0] < -85 and check[1] < 41:
+                swoffortwayne = True
+            else:
+                swoffortwayne = False
+            if westofphilly and not swoffortwayne:
+                if clsubtally == 0:
+                    clsubtally = 1
+                else:
+                    cl.write(',\n')
+                cl.write('{"type":"Feature",\n')
+                cl.write('"properties":{},\n')
+                cl.write('"geometry": {\n"type": "LineString",\n')
+                cl.write('"coordinates": [\n')
+                for pair in cc:
+                    if cltally == 0:
+                        cl.write(str(pair))
+                        cltally = 1
+                    else:
+                        cl.write(',\n'+str(pair))
+                cl.write(']\n}\n}\n') #end of pair list, geometry, feature
+
 
     eb.write(']\n') #end of FeaturesCollection list
     eb.write('}')
     eb.close()
+    cs.write(']\n') #end of FeaturesCollection list
+    cs.write('}')
+    cs.close()
+    sl.write(']\n') #end of FeaturesCollection list
+    sl.write('}')
+    sl.close()
+    cr.write(']\n') #end of FeaturesCollection list
+    cr.write('}')
+    cr.close()
+    cl.write(']\n') #end of FeaturesCollection list
+    cl.write('}')
+    cl.close()
