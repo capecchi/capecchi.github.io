@@ -3,7 +3,7 @@ layout: post
 title: 4D Visualization of Time Series Analysis
 date: 2017-04-25
 excerpt: MACD time series analysis with comments on 4D data visualization
-image: /images/posts/macd_small_3d_scan.png
+image: /images/posts/macd_thumb.png
 project: true
 tags: time-series optimization 4D-visualization
 ---
