@@ -3,6 +3,9 @@
 
 /* Modifications */
 
+/*CAPTION STUFF*/
+img + em { display: block; text-align: center;}
+
 img.post-image {
   width: 100%;
 }

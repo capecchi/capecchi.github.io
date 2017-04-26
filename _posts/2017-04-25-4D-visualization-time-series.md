@@ -32,13 +32,15 @@ For this work the three year dataset was broken up into a 2-year 'in-sample' and
 
 ![image](/images/posts/macd_a_scan.png)
 *Scan of a parameter on in/out-sample data*
+
 After scanning over a single parameter we apply investment model to calculate the ROI for each value of *a* on both the in- and out-sample data. The optimization on the in-sample data (green marker) gives an ROI of 1.5, falling to 1.36 when applied to the out-sample data. While not a bad return, it is noticeably not the best we could have done with the out-sample data.
 
 ![image](/images/posts/macd_small_3d_scan.png)
 *Small scan of (a,b,c) parameters*
+
 We now scan over all three parameters, given the constraint that *c <= a < b*. By allowing variation in all three parameters, we are able to increase the ROI on in-sample data up to 3.08 with optimized parameters of (a,b,c) = (5,9,4). Applied to the out-sample data however, the ROI falls to 0.93.
 
-The actual analysis was conducted over a much larger parameter array, but what is presented above suffices to illustrate the motivation for the second portion of this post.
+The actual analysis was conducted over a much larger parameter array. Although stock volatility makes this analysis far from guaranteed to increase profit, the optimization here did result in a 32.3 and 51.9% increase in ROI on the out-sample data when compared to the "standard" analysis parameters of (12,26,9) conducted on the two stocks. While smaller sample sizes can be fairly effectively visualized as shown above, the much larger datasets created through the full 3D parameter scan are more difficult to portray in easily understandable formats. This is the motivation for the second portion of this post.
 
 **The Visualization of 4-dimensional Data**
 (coming soon)
