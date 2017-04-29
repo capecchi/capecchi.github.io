@@ -119,26 +119,50 @@ def main(newdata=False,
         if sub in crescent:
             crtally = 0
             cc = feature['geometry']['coordinates']
-            if crsubtally == 0:
-                crsubtally = 1
-            else:
-                cr.write(',\n')
-            cr.write('{"type":"Feature",\n')
-            cr.write('"properties":{},\n')
-            cr.write('"geometry": {\n"type": "LineString",\n')
-            cr.write('"coordinates": [\n')
-            for pair in cc:
-                if crtally == 0:
-                    cr.write(str(pair))
-                    crtally = 1
+            if sub == 'MID-ATLANTIC':
+                if crsubtally == 0:
+                    crsubtally = 1
                 else:
-                    cr.write(',\n'+str(pair))
-            cr.write(']\n}\n}\n') #end of pair list, geometry, feature
+                    cr.write(',\n')
+                cr.write('{"type":"Feature",\n')
+                cr.write('"properties":{},\n')
+                cr.write('"geometry": {\n"type": "LineString",\n')
+                cr.write('"coordinates": [\n')
+                for pair in cc:
+                    if pair[1] < 39.955790:
+                        southofphilly = True
+                    else: southofphilly = False
+                    if southofphilly:
+                        if crtally == 0:
+                            cr.write(str(pair))
+                            crtally = 1
+                        else:
+                            cr.write(',\n'+str(pair))
+                cr.write(']\n}\n}\n') #end of pair list, geometry, feature
+            else: #not mid-atlantic subdiv                   
+                if crsubtally == 0:
+                    crsubtally = 1
+                else:
+                    cr.write(',\n')
+                cr.write('{"type":"Feature",\n')
+                cr.write('"properties":{},\n')
+                cr.write('"geometry": {\n"type": "LineString",\n')
+                cr.write('"coordinates": [\n')
+                for pair in cc:
+                    if crtally == 0:
+                        cr.write(str(pair))
+                        crtally = 1
+                    else:
+                        cr.write(',\n'+str(pair))
+                cr.write(']\n}\n}\n') #end of pair list, geometry, feature
 
         if sub in capitol_limited:
             cltally = 0
             cc = feature['geometry']['coordinates']
-            if sub == 'MID-ATLANTIC':
+            check = cc[0]
+            if check[0] < -75.181975: westofphilly = True
+            else: westofphilly = False
+            if westofphilly:
                 if clsubtally == 0:
                     clsubtally = 1
                 else:
@@ -148,36 +172,12 @@ def main(newdata=False,
                 cl.write('"geometry": {\n"type": "LineString",\n')
                 cl.write('"coordinates": [\n')
                 for pair in cc:
-                    if pair[1] < 39.955790:
-                        southofphilly = True
-                    else: southofphilly = False
-                    if southofphilly:
-                        if cltally == 0:
-                            cl.write(str(pair))
-                            cltally = 1
-                        else:
-                            cl.write(',\n'+str(pair))
-                cl.write(']\n}\n}\n') #end of pair list, geometry, feature
-            else: #not mid-atlantic subdiv                   
-                check = cc[0]
-                if check[0] < -85 and check[1] < 41: swoffortwayne = True
-                else: swoffortwayne = False
-                if not swoffortwayne:
-                    if clsubtally == 0:
-                        clsubtally = 1
+                    if cltally == 0:
+                        cl.write(str(pair))
+                        cltally = 1
                     else:
-                        cl.write(',\n')
-                    cl.write('{"type":"Feature",\n')
-                    cl.write('"properties":{},\n')
-                    cl.write('"geometry": {\n"type": "LineString",\n')
-                    cl.write('"coordinates": [\n')
-                    for pair in cc:
-                        if cltally == 0:
-                            cl.write(str(pair))
-                            cltally = 1
-                        else:
-                            cl.write(',\n'+str(pair))
-                    cl.write(']\n}\n}\n') #end of pair list, geometry, feature
+                        cl.write(',\n'+str(pair))
+                cl.write(']\n}\n}\n') #end of pair list, geometry, feature
 
 
     eb.write(']\n') #end of FeaturesCollection list
