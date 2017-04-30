@@ -3,8 +3,8 @@ def sort_coords(pairs):
     #(long,lat) -> (x,y)
     #math.atan2(y,x) is quantrant sensitive
     
-    test = pairs[0]
-    pairs = pairs[1:]
+    test = pairs[-1]
+    pairs = pairs[:-1]
     testdist = [ (test[0]-p[0])**2+(test[1]-p[1])**2 for p in pairs ]
     chain = pairs[np.where(testdist == np.max(testdist))]
     pairs = pairs[np.where(testdist != np.max(testdist))]
@@ -14,7 +14,7 @@ def sort_coords(pairs):
         dist = [ (last[0]-p[0])**2+(last[1]-p[1])**2 for p in pairs ]
         print(len(pairs), np.min(dist))
 
-        if np.min(dist) >= 10: #reached an end with pts remaining
+        if np.min(dist) >= 50: #reached an end with pts remaining
             chain = chain[::-1]
         else:
             nextpt = pairs[np.where(dist == np.min(dist))]
@@ -51,22 +51,21 @@ def main(newdata=False):
     
 
     col = ['latitude','longitude','subdiv']
-    eb = open(local+'empire_builder.geojson','w')
+    eb = open(local+'empire_builder_ls.geojson','w')
     eb.write('{"type":"LineString",\n')
     eb.write('"coordinates":[\n')
-    cs = open(local+'coast_starlight.geojson','w')
+    cs = open(local+'coast_starlight_ls.geojson','w')
     cs.write('{"type":"LineString",\n')
     cs.write('"coordinates":[\n')
-    sl = open(local+'sunset_limited.geojson','w')
+    sl = open(local+'sunset_limited_ls.geojson','w')
     sl.write('{"type":"LineString",\n')
     sl.write('"coordinates":[\n')
-    cr = open(local+'crescent.geojson','w')
+    cr = open(local+'crescent_ls.geojson','w')
     cr.write('{"type":"LineString",\n')
     cr.write('"coordinates":[\n')
-    cl = open(local+'capitol_limited.geojson','w')
+    cl = open(local+'capitol_limited_ls.geojson','w')
     cl.write('{"type":"LineString",\n')
     cl.write('"coordinates":[\n')
-
 
     if newdata or not os.path.isfile(local+'coords.npz'):
         i = 1
@@ -78,7 +77,7 @@ def main(newdata=False):
         cr_coords = []
         cl_coords = []
         for feature in data['features']:
-            print(i,'/',nn)
+            #print(i,'/',nn)
             i += 1
             sub = feature['properties']['SUBDIV']
             if sub in empire_builder:
@@ -114,17 +113,26 @@ def main(newdata=False):
     if newdata or not os.path.isfile(local+'eb_sorted.npy'):
         eb_sorted = sort_coords(eb_coords)
         np.save(local+'eb_sorted',eb_sorted)
+    else: eb_sorted = np.load(local+'eb_sorted.npy')
     if newdata or not os.path.isfile(local+'cs_sorted.npy'):    
         cs_sorted = sort_coords(cs_coords)
         np.save(local+'cs_sorted',cs_sorted)
+    else: cs_sorted = np.load(local+'cs_sorted.npy')
     if newdata or not os.path.isfile(local+'sl_sorted.npy'):
         sl_sorted = sort_coords(sl_coords)
-        np.save(local+'sl_sorted',ls_sorted)
-                
+        np.save(local+'sl_sorted',sl_sorted)
+    else: sl_sorted = np.load(local+'sl_sorted.npy')
+    if newdata or not os.path.isfile(local+'cr_sorted.npy'):
         cr_sorted = sort_coords(cr_coords)
+        np.save(local+'cr_sorted',cr_sorted)
+    else:cr_sorted = np.load(local+'cr_sorted.npy')
+    if newdata or not os.path.isfile(local+'cl_sorted.npy'):
         cl_sorted = sort_coords(cl_coords)
-        np.savez(local+'sorted',eb_sorted=eb_sorted,cs_sorted=cs_sorted,
-                 sl_sorted=sl_sorted,cr_sorted=cr_sorted,cl_sorted=cl_sorted)
+        np.save(local+'cr_sorted',cr_sorted)
+    else: cl_sorted = np.load(local+'cl_sorted.npy')        
+
+    np.savez(local+'sorted',eb_sorted=eb_sorted,cs_sorted=cs_sorted,
+             sl_sorted=sl_sorted,cr_sorted=cr_sorted,cl_sorted=cl_sorted)
 
     f = np.load(local+'sorted.npz')
     eb_sorted = f['eb_sorted']
@@ -139,7 +147,7 @@ def main(newdata=False):
     for pair in eb_sorted:
         if tally == 0:
             eb.write('['+str(pair[0])+','+str(pair[1])+']')
-            ebtally = 1
+            tally = 1
         else:
             eb.write(',\n['+str(pair[0])+','+str(pair[1])+']')
     eb.write(']\n}')
@@ -149,7 +157,7 @@ def main(newdata=False):
     for pair in cs_sorted:
         if tally == 0:
             cs.write('['+str(pair[0])+','+str(pair[1])+']')
-            ebtally = 1
+            tally = 1
         else:
             cs.write(',\n['+str(pair[0])+','+str(pair[1])+']')
     cs.write(']\n}')
@@ -159,7 +167,7 @@ def main(newdata=False):
     for pair in sl_sorted:
         if tally == 0:
             sl.write('['+str(pair[0])+','+str(pair[1])+']')
-            sltally = 1
+            tally = 1
         else:
             sl.write(',\n['+str(pair[0])+','+str(pair[1])+']')
     sl.write(']\n}')
@@ -169,7 +177,7 @@ def main(newdata=False):
     for pair in cr_sorted:
         if tally == 0:
             cr.write('['+str(pair[0])+','+str(pair[1])+']')
-            crtally = 1
+            tally = 1
         else:
             cr.write(',\n['+str(pair[0])+','+str(pair[1])+']')
     cr.write(']\n}')
@@ -179,7 +187,7 @@ def main(newdata=False):
     for pair in cl_sorted:
         if tally == 0:
             cl.write('['+str(pair[0])+','+str(pair[1])+']')
-            cltally = 1
+            tally = 1
         else:
             cl.write(',\n['+str(pair[0])+','+str(pair[1])+']')
     cl.write(']\n}')
