@@ -40,14 +40,14 @@ Some visuals might help explain my method here. Consider this cartoon of a junct
 
 Starting from the red node, the routine identifies these possible paths of length 5:
 ```Python
-  [[0, 173, 181, 180, 182],
-  [0, 173, 181, 180, 183],
-  [0, 173, 181, 182, 180],
-  [0, 173, 181, 182, 183],
-  [1, 14, 16, 18, 4],
-  [1, 14, 17, 18, 4],
-  [15, 14, 16, 18, 4],
-  [15, 14, 17, 18, 4]]
+paths = [[0, 173, 181, 180, 182],
+         [0, 173, 181, 180, 183],
+         [0, 173, 181, 182, 180],
+         [0, 173, 181, 182, 183],
+         [1, 14, 16, 18, 4],
+         [1, 14, 17, 18, 4],
+         [15, 14, 16, 18, 4],
+         [15, 14, 17, 18, 4]]
 ```
 I identify the furthest reaching paths by identifying which paths have final segments that do not occur in the first four segments of the rest of the set of paths. So in the case above, the 2nd and 5th paths are identified as the furthest reaching (others with the same end segments are ignored). The redundant segments are those that occur in the set of paths listed above, and do not occur in our list of furthest reaching paths. Applied here, this results in redundant segments of 15, 17, and 182.
 
