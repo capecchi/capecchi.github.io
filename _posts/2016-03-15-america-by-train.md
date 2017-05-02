@@ -16,42 +16,39 @@ Early last year I found myself in an unusual situation. I was nearing the end of
 
 I wanted to create a visualization for this post using CartoDB because I knew it offered a lot of interesting ways to incorporate pictures and text blurbs into a map, but also because I haven't used it before and wanted to familiarize myself with it.
 
-With that as my ultimate goal, the first step was acquiring data to plot the Amtrak routes, as I wanted these as the basis over which I applied my trip narrative. A simple google search leads to numerous links from which one can easily download a geojson file containing the Amtrak routes. Upon inspection, I found that this file contains every Amtrak route, but notably lacks an easy way to segment the tracks by which trains operate on them. The Empire Builder, for example, runs from Chicago to Seattle across the northern states, but the data lacks a property identifying any given segment as belonging to this particular train. Instead, a property is included that identifies a *subdivision*.
+With that as my ultimate goal, the first step was acquiring data to plot the Amtrak routes, as I wanted these as the basis over which I applied my trip narrative. A simple google search leads to numerous links from which one can easily download a geojson file containing the Amtrak routes. Upon inspection, I found that this file contains every Amtrak route broken up into segments typically less than a mile in length, but notably lacks an easy way to segment the tracks by which trains operate on them. The Empire Builder, for example, runs from Chicago to Seattle across the northern states, but the data lacks a property identifying any given segment as belonging to this particular train.
 
-Using CartoDB I can add overlay labels which reveal which subdivisions are part of each train. Each route only contains a dozen or so subdivisions, so creating a string array in Python was not too difficult. From there it took some finagling, but with a careful use of syntax I could successfully write a geojson file for each route, writing in each subdivision as a feature with LineString geometry in a FeatureCollection object using the code below.
+There are numerous other properties, and I tried a great many ways to use these to my advantage, but continually ran into issues resulting from what I consider a very messy (and frustrating) database. For example, a property is included that identifies a *subdivision* which usually contains a large number of track segments, but not only are these subdivisions not unique (the subdivision "Lafayette" is not only a part of the Sunset Limited route, but can also be found in southwest Indiana), not all track segments are part of a subdivision. The same is true for the property "FRAARCID" which, given the fact that it ends in "ID", I may be forgiven for assuming would represent a unique segment identifier. There is even a "To" and "From" property for each segment identifying which track segments connect, but here it was found while trying to piece the routes together that these identifiers are not unique and therefore create problems when trying to correctly link segments end to end to create the individual train routes. The saving grace for this dataset, and the fact I exploited to my advantage, was that each segment shared the same point (to within what I assume were rounding errors in the data entry) with its connecting segment(s).
+
+To create the routes, I basically linked segments together from origin to destination using a fun bit of recursive programming. To begin, I created a unique identifier for each segment by merely creating an `index` array of features from the geojson FeatureCollection. I also created a `start-point` and `end-point` array for each segment; this was essential so that once I knew which segment came next as I built the routes, I would know in which order to add the coordinates listed in that segment depending on if it were the "start" or "end" of that segment that adjoined the end of my route.
+
+By identifying the start and end points for a route (say St. Paul, MN and Seattle, WA for my trip on the Empire Builder), I set the code off on linking segments together to build the route. The need for recursive programming is that there are obviously more than one way to get to Seattle from St. Paul. The code starts building segments together until it reaches a bifurcation, then calls itself for each direction possible. Whenever the end of a track is reached (or if the desired end-point is reached), the route is saved. In this way we can create every possible route from St. Paul to Seattle and simply choose the Empire Builder from them.
+
+I would argue to say I've had the code running for the past few days, but two major difficulties arose using this method that needed to be addressed in order to produce results using this method. One is a memory limitation, the other is a redundancy in the results, but both arise from the same underlying issue. Consider the map below, depicting all the Amtrak routes across America with an inset of a particularly messy interchange in Chicago.
+
+![image](/images/posts/abt_messy.png)
+
+This map highlights the fact that this data does not represent Amtrak *routes*, it actually is a dataset of Amtrak *tracks*. So not only does my program look for all routes from St. Paul to Seattle, including those that go through Chicago, it looks for all possible **track** combinations as well. The enormous number of permutations of tracks leads to the two issues mentioned above in that it both pulls my CPU into the abyss, and produces a huge number of routes that are essentially identical (though passing along different tracks as they traverse Amtrak stations).
+
+My solution to the memory issue was to track the level of recursion. It seems that my CPU can only handle 45 or so nesting calls to a function at once, so to prevent the memory issue whenever the nesting level reached 40, the route is saved in a temp file and the routine returns up a level. In effect, this finds all routes from the starting point that require 40 levels of recursion. Once done with that, it then starts opening these partial routes (with the entire partial route now at level 0) and continues building. While a limit at level 40 suffices, in practice I set the level limit to 20 to save some CPU for whatever else I want to be doing.
+
+While technically functioning at this point with the memory solution in place, a huge number of routes are generated due to the track redundancy- so many that starting from St. Paul my computer struggles to build routes much further than St. Cloud. If left long enough I am confident it would work as designed, but ineffectual programming isn't very fun. To alleviate this problem I needed to essentially remove information, or more accurately tell the program what information to ignore. To do this, I apply a smaller version of the recursive programming already developed. Using the `index` ID already in use, I scan each junction to see if the track bifurcates (noted by three or more segments meeting at one point). At each bifurcating junction I then trace out all possible routes of a certain length (5 connected segments suffices). I then identify redundant track segments by finding paths whose last segment is found within another path before the last segment. In effect, I'm identifying which paths extend the furthest from the starting point, and then keeping track of all the extra track segments that are within range but not used by these far-reaching paths.
+
+Some visuals might help explain my method here. Consider this cartoon of a junction in Mississippi.
+
+![image](/images/posts/abt_redundancy_cartoon.png)
+
+Starting from the red node, the routine identifies these possible paths of length 5:
 ```Python
-#initiate the file
-eb = open(local+'empire_builder.geojson','w')
-eb.write('{"type":"FeatureCollection",\n"features": [\n')
-
-#add each subdivision's LineString geometry as a new feature
-subtally = 0
-for feature in data['features']:
-    sub = feature['properties']['SUBDIV']
-    if sub in empire_builder:
-        tally = 0
-        cc = feature['geometry']['coordinates']
-        if subtally == 0:
-            subtally = 1
-        else:
-            eb.write(',\n')
-        eb.write('{"type":"Feature",\n')
-        eb.write('"properties":{},\n')
-        eb.write('"geometry": {\n"type": "LineString",\n')
-        eb.write('"coordinates": [\n')
-        for pair in cc:
-            if tally == 0:
-                eb.write(str(pair))
-                tally = 1
-            else:
-                eb.write(',\n'+str(pair))
-        eb.write(']\n}\n}\n') #end of pair list, geometry, feature
-
-#end and close the file
-eb.write(']\n') #end of FeaturesCollection list
-eb.write('}')
-eb.close()
+  [[0, 173, 181, 180, 182],
+  [0, 173, 181, 180, 183],
+  [0, 173, 181, 182, 180],
+  [0, 173, 181, 182, 183],
+  [1, 14, 16, 18, 4],
+  [1, 14, 17, 18, 4],
+  [15, 14, 16, 18, 4],
+  [15, 14, 17, 18, 4]]
 ```
-This code, when applied to the five different routes I travelled, results in five geojson files ready to be uploaded and mapped.
+I identify the furthest reaching paths by identifying which paths have final segments that do not occur in the first four segments of the rest of the set of paths. So in the case above, the 2nd and 5th paths are identified as the furthest reaching (others with the same end segments are ignored). The redundant segments are those that occur in the set of paths listed above, and do not occur in our list of furthest reaching paths. Applied here, this results in redundant segments of 15, 17, and 182.
 
-A careful look at the routes does reveal gaps in most of the routes. This, in my opinion, is the result of yet another flaw in the data. Not only is there no 'ROUTE' property, there is not even a 'SUBDIV' property for all of the LineString elements. What is worse, there are some subdivisions that are not unique! 'Lafayette' for example, is both part of the Sunset Limited route, and a segment up near Indianapolis. This is definitely something I would clean up if I were to spend more time with the data, but after applying some rough lat/long conditions to rule out duplicate subdivisions, each route contained around 12,000 gps coordinates, and that's good enough for the purposes here.
+By compiling a list of these redundancies and feeding them into the recursive route-building routine we can ignore the a great deal of the complexity in the dataset and more effectively build the routes we're looking for.
