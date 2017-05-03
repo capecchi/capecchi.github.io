@@ -8,6 +8,8 @@ project: true
 tags: time-series optimization 4D-visualization
 ---
 
+**This post is in progress**
+
 I recently completed a project for an Upwork client optimizing parameters in a time-series analysis. I thought both the project itself the subsequent task of communicating the results through visuals presented some interesting material, and so I wanted to briefly mention a few things here.
 
 **The Project**
