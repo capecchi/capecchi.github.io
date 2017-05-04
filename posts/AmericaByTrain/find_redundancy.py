@@ -4,7 +4,7 @@ def main(index,strt,end,cid,local):
     import length_builder
     import os
     
-    pl = 5 #set num of segments to consider
+    pl = 10 #set num of segments to consider
     #index = np.roll(index,-11600)
     for i in index:
         if (i+1) % 100 == 0: print(i+1,'/',len(index))

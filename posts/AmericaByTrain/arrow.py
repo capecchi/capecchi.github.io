@@ -116,11 +116,11 @@ def main(newdata=False,
     #put an npy file in /rb to start with
     ptA = [stpaul]
     iredund = np.load(local+'redundant.npy')
-    for i in eb_block:
-        iredund = np.append(iredund,i)
+    #for i in eb_block:
+    #    iredund = np.append(iredund,i)
     iarr = np.array([],dtype=int)
     if not cont: np.savez(rb+'partial',ptA=ptA,iarr=iarr)
-    print(len(iredund),eb_block)
+    print(len(iredund))
     partials = glob.glob(rb+'*.npz')
     while len(partials) > 0:
         level = 0

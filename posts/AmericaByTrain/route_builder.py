@@ -11,7 +11,7 @@ def main(ptA, iarr, ptB, fn, level, iredund):
     level += 1
     
     #IF LEVEL TOO HIGH- tie off and save as partial file
-    if level >= 40:
+    if level >= 20:
         print('TOO HIGH----------------------------')
         j = 1
         local = 'C:/Python34/America_By_Train/'
