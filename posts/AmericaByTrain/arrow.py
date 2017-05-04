@@ -120,7 +120,7 @@ def main(newdata=False,
         iredund = np.append(iredund,i)
     iarr = np.array([],dtype=int)
     if not cont: np.savez(rb+'partial',ptA=ptA,iarr=iarr)
-    print(len(iredund))
+    print(len(iredund),eb_block)
     partials = glob.glob(rb+'*.npz')
     while len(partials) > 0:
         level = 0

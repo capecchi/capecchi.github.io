@@ -65,28 +65,28 @@ def main(ptA, iarr, ptB, fn, level, iredund):
 
             #REMOVE SEGMENTS ALREADY USED OR REDUNDANT
             if len(isps) > 0:
-                isps2 = isps
+                isps2 = np.array([],dtype=int)
                 for i in isps:
-                    if i not in iarr and i not in iredund: isps2 = np.append(isps2,i)
+                    if i not in iarr:
+                        if i not in iredund: isps2 = np.append(isps2,i)
                 isps = isps2
             if len(ieps) > 0:
-                ieps2 = ieps
+                ieps2 = np.array([],dtype=int)
                 for i in ieps:
-                    if i not in iarr and i not in iredund: ieps2 = np.append(ieps2,i)
+                    if i not in iarr:
+                        if i not in iredund: ieps2 = np.append(ieps2,i)
                 ieps = ieps2
-#            if len(iarr) > 0 and len(isps) > 0:
-#                isps2 = []
-#                for i in np.arange(len(isps)):
-#                    if isps[i] not in iarr: isps2.append(isps[i])
-#                isps = isps2
-#            if len(iarr) > 0 and len(ieps) > 0:
-#                ieps2 = np.array([],dtype=int)
-#                for i in np.arange(len(ieps)):
-#                    if ieps[i] not in iarr: ieps2 = np.append(ieps2,ieps[i])
-#                ieps = ieps2
-                
+
             #END, BUILD, OR BIFURCATE
             npts = len(isps) + len(ieps) #number of start and endpoints found
+
+            if 0:#len(iarr) > 0:
+                print(npts)
+                print(iarr)
+                print(iredund)
+                if 8 in iredund: print('True')
+                stop
+            
             if npts == 0: #end of route found
                 building = 0
                 coords2linestring.main(ptA,fn,ptB=False)    
