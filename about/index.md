@@ -18,4 +18,4 @@ To measure this threshold I developed a collimated neutron detector, which by me
 A copy of my thesis can be found [here](/about/Capecchi_thesis.pdf).
 
 
-##### This site is built using Jekyll and the [Jekyll-Uno](http://jekyllthemes.org/themes/jekyll-uno/) theme
+<p style="font-size:0.8em"> This site is built using Jekyll and the [Jekyll-Uno](http://jekyllthemes.org/themes/jekyll-uno/) theme</p>
