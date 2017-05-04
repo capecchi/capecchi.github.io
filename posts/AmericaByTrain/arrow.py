@@ -1,6 +1,9 @@
 #Amtrak Recursiv ROute Writer (ARROW)
+#cont- does not write initial .npz file, relies on existing partials
 
-def main(newdata = False):
+def main(newdata=False,
+         cont=False,
+         newredund=False):
     import json
     import numpy as np
     import os
@@ -31,6 +34,7 @@ def main(newdata = False):
         #fraarcid
         stpaulid = 182592 #keep east pt
         stpaul_iarr_cid = 182614 #mark eastern segment as redundant so we only search west
+        portland_cid = 266301 #block southern route to Portland
         seattleid = 241310 #keep south pt
         laid = 211793 #keep south pt
         palmspringsid = 263261 #keep west pt
@@ -39,7 +43,7 @@ def main(newdata = False):
         phillyid = 204870 #keep north pt
         dcid = 164103 #keep south pt
         chicagoid = 253079 #keep north pt
-        stpaul_iarr = np.array([],dtype=int)
+        eb_block = np.array([],dtype=int)
         
         for i in index:
             cid = feats[i]['properties']['FRAARCID']
@@ -50,7 +54,9 @@ def main(newdata = False):
                 if c1[0] > c2[0]: stpaul = c1
                 else: stpaul = c2
             if cid == stpaul_iarr_cid:
-                stpaul_iarr = np.append(stpaul_iarr,i)
+                eb_block = np.append(eb_block,i)
+            if cid == portland_cid: #block southern route to Portland
+                eb_block = np.append(eb_block,i)
             if cid == seattleid:
                 if c1[1] < c2[1]: seattle = c1
                 else: seattle = c2
@@ -76,17 +82,18 @@ def main(newdata = False):
                 if c1[1] > c2[1]: chicago = c1
                 else: chicago = c2
 
-        #Identify redundant track segments
-        fraarcid = [feats[i]['properties']['FRAARCID'] for i in index]
-        iredund = np.array([],dtype=int)
-        np.save(local+'redundant',iredund)
-        redundant = find_redundancy.main(index,strt,end,fraarcid,local)        
+        if newredund:
+            #Identify redundant track segments
+            fraarcid = [feats[i]['properties']['FRAARCID'] for i in index]
+            iredund = np.array([],dtype=int)
+            np.save(local+'redundant',iredund)
+            redundant = find_redundancy.main(index,strt,end,fraarcid,local)        
 
         #SAVE STUFF
         np.savez(local+'endpts',index=index,strt=strt,end=end,
                  stpaul=stpaul,seattle=seattle,la=la,palmsprings=palmsprings,
                  neworleans_end=neworleans_end,neworleans_start=neworleans_start,
-                 philly=philly,dc=dc,chicago=chicago,stpaul_iarr=stpaul_iarr)
+                 philly=philly,dc=dc,chicago=chicago,eb_block=eb_block)
         print('saved endpts arrays and city GPS coords')
 
     else:
@@ -95,7 +102,7 @@ def main(newdata = False):
         strt = f['strt']
         end = f['end']
         stpaul = f['stpaul']
-        stpaul_iarr = f['stpaul_iarr']
+        eb_block = f['eb_block']
         seattle = f['seattle']
         la = f['la']
         palmsprings = f['palmsprings']
@@ -104,17 +111,15 @@ def main(newdata = False):
         philly = f['philly']
         dc = f['dc']
         chicago = f['chicago']
-        
-    #BUILD ALL THE ROUTES FROM A TO B
-    #ptA either [[long,lat]] or [[long,lat],...]
 
     #EMPIRE BUILDER
     #put an npy file in /rb to start with
     ptA = [stpaul]
     iredund = np.load(local+'redundant.npy')
-    #iredund = np.append(iredund,stpaul_iarr) #uncomment to only look west
+    for i in eb_block:
+        iredund = np.append(iredund,i)
     iarr = np.array([],dtype=int)
-    np.savez(rb+'partial',ptA=ptA,iarr=iarr)
+    if not cont: np.savez(rb+'partial',ptA=ptA,iarr=iarr)
     print(len(iredund))
     partials = glob.glob(rb+'*.npz')
     while len(partials) > 0:
