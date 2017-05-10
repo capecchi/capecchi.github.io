@@ -8,8 +8,6 @@ project: true
 tags: time-series optimization 4D-visualization
 ---
 
-**This post is in progress**
-
 I recently completed a project for an Upwork client optimizing parameters in a time-series analysis. I thought both the project itself and the subsequent task of communicating the results through visuals presented some interesting material, and so I wanted to briefly mention a few things here.
 
 **The Project**
@@ -60,8 +58,17 @@ By flattening one of the dimensions (in this case by keeping the maximum value) 
 
 One way to clarify the visualization is to include another dimension, namely time. Instead of flattening one dimension as above, we prescribe that variable to the time axis. So now we have the four quantities we're trying to plot (a,b,c,ROI) assigned to four axes (x,y,z/time,color).
 
-<video width="320" height="240" controls>
-  <source src="/images/posts/macd_3danim.mp4" type="video/mp4">
+<video width="500" height="375" controls>
+  <source src="/images/posts/macd_c_anim.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
-*Contours of flattened data reveals information on internal structure*
+*Scanning parameter 'c' vs time*
+
+We can make another interesting visual by mapping the ROI value to the time axis instead of the time window 'c'.
+<video width="500" height="375" controls>
+  <source src="/images/posts/macd_roi_anim.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+*Plotting normalized ROI vs time*
+
+Finding useful, concise, and clear methods to convey 4D data is a common challenge. Any measure of a 3D object (the human body for example) results in 4D data, and a good representation of the data is often more of an art than a science.
