@@ -31,12 +31,12 @@ The client provided me with roughly three years of stock price data for two stoc
 For this work the three year dataset was broken up into a 2-year 'in-sample' and 1-year 'out-sample' set. This allowed us to perform the optimization on the in-sample and see how it would perform on data for which it was not optimized. The following two plots show examples of the results on a small (and hopefully digestible) scale.
 
 ![image](/images/posts/macd_a_scan.png)
-*Scan of 'a' parameter on in/out-sample data*
+**Scan of 'a' parameter on in/out-sample data**
 
 After scanning over a single parameter we apply the investment model to calculate the ROI for each value of *a* on both the in- and out-sample data. The optimization on the in-sample data (green marker) gives an ROI of 1.5, falling to 1.36 when applied to the out-sample data. While not a bad return, it is noticeably not the best we could have done with the out-sample data.
 
 ![image](/images/posts/macd_small_3d_scan.png)
-*Small scan of (a,b,c) parameters*
+**Small scan of (a,b,c) parameters**
 
 We now scan over all three parameters, given the constraint that *c <= a < b*. By allowing variation in all three parameters, we are able to increase the ROI on in-sample data up to 3.08 with optimized parameters of (a,b,c) = (5,9,4). Applied to the out-sample data however, the ROI falls to 0.93.
 
@@ -49,7 +49,7 @@ The fundamental difficulty of plotting 4D data is of course that we assign a phy
 The time windows considered for this analysis were set by *1 <= c <= 78*, where 78 (given the 5 minute increment in stock data) represents one day of trading. Parameters *a* and *b* are constrained as mentioned above. This gives a parameter space consisting of 79,079 data points. While not a large dataset by any means, representing 79,079 different ROI values visually while depending on three input parameters is very difficult. Using the same color scheme as above results in the data being so tightly packed that it is very difficult to see inside the boundary.
 
 ![image](/images/posts/macd_3dscan.png)
-*Color scale plot of 3D scan of (a,b,c) parameters*
+**Color scale plot of 3D scan of (a,b,c) parameters**
 
 By flattening one of the dimensions (in this case by keeping the maximum value) we can include 2D color plots alongside the one shown above to get a sense for the internal structure. By including more information in more plots, however, we complicate the visual and make it more difficult to digest.
 
