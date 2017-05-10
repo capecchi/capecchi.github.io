@@ -4,8 +4,9 @@
 /* Modifications */
 
 /*CAPTION STUFF*/
-img + em { display: block; text-align: center;}
-video + em { display: block;
+img + strong { display: block; text-align: center;}
+video { display: block;
+  text-align: center;
   margin: 0 auto;
 }
 

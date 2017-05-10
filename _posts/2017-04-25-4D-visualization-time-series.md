@@ -54,7 +54,7 @@ The time windows considered for this analysis were set by *1 <= c <= 78*, where 
 By flattening one of the dimensions (in this case by keeping the maximum value) we can include 2D color plots alongside the one shown above to get a sense for the internal structure. By including more information in more plots, however, we complicate the visual and make it more difficult to digest.
 
 ![image](/images/posts/macd_3d_wcontour.png)
-*Contours of flattened data reveals information on internal structure*
+**Contours of flattened data reveals information on internal structure**
 
 One way to clarify the visualization is to include another dimension, namely time. Instead of flattening one dimension as above, we prescribe that variable to the time axis. So now we have the four quantities we're trying to plot (a,b,c,ROI) assigned to four axes (x,y,z/time,color).
 
