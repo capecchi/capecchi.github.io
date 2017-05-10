@@ -5,8 +5,8 @@
 
 /*CAPTION STUFF*/
 img + em { display: block; text-align: center;}
-video { display: block;
-  text-align: right;
+video + em { display: block;
+  text-align: center;
   margin: 0 auto;
 }
 
