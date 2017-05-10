@@ -58,7 +58,7 @@ By flattening one of the dimensions (in this case by keeping the maximum value) 
 
 One way to clarify the visualization is to include another dimension, namely time. Instead of flattening one dimension as above, we prescribe that variable to the time axis. So now we have the four quantities we're trying to plot (a,b,c,ROI) assigned to four axes (x,y,z/time,color).
 
-<video width="500" height="375" controls>
+<video width="500" height="375" controls align="center">
   <source src="/images/posts/macd_c_anim.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>

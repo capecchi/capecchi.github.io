@@ -5,6 +5,10 @@
 
 /*CAPTION STUFF*/
 img + em { display: block; text-align: center;}
+video { display: block;
+  text-align: right;
+  margin: 0 auto;
+}
 
 img.post-image {
   width: 100%;
