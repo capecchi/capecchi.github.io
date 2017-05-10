@@ -62,13 +62,13 @@ One way to clarify the visualization is to include another dimension, namely tim
   <source src="/images/posts/macd_c_anim.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
-<p style="text-align: center;">**Scanning parameter 'c' vs time**</p>
+<p style="text-align: center; font-weight: bold;">Scanning parameter 'c' vs time</p>
 
 We can make another interesting visual by mapping the ROI value to the time axis instead of the time window 'c'.
 <video width="500" height="375" controls>
   <source src="/images/posts/macd_roi_anim.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
-*Plotting normalized ROI vs time*
+<p style="text-align: center; font-weight: bold;">Plotting normalized ROI vs time*</p>
 
 Finding useful, concise, and clear methods to convey 4D data is a common challenge. Any measure of a 3D object (the human body for example) results in 4D data, and a good representation of the data is often more of an art than a science.
