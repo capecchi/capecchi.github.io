@@ -62,7 +62,7 @@ One way to clarify the visualization is to include another dimension, namely tim
   <source src="/images/posts/macd_c_anim.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
-<p style="text-align: center;">*Scanning parameter 'c' vs time*</p>
+<p style="text-align: center;">**Scanning parameter 'c' vs time**</p>
 
 We can make another interesting visual by mapping the ROI value to the time axis instead of the time window 'c'.
 <video width="500" height="375" controls>
