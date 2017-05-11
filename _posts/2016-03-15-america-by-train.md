@@ -53,4 +53,11 @@ paths = [[0, 173, 181, 180, 182],
 ```
 I identify the furthest reaching paths by identifying which paths have final segments that do not occur in the first four segments of the rest of the set of paths. So in the case above, the 2nd and 5th paths are identified as the furthest reaching (others with the same end segments are ignored). The redundant segments are those that occur in the set of paths listed above, and do not occur in our list of furthest reaching paths. Applied here, this results in redundant segments of 15, 17, and 182.
 
-By compiling a list of these redundancies and feeding them into the recursive route-building routine we can ignore the a great deal of the complexity in the dataset and more effectively build the routes we're looking for.
+By compiling a list of these redundancies and feeding them into the recursive route-building routine we can ignore a great deal of the complexity in the dataset and more effectively build the routes we're looking for. Additionally I can manually add segments in order to prevent unnecessary route searching (I can, for example, prevent the recursion from looking East out of St. Paul). I can now quickly obtain all the routes of my journey, with no gaps, overlaps, or other ugly features.
+
+![image](/images/posts/abt_myroutes.png)
+**The routes of my tour**
+
+It is amusing, however, to see what the computer can come up with. I took the time to write a recursive algorithm, may as well have some fun with it. Here are all the ways to get from St. Paul to Seattle...
+
+ (image coming soon... still crunching!)

@@ -6,6 +6,10 @@ def main():
     
     rb = 'C:/Python34/America_By_Train/route_builder/'
     geos = glob.glob(rb+'*.geojson')
+    size = [(f,os.path.getsize(f)) for f in geos]
+    size.sort(key=lambda filename: filename[1],reverse=True)
+    geos = [g[0] for g in size] #ordered largest to smallest
+
     index = np.arange(len(geos))
     i = 0
     while i < len(index):
@@ -29,8 +33,15 @@ def main():
                 while os.path.isfile(fn):
                     num += 1
                     fn = rb+'duplicates/duplicate'+str(num)+'.geojson'
-                os.rename(o,fn)
-                print('moved',o,'--to--',fn)
+                if 0:
+                    os.rename(o,fn)
+                    print('moved',o,'--to--',fn)
+                if 1:
+                    os.remove(o)
+                    print('deleted',o)
         geos = glob.glob(rb+'*.geojson')
+        size = [(f,os.path.getsize(f)) for f in geos]
+        size.sort(key=lambda filename: filename[1],reverse=True)
+        geos = [g[0] for g in size] #ordered largest to smallest
         index = np.arange(len(geos))
         i += 1
