@@ -8,7 +8,7 @@ tags: Carto
 
 **This post is in progress**
 
-[![image](/images/posts/america_by_train.png)](/posts/AmericaByTrain)
+[![image](/images/posts/abt.png)](/posts/AmericaByTrain)
 
 In March of last year I found myself in an unusual situation. I was nearing the end of my graduate research project, but was still missing the bulk of the experimental data I needed. I had already designed the experiment, modeled and built the diagnostic, and tested what I could, but I was waiting on the scintillator for my neutron detector to be built by the manufacturer. With mounting impetus to move towards graduation I found I had little to do in the lab, but plenty to do in writing my thesis. So I grabbed my laptop, a mountain of research papers, bought myself an Amtrak rail pass, and took off for a three week trip around the United States.
 
