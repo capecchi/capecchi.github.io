@@ -7,18 +7,17 @@ layout: default
     <img src="/images/engagement.jpg" alt="Engagement_photo" style="width:320px;" align="right">
   </li>
   <li style="display:block; text-align:left;">
-    **Potential Employers:**
-
+    <strong>Unavailability Notice:</strong></br>
     I am getting married on May 27th and will be unavailable while on honeymoon until June 12th.
     Please feel free to peruse the site and/or send me an
     <a href="mailto:william.capecchi@gmail.com" target="blank">email</a>.
   </li>
 </ul>
 
-***
-
 ---
-
+well?
+***
+anything?
 ___
 
 ## About Me
