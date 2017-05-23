@@ -6,8 +6,9 @@ layout: default
   <li style="display: block;">
     <img src="/images/engagement.jpg" alt="Engagement_photo" style="width:320px;" align="right">
   </li>
-  <li style="display:block; text-align:left; margin-left:16px">
-    <strong></br>Potential employers:</strong></br>
+  <li style="display:block; text-align:left;">
+    **Potential Employers:**
+
     I am getting married on May 27th and will be unavailable while on honeymoon until June 12th.
     Please feel free to peruse the site and/or send me an
     <a href="mailto:william.capecchi@gmail.com" target="blank">email</a>.
