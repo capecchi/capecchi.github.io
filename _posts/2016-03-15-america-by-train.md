@@ -5,17 +5,29 @@ date: 2017-05-01
 excerpt: A three week rail journey around the states
 tags: Carto Amtrak geojson
 ---
+Jump To:  
+<a href="#travels">The travels</a>  
+<a href="#data">The data</a>
 
 **This post is in progress**
 
 [![image](/images/posts/abt.png)](/posts/AmericaByTrain)
-**(click the map for an interactive version)**
+***(click the map for an interactive version)***
 
 In March of last year I found myself in an unusual situation. I was nearing the end of my graduate research project, but was still missing the bulk of the experimental data I needed. I had already designed the experiment, modeled and built the diagnostic, and tested what I could, but I was waiting on the scintillator for my neutron detector to be built by the manufacturer. With mounting impetus to move towards graduation I found I had little to do in the lab, but plenty to do towards writing my thesis. So I grabbed my laptop, a mountain of research papers, bought myself an Amtrak rail pass, and took off for a three week trip around the United States.
 
-...I'll fill out this portion later, describing the adventures of the trip. For now, I'm developing that data/mapping visuals that will accompany it.
+I wanted to create this post because after coming home I had wanted to put some pictures from my trip on a map showing the route I had traveled. Messing around with the Amtrak geojson data turned out to be a lot messier than I had expected, and resulted in some fun bits of programming that I thought would be fun to put up on the site.
 
-**Addendum: Data and Mapping for this post**
+<h2 id="travels">The adventure itself</h2>
+
+My train adventure began, interestingly, with a bus ride to St. Paul, MN where I made my first stop for my nephew's birthday party. My parents dropped me off afterward at the Amtrak depot and I climbed aboard. What struck me first is the vast difference in security from airline travel. With two backpacks (one for clothes, one for my camera), I presented my ticket and just... walked on. The larger clothes bag I stored in a luggage rack on the lower level before ascending to the (spacious) seating on the upper deck. Here the seats reclined nearly flat, with enough leg room to extend my feet without touching the back of the row in front of me. Such roominess turned out to make all the difference in comfort as I'd be spending many nights aboard the train over the next few weeks.
+
+Departing from St. Paul late in the evening I quickly fell asleep and awoke in the plains.
+
+
+<h2 id="data">Data</h2>
+
+**Data and mapping (the fun stuff)**
 
 I wanted to create a visualization for this post using CartoDB primarily because I haven't used it before and wanted to familiarize myself with it.
 

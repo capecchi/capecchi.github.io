@@ -1,4 +1,4 @@
-#Amtrak Recursiv ROute Writer (ARROW)
+#Amtrak Recursive ROute Writer (ARROW)
 #cont- does not write initial .npz file, relies on existing partials
 
 def main(newdata=False,

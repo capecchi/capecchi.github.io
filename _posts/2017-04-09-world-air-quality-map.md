@@ -7,6 +7,10 @@ image: /images/posts/monthly_data.png
 project: true
 tags: Mapbox web-scraper pollution geojson
 ---
+Jump To:  
+<a href="#scraping">Scraping and Analyzing</a>  
+<a href="#cleaning">Data Cleaning and Considerations</a>  
+<a href="#maps">Creating the Maps</a>
 
 [![image](/images/posts/aggregate_data.png)](/projects/AirQuality/world_data)
 **Pollutant Concentration Averages Since 06/2015** ***(click the map for an interactive version)***
@@ -15,7 +19,7 @@ Data does not tell its own story. My graduate thesis project, towards which I wo
 
 A few weeks ago I found a database of air quality measurements from locations around the world. The data, available at [OpenAQ](https://openaq-data.s3.amazonaws.com/index.html), offers almost daily data going back to June of 2015. I decided to create a map to visualize this data to get a sense of what the mountain of spreadsheets had to show. I had never built a web scraper before, nor done much coding in Python, so I took this as an opportunity to learn a few new skills.
 
-**Scraping and Analyzing**
+<h2 id="scraping">Scraping and Analyzing</h2>
 
 The key to writing a program to download the right files comes down to getting an array of the file names. Here I used the Python package `BeautifulSoup` to parse the page. In this case, the CSV files were given `<key>` tags in the site HTML, making them easy to pluck out.
 ```py
@@ -68,7 +72,7 @@ for ym in month_csvs: #for each month
 ```
 This process creates one file for each month, accomplished in two steps. First, a dataframe is created that only consists of unique parameter/location pairs (`month_data` in the above code). Then all the records taken that month of that parameter at that location are assembled (`multiple_records` above). This is used to compute the average recorded value for the month and the value is updated in the `month_data` dataframe. By also keeping track of how many records were used to compute each monthly average, I can then find the aggregate-average by combining the monthly files and compute the weighted average of the monthly values for each parameter and location.
 
-**Data Cleaning and Considerations**
+<h2 id="cleaning">Data Cleaning and Considerations</h2>
 
 There are a few things about the data that need consideration, both to clean it and to present it in a useful and appealing way. First, there are entries lacking latitude/longitude information. These are avoided with a simple call to drop any rows containing `NaN` values. Second, there are numerous entries throughout the dataset that contain negative concentrations (which obviously do not reflect the actual pollutant levels). OpenAQ responded to my query regarding this by stating that they archive the raw data recorded by each location and do not correct for any instrument drift or periods of instrument malfunction. This being the case, for the purposes of this visualization I simply ignored negative values. The last cleaning step is a simple unit conversion, converting from 'parts-per-million' to 'µg/m³' as needed to create a uniform dataset.
 
@@ -92,7 +96,7 @@ In order to aid in the decision of where to set the upper limit for marker size,
 ![figure](/images/posts/AQ_hist.png)
 From this it is apparent that the number of records falls off with higher concentrations as expected. Moreover, over 95% of the records fall below a value of 100. For this reason I chose 100 as the upper stop for the map marker radius.
 
-**Creating the Maps**
+<h2 id="maps">Creating the Maps</h2>
 
 I created the map visualization using the Mapbox API which required converting the data from CSV files into a geojson format, accomplished using this online [converter tool](http://www.convertcsv.com/csv-to-geojson.htm). The map style was formatted following this [example](https://www.mapbox.com/mapbox-gl-js/example/timeline-animation/). The visualization of the aggregate data (above) required a simple filter applied to the slider setting that displayed only the data for the pollutant selected (mainly to avoid the overlapping icons that would result from displaying multiple pollutant records at each location).
 ```javascript

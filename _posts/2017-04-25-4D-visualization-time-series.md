@@ -7,10 +7,13 @@ image: /images/posts/macd_thumb.png
 project: true
 tags: time-series optimization 4D-visualization
 ---
+Jump To:  
+<a href="#project">The Project</a>  
+<a href="#visualization">4D Visualization of Data</a>
 
 I recently completed a project for an Upwork client optimizing parameters in a time-series analysis. I thought both the project itself and the subsequent task of communicating the results through visuals presented some interesting material, and so I wanted to briefly mention a few things here.
 
-**The Project**
+<h2 id="project">The Project</h2>
 
 My client's goal in hiring me was to increase the success of his stock trading by using the moving average convergence/divergence ([MACD](https://en.wikipedia.org/wiki/MACD)) technique. This technique computes three exponential moving averages ([EMA](https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average)) based on three time windows (a,b,c), which is supposed to reveal changes in the strength, direction, momentum, and duration of a trend in a stock's prices.
 
@@ -42,7 +45,7 @@ We now scan over all three parameters, given the constraint that *c <= a < b*. B
 
 The actual analysis was conducted over a much larger parameter space. Although stock volatility makes this analysis far from guaranteed to increase profit, the optimization here did result in a 32.3 and 51.9% increase in ROI on the out-sample data when compared to the "standard" analysis parameters of (12,26,9) conducted on the two stocks. While smaller sample sizes can be fairly effectively visualized as shown above, the much larger datasets created through the full 3D parameter scan are more difficult to portray in easily understandable formats. This is the motivation for the second portion of this post.
 
-**The Visualization of 4-dimensional Data**
+<h2 id="visualization">Visualization of 4-dimensional Data</h2>
 
 The fundamental difficulty of plotting 4D data is of course that we assign a physical dimension to a dimension of the data, and are left with one extra data dimension with no obvious choice for how to represent it. Color is a common choice, as demonstrated above. The difficulty for this analysis arises from the large amount of data to be represented in the real parameter optimization.
 
