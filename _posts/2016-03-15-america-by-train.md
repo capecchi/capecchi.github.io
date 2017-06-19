@@ -25,9 +25,7 @@ My train adventure began, interestingly, with a bus ride to St. Paul, MN where I
 Departing from St. Paul late in the evening I quickly fell asleep and awoke in the plains.
 
 
-<h2 id="data">Data</h2>
-
-**Data and mapping (the fun stuff)**
+<h2 id="data">Data and Mapping (the fun stuff)</h2>
 
 I wanted to create a visualization for this post using CartoDB primarily because I haven't used it before and wanted to familiarize myself with it.
 
@@ -71,6 +69,6 @@ By compiling a list of these redundancies and feeding them into the recursive ro
 ![image](/images/posts/abt_myroutes.png)
 **The routes of my tour**
 
-It is amusing, however, to see what the computer can come up with. I took the time to write a recursive algorithm, may as well have some fun with it. Here are all the ways to get from St. Paul to Seattle...
+It is amusing, however, to see what the computer can come up with. I took the time to write a recursive algorithm, may as well have some fun with it. I am working on a way to present all the possible routes from St. Paul to Seattle, but there are many possible routes, and displaying them clearly is difficult. Perhaps in the future I'll create a gif or something. For now, here is one of the longest ways to get from St. Paul to Seattle (without doubling back over any already-traveled track segment).
 
- (image coming soon... still crunching!)
+[![image](/images/posts/abt_longway.png)](/posts/AmericaByTrain/longway)
