@@ -12,7 +12,7 @@ So what is around the world? I decided to have some fun with this by imagining a
 
 Suunto lets you download your data in a number of formats, and in this case I used the GPX format which I manipulated using the Python module gpxpy. I read in the lat/long coordinates from the file and created three arrays of coordinates; one the unperturbed lat/long pairs, another the polar opposite, and the third the "northern" opposite where I did the reflection across the global axis instead of the global center thereby keeping the same latitude.
 
-```Python
+```py
 gpx_file = open(file,'r')
 gpx = gpxpy.parse(gpx_file)
 for t in gpx.tracks:
