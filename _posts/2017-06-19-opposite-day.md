@@ -2,7 +2,7 @@
 layout: post
 title: Opposite Day
 date: 2017-06-19
-excerpt: What's really under your feet
+excerpt: What's 8,000 miles under your feet
 tags:
 ---
 
