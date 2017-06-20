@@ -26,3 +26,10 @@ This method, applied to the Twin Cities Marathon I ran in 2015, shows that inver
 
 [![image](/images/posts/oppositeday.png)](/posts/OppositeDay)
 ***(click the map for an interactive version)***
+
+After musing on this for a while I began to wonder if it might be possible to run a marathon on the opposite side of the world. Somehow it struck me as interesting to think of a marathon being conducted somewhere, with thousands of people filling the streets, while I run the exact same course at the exact same time, but 8,000 miles directly through the entire planet. It seems like "ghost-running" is a good name for that. So I immediately sought out Boston's antipode, as I feel that there could be no better marathon to ghost-run. Alas, it's still asea in the Indian Ocean.
+
+The quest then became to find somewhere I could feasibly imagine a ghost-run scenario. The logical question that follows, I believe, is where are there antipodes that are both on land? That seems like a good place to start. I found a world map json file online, rotated it 180 degrees and flipped it across the equator to get the map shown below. It was striking to me how little overlap there is between the land and ghost-land masses.
+[![image](/images/posts/oppositeday_antiworld.png)](/posts/OppositeDay/anti_world)
+
+There don't appear to not be too many places where this could work. The options seem to be New Zealand-Spain, Hawaii-Botswana, or somewhere in South America-Southeast Asia/China. I'd love to overlay the actual locations of active marathons, and may later, but for now it's pretty fun just to poke around on the map.
