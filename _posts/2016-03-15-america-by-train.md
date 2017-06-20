@@ -30,9 +30,9 @@ I walked from the DC station to my cousin Bob's place where they put me up. DC w
 
 The Capitol Limited was my last leg. I disembarked in Chicago where I jumped on a Megabus to take me back to Madison. My train travels took me to 24 states over 3 weeks. I saw mile after mile of beautiful countryside as I chipped away at my thesis. It was an incredible experience, and an unforgettable trip. Thank you to everyone who put me up- cousins Jim, Anne, Bob, and Dan, and my good friend Dan Carmody. I relied on you to make this trip a possibility and it was truly a highlight of an amazing trip to get to spend time with each one of you.
 
-<h2 id="data">Data and Mapping (the fun stuff)</h2>
+<h2 id="data">Data and Mapping</h2>
 
-I wanted to create a visualization for this post using CartoDB primarily because I haven't used it before and wanted to familiarize myself with it.
+I wanted to create a visualization for this post using [Carto](http://carto.com) primarily because I haven't used it before and wanted to familiarize myself with it.
 
 The first step was acquiring data to plot the Amtrak routes, as I wanted these as the basis over which I applied my trip narrative. A simple google search leads to numerous links from which one can easily download a geojson file containing the Amtrak routes. Upon inspection, I found that this file contains every Amtrak route broken up into segments typically less than a mile in length, but notably lacks an easy way to segment the tracks by which trains operate on them. The Empire Builder, for example, runs from Chicago to Seattle across the northern states, but the data lacks a property identifying any given segment as belonging to this particular train.
 

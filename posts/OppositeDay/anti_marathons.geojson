@@ -1,0 +1,3014 @@
+{"type":"FeatureCollection",
+"features": [
+{"type":"Feature",
+"properties":{"location":"Spijkenisse, Netherlands"},
+"geometry":{
+"type":"Point",
+"coordinates":[-175.664670354,-51.84342795]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Chiang Mai City, Thailand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-81.0119091,-18.7905618]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Xiamen, China"},
+"geometry":{
+"type":"Point",
+"coordinates":[-61.8644356,-24.497442]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Tiberias, Israel"},
+"geometry":{
+"type":"Point",
+"coordinates":[-144.4671434,-32.7938522]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Ibusuki, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-49.370322,-31.251181]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Cebu City, Philippines"},
+"geometry":{
+"type":"Point",
+"coordinates":[-56.1069161,-10.3090298]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Pinamar, Argentina"},
+"geometry":{
+"type":"Point",
+"coordinates":[123.1460993,37.1099492]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Hamilton, Bermuda"},
+"geometry":{
+"type":"Point",
+"coordinates":[115.294221747,-32.3298121]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Luxor, Egypt"},
+"geometry":{
+"type":"Point",
+"coordinates":[-147.352814,-25.702096]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Doha, Qatar"},
+"geometry":{
+"type":"Point",
+"coordinates":[-128.500332601,-25.3014957]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Hobart, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-32.6718767,42.8825088]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Nassau, Bahamas"},
+"geometry":{
+"type":"Point",
+"coordinates":[102.6616669,-25.0783456]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Las Palmas de Gran Canaria, Spain"},
+"geometry":{
+"type":"Point",
+"coordinates":[164.5649486,-28.1287799]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Fish Hoek, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-161.57511647,34.13796655]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Dubai, United Arab Emirates"},
+"geometry":{
+"type":"Point",
+"coordinates":[-124.7038038,-25.2683521]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Pretoria, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-151.8120556,25.7459374]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Hong Kong, China"},
+"geometry":{
+"type":"Point",
+"coordinates":[-65.8371869,-22.2793278]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Port Elizabeth, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-154.3792481,33.9617051]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Khon Kaen, Thailand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-77.3647067,-16.6022387]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Marrakech, Morocco"},
+"geometry":{
+"type":"Point",
+"coordinates":[172.0113917,-31.6259901]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Central Gauteng, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-151.8144737,25.7482196]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Hitachinaka, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-39.4638074,-36.3972484]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Osaka, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-44.498113,-34.704365]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Port of Spain, Trinidad And Tobago"},
+"geometry":{
+"type":"Point",
+"coordinates":[118.4819827,-10.6572678]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Free State, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-153.5021067,28.7853618]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Beppu, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-48.5145946,-33.301435]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Apeldoorn, Netherlands"},
+"geometry":{
+"type":"Point",
+"coordinates":[-174.0360515,-52.2156457]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Manila, Philippines"},
+"geometry":{
+"type":"Point",
+"coordinates":[-59.0200304,-14.5906216]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Westport, New Zealand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-8.3964316,41.754183]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Lagos City, Nigeria"},
+"geometry":{
+"type":"Point",
+"coordinates":[-176.6058205,-6.4550575]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Hillcrest, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-161.6344897,34.0465386]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kaohsiung, Taiwan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-59.6879625,-22.6203348]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Johannesburg, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-151.950278,26.205]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Nobeoka, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-48.342757,-32.664409]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Amwaj Island, Bahrain"},
+"geometry":{
+"type":"Point",
+"coordinates":[-129.333555,-26.2947431]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Cape Town, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-161.582604,33.928992]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Fukuoka, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-49.3819984,-33.6251241]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kumamoto, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-49.3658655,-32.6450475]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kyoto, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-44.236165,-35.0185804]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Castellón, Spain"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.93849489,-40.25185675]
+}
+},
+{"type":"Feature",
+"properties":{"location":"San Valentino, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-167.830474,-42.4170784]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Rwamagana, Rwanda"},
+"geometry":{
+"type":"Point",
+"coordinates":[-149.565115,1.951239]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kochi, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-46.4393759,-33.6569018]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Sevilla, Spain"},
+"geometry":{
+"type":"Point",
+"coordinates":[174.0046829,-37.3886303]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Okinawa, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-51.9744099,-26.5707754]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Tel Aviv, Israel"},
+"geometry":{
+"type":"Point",
+"coordinates":[-145.2194726,-32.0804808]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bad Salzuflen, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.2465578,-52.0857452]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kiel, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.8628142,-54.3216753]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Port-au-Prince, Haiti"},
+"geometry":{
+"type":"Point",
+"coordinates":[107.6604072,-18.547327]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Tokyo, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-40.7052254726,-34.2255804]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Himeji, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-45.3145475,-34.8160532]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Moshi, Tanzania"},
+"geometry":{
+"type":"Point",
+"coordinates":[-142.6573956,3.3554739]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Pietermaritzburg, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-149.6211111,29.6]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Okayama, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-46.075337,-34.711796]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Salsomaggiore, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.020424,-44.814762]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Naples, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-165.7512174,-40.8359336]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Al Ayoun, Algeria"},
+"geometry":{
+"type":"Point",
+"coordinates":[-176.938067773,-36.7865575]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Punakha, Bhutan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-90.2910452,-27.6685526]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Wanaka, New Zealand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-10.8635739,44.6971416]
+}
+},
+{"type":"Feature",
+"properties":{"location":"New Plymouth, New Zealand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-5.9193526,39.0579941]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Pafos, Cyprus"},
+"geometry":{
+"type":"Point",
+"coordinates":[-147.501787726,-34.9169592]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Torreón, Coahuila, Mexico"},
+"geometry":{
+"type":"Point",
+"coordinates":[76.589487,-25.542698]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Hyogo, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-45.139334,-34.914934]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Shizuoka, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-41.5144456,-34.8566552]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Treviso, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-167.7544586,-45.6658505]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Listvyanka, Russian Federation"},
+"geometry":{
+"type":"Point",
+"coordinates":[-75.13942,-51.85693]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kandel, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.8029301,-49.0809754]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Brescia, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.7795103,-45.5399392]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Barcelona, Spain"},
+"geometry":{
+"type":"Point",
+"coordinates":[-177.8225678,-41.3828939]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Messini, Greece"},
+"geometry":{
+"type":"Point",
+"coordinates":[-157.9920096,-37.051372]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Nagoya, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-43.09552,-35.15792]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Edenvale South, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-151.8488889,26.1366667]
+}
+},
+{"type":"Feature",
+"properties":{"location":"San Juan, Puerto Rico"},
+"geometry":{
+"type":"Point",
+"coordinates":[113.946560026,-18.38423905]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Jerusalem, Israel"},
+"geometry":{
+"type":"Point",
+"coordinates":[-144.777026986,-31.78911765]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Birling Gap, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[-179.7955238,-50.7433413]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Seoul, Korea (South)"},
+"geometry":{
+"type":"Point",
+"coordinates":[-53.0217086,-37.5666791]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Ferrara, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-168.3813549,-44.8371856]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Limassol, Cyprus"},
+"geometry":{
+"type":"Point",
+"coordinates":[-146.957659,-34.6735637]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Springe / Deister, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.4675838,-52.2373844]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Singapore City, Singapore"},
+"geometry":{
+"type":"Point",
+"coordinates":[-76.1479641,-1.2904753]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Moorea, French Polynesia"},
+"geometry":{
+"type":"Point",
+"coordinates":[30.1613752931,17.53326075]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Zhengzhou, China"},
+"geometry":{
+"type":"Point",
+"coordinates":[-66.3475924,-34.7591877]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Montauban, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-178.6450009,-44.0175835]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bethlehem, Israel"},
+"geometry":{
+"type":"Point",
+"coordinates":[-144.7849762,-31.7449254]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Mallorca, Spain"},
+"geometry":{
+"type":"Point",
+"coordinates":[-177.013761,-39.6594496]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Thessaloniki, Greece"},
+"geometry":{
+"type":"Point",
+"coordinates":[-157.0647284,-40.6403167]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bonn, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-172.89934,-50.735851]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bratislava, Slovakia (Slovak Republic)"},
+"geometry":{
+"type":"Point",
+"coordinates":[-160.839354823,-48.61098615]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Daegu, Korea (South)"},
+"geometry":{
+"type":"Point",
+"coordinates":[-51.4400482,-35.8494916]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Freiburg, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-172.1505995,-47.9960901]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Cheverny, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-178.5423376,-47.4970024]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Milano, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.8095016,-45.4667971]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Roma, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-167.5170679,-41.8933203]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Santiago, Chile"},
+"geometry":{
+"type":"Point",
+"coordinates":[109.3495549,33.4377968]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Taunton, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[176.897019,-51.015024]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bath, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[177.6403037,-51.3813864]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Exmoor, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[176.396005109,-51.1338406]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Brighton, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.8625939,-50.8220399]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bunbury, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-64.363302,33.3267797]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Canberra, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-30.8987324,35.2975906]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Linz, Austria"},
+"geometry":{
+"type":"Point",
+"coordinates":[-165.713802,-48.3059078]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Zurich, Switzerland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.4576784,-47.3723957]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kharkov, Ukraine"},
+"geometry":{
+"type":"Point",
+"coordinates":[-143.727733928,-49.99142545]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Leipzig, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-167.6189451,-51.3391827]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Hannover, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.2614468,-52.3744779]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Paris, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-177.6485008,-48.8566101]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Rotterdam, Netherlands"},
+"geometry":{
+"type":"Point",
+"coordinates":[-175.511376731,-51.92779805]
+}
+},
+{"type":"Feature",
+"properties":{"location":"São Paulo, Brazil"},
+"geometry":{
+"type":"Point",
+"coordinates":[133.3666176,23.5506507]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Farso, Denmark"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.664257307,-56.76908805]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bockenheim, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.362468676,-50.12237205]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Jinshanling, China"},
+"geometry":{
+"type":"Point",
+"coordinates":[-62.762038,-40.6864301]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Azay, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-178.7242583,-46.6422683]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Nagano City, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-41.9680985,-36.1143945]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Ibaraki, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-39.6015674059,-36.3420485]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Blackpool, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[176.962680005,-53.8245483]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Connemara, Ireland"},
+"geometry":{
+"type":"Point",
+"coordinates":[170.121042416,-53.5303027]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Enschede, Netherlands"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.129404336,-52.22336325]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Helsinki, Finland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-155.0574317,-60.1674086]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Lodz, Poland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-160.5430089,-51.7687323]
+}
+},
+{"type":"Feature",
+"properties":{"location":"London, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.8723526,-51.5073219]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Hamburg, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.999346,-53.550341]
+}
+},
+{"type":"Feature",
+"properties":{"location":"A Coruna, Spain"},
+"geometry":{
+"type":"Point",
+"coordinates":[171.419058195,-43.1538815]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Warsaw, Poland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-158.9932735,-52.2319237]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Madrid, Spain"},
+"geometry":{
+"type":"Point",
+"coordinates":[176.2964175,-40.4167047]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Padua, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-168.1265545,-45.4077172]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Shangri-La, China"},
+"geometry":{
+"type":"Point",
+"coordinates":[-80.150951,-28.055698]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Nottingham, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.8507227,-52.9534161]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Vienna, Austria"},
+"geometry":{
+"type":"Point",
+"coordinates":[-163.6274958,-48.2083537]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Werdau, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-167.6236153,-50.7361377]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Siracusa, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-164.7092804,-37.0646139]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Krakow, Poland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-160.0631436,-50.0619474]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Limerick, Ireland"},
+"geometry":{
+"type":"Point",
+"coordinates":[171.3698761,-52.661252]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Panajachel, Guatemala"},
+"geometry":{
+"type":"Point",
+"coordinates":[88.8502190175,-14.74658485]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Nantes, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.4458638,-47.2186371]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Annecy, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.8645349,-45.88975045]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Dusseldorf, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.2236863,-51.2254018]
+}
+},
+{"type":"Feature",
+"properties":{"location":"West Sussex, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.583333,-51.0]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Belfast, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[174.0699008,-54.5969869]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Milton Keynes, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.2410393,-52.0429797]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Gauteng North, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-151.9186895,25.9363439]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Rotorua, New Zealand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-3.747078,38.1381493]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Helgoland, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-172.114521807,-54.17960165]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kleinalmerode, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.2128235,-51.3307368]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Trieste, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-166.2293441,-45.6500335]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Geneva, Switzerland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.8533986,-46.2017559]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Mainz, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.7289763,-49.9999952]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Halstead, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[-179.3608426,-51.9437801]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Heilbronn, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.781345,-49.142291]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Prague, Czech Republic"},
+"geometry":{
+"type":"Point",
+"coordinates":[-165.5787465,-50.0874654]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Salzburg, Austria"},
+"geometry":{
+"type":"Point",
+"coordinates":[-166.9535194,-47.7981346]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Stratford-upon-Avon, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.2942123,-52.1923414]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Gaborone, Botswana"},
+"geometry":{
+"type":"Point",
+"coordinates":[-154.091272,24.655319]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Blaye, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.3364036,-45.1271231]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Durness, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[175.2518243,-58.568418]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Visé, Belgium"},
+"geometry":{
+"type":"Point",
+"coordinates":[-174.304464,-50.7336644]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Victoria Gasteiz, Spain"},
+"geometry":{
+"type":"Point",
+"coordinates":[177.3270816,-42.846608]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Riga, Latvia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-155.833401398,-56.9716562]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Drebber, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.5800678,-52.652437]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Beijing, China"},
+"geometry":{
+"type":"Point",
+"coordinates":[-63.608752,-39.9059631]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Schmiedefeld, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-168.7833,-50.5333]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Radenci, Slovenia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-163.9593151,-46.6408144]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Thorpe, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[-179.7513454,-53.3138051]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bangkok, Thailand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-79.506913,-13.7542529]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Copenhagen, Denmark"},
+"geometry":{
+"type":"Point",
+"coordinates":[-167.4299276,-55.6867243]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Wirral, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[176.9499084,-53.3409714]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kigali, Rwanda"},
+"geometry":{
+"type":"Point",
+"coordinates":[-149.8703249,1.8859597]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kuala Lumpur, Malaysia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-78.2990472,-3.1570976]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Leiden, Netherlands"},
+"geometry":{
+"type":"Point",
+"coordinates":[-175.518891133,-52.1518157]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Lima, Peru"},
+"geometry":{
+"type":"Point",
+"coordinates":[102.9634744,12.0621065]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Lisbon, Portugal"},
+"geometry":{
+"type":"Point",
+"coordinates":[170.8634939,-38.7077926]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Stirlingshire, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[176.0912649,-56.0701208]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Gelsenkirchen, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-172.9040737,-51.5109791]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Windermere, Cumbria, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[177.0955762,-54.3787142]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Wurtzburg, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-166.5767925,-52.5777886]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Würzburg, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.067034,-49.79245]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Chavagnes-en-Paillers, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.7486111,-46.8933333]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Klazienaveen, Netherlands"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.010292378,-52.71757145]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Edinburgh, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[176.8085028,-55.9495628]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Poitiers, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-179.659804,-46.5802596]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Cancale, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.1493047,-48.6771721]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Newry, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[173.662494,-54.1775283]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Regensburg, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-167.9025131,-49.0195333]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Liverpool, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[177.0194608,-53.4054719]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Makeni, Sierra Leone"},
+"geometry":{
+"type":"Point",
+"coordinates":[167.95088,-8.88474]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Winterthur, Switzerland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.2708502,-47.4991723]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Machu Picchu, Peru"},
+"geometry":{
+"type":"Point",
+"coordinates":[107.455236026,13.16441865]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Stockholm, Sweden"},
+"geometry":{
+"type":"Point",
+"coordinates":[-161.9289065,-59.3251172]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Tórshavn, Faroe Islands"},
+"geometry":{
+"type":"Point",
+"coordinates":[173.232,-62.012]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Hokkaido, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-37.1802166,-43.4519831]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Christchurch, New Zealand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-7.3633545,43.530955]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Durban, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-148.990091,29.861825]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Easter Island, Chile"},
+"geometry":{
+"type":"Point",
+"coordinates":[70.6503256944,27.1260192]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Huddersfield, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.2167923,-53.6467031]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Mannheim, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.532764,-49.489591]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Phuket, Thailand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-81.6470708,-7.9366015]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Traralgon Victoria, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-33.4617673,38.1946441]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Masaka, Uganda"},
+"geometry":{
+"type":"Point",
+"coordinates":[-148.168310284,0.48386245]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Aalborg, Denmark"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.0806061,-57.0482206]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Cork, Ireland"},
+"geometry":{
+"type":"Point",
+"coordinates":[171.5294194,-51.8979282]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Val-de-Travers, Switzerland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.417372429,-46.9188206]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bendern, Liechtenstein"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.4937864,-47.2122144]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bitburg, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.475053,-49.9732762]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kaunas, Lithuania"},
+"geometry":{
+"type":"Point",
+"coordinates":[-156.0955183,-54.8982139]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Caen, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.6309185,-49.1828008]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Duisburg, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.240438,-51.434999]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Torhout, Belgium"},
+"geometry":{
+"type":"Point",
+"coordinates":[-176.908692795,-51.0585915]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Aabenraa, Denmark"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.5790333,-55.0446228]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Tromso, Norway"},
+"geometry":{
+"type":"Point",
+"coordinates":[-161.0451511,-69.6492969]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Forssa, Finland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-156.3670822,-60.8167634]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Coulon, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.4138534,-46.3221277]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Perth, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-64.1395204,31.9527121]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Rio de Janeiro, Brazil"},
+"geometry":{
+"type":"Point",
+"coordinates":[136.7906273,22.9110137]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Victoria Falls, Zimbabwe"},
+"geometry":{
+"type":"Point",
+"coordinates":[-154.1644762,17.9280075]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Wakefield, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.4999534,-53.6825669]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Wellington, New Zealand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-5.2227761,41.2887639]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Entabeni Game Reserve, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-151.34269,24.2265159]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Lewa Wildlife Conservancy, Kenya"},
+"geometry":{
+"type":"Point",
+"coordinates":[-142.569920606,-0.21283495]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Waterford City, Ireland"},
+"geometry":{
+"type":"Point",
+"coordinates":[172.8849072,-52.2628502]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Finistere, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[175.955969774,-48.2452998]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Mutzig, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-172.5444222,-48.5395474]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Rosario, Argentina"},
+"geometry":{
+"type":"Point",
+"coordinates":[119.3384585,32.9595004]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Chamonix, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.1272494,-45.9246705]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Hvide Sande, Denmark"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.8711565,-56.0057884]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Port Augusta, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-42.2360126,32.4908819]
+}
+},
+{"type":"Feature",
+"properties":{"location":"North Devon, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[176.076076702,-51.061456]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Båstad, Sweden"},
+"geometry":{
+"type":"Point",
+"coordinates":[-167.1392849,-56.4267895]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Turku, Finland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-157.7329478,-60.4517531]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Zermatt, Switzerland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-172.2505998,-46.0222273]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Geraldton, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-65.3852841,28.77035]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Gold Coast, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-26.5854013,28.0023731]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Halifax, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.1325496,-53.7209169]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Guayaquil, Ecuador"},
+"geometry":{
+"type":"Point",
+"coordinates":[100.1234427,2.1811931]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Cusco, Peru"},
+"geometry":{
+"type":"Point",
+"coordinates":[108.0,13.5]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Cairns, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-34.2280989,16.9204963]
+}
+},
+{"type":"Feature",
+"properties":{"location":"St. Petersburg, Russian Federation"},
+"geometry":{
+"type":"Point",
+"coordinates":[-149.683771,-59.938732]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Fichtelgebirgs, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-168.3862586,-49.9556168]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Knysna, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-156.951515,34.035734]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Stevenage, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.7986632,-51.9035099]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Pattaya, Thailand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-79.0993095,-12.9318593]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Lindvik, Norway"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.9804487,-58.6135785]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Mt. Kenya, Kenya"},
+"geometry":{
+"type":"Point",
+"coordinates":[-142.6907862,0.152707]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Buhlertal, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.8091987,-48.6859065]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Füssener, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.3175556,-47.5826908]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bornholm, Denmark"},
+"geometry":{
+"type":"Point",
+"coordinates":[-165.077361183,-55.1430973]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Ayres Rock, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-27.0803896,30.3953547]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Davos, Switzerland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.1762734,-46.7961744]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Fort William, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[174.8879692,-56.8169712]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kempele, Finland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-154.4891777,-64.91245]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Riebeeck West, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-161.591359354,33.93418665]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Siem Reap, Cambodia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-76.1409679,-13.3617562]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Brisbane, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-26.9765009,27.4689682]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Da Nang, Viet Nam"},
+"geometry":{
+"type":"Point",
+"coordinates":[-71.7880604,-16.0679814]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Townsville, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-33.1760463,19.2569391]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Abijatta, Ethiopia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-141.470492781,-7.55190485]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Omsk, Russian Federation"},
+"geometry":{
+"type":"Point",
+"coordinates":[-106.628471,-54.991375]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Ramsey, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.8978864,-52.4494068]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Monschau-Konzen, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.7402952,-50.5799559]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Gdansk, Poland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-161.3547971,-54.347628]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Reykjavík City, Iceland"},
+"geometry":{
+"type":"Point",
+"coordinates":[158.256419136,-64.1327926]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Adelaide, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-41.400101,34.9274284]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Alice Springs, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-46.1187115,23.6983884]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Ljungdalen, Sweden"},
+"geometry":{
+"type":"Point",
+"coordinates":[-167.2084528,-62.8507805]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Mudgee, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-30.4113617,32.5980702]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Sunshine Coast, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-26.9492295,26.5443222]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Stavanger, Norway"},
+"geometry":{
+"type":"Point",
+"coordinates":[-174.2675278,-58.9680427]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bali, Indonesia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-64.7293452995,8.4553388]
+}
+},
+{"type":"Feature",
+"properties":{"location":"St. Peter Port, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.064076775,-52.09037975]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Longford, Ireland"},
+"geometry":{
+"type":"Point",
+"coordinates":[172.2036184,-53.7278]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Howick, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-149.776944,29.482222]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Asuncion, Paraguay"},
+"geometry":{
+"type":"Point",
+"coordinates":[122.3688804,25.2959916]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Mexico City, Mexico"},
+"geometry":{
+"type":"Point",
+"coordinates":[80.8666584,-19.4326009]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Goldenstedt, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.5687169,-52.7871347]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Shepparton, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-34.6620554429,36.155505]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bolzano, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-168.6452199,-46.4981125]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Dingle, Co. Kerry, Ireland"},
+"geometry":{
+"type":"Point",
+"coordinates":[169.7311169,-52.1408381]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kuopio, Finland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-152.405438516,-62.8241424]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Wolgast, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-166.2242191,-54.0536473]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Forchheim, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-168.940358,-49.7187128]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Wolverhampton, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[177.872433,-52.5847651]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kazbegi, Georgia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-135.3589493,-42.6585469]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Interlaken, Switzerland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-172.1414861,-46.6855231]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Medoc, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.501236,-45.5585306]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Charlestown, Saint Kitts And Nevis"},
+"geometry":{
+"type":"Point",
+"coordinates":[117.3783846,-17.1393977]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Torres del Paine National Park, Chile"},
+"geometry":{
+"type":"Point",
+"coordinates":[107.015631894,51.0406792]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Surrey, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.658547649,-51.2715316]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Fulda, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.323489,-50.5521486]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Flanders, Belgium"},
+"geometry":{
+"type":"Point",
+"coordinates":[-175.820148711,-51.0962462]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Vilnius, Lithuania"},
+"geometry":{
+"type":"Point",
+"coordinates":[-154.7170889,-54.6870458]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Otterndorf, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.100285,-53.808132]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Munster, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-172.38669835,-51.9501317]
+}
+},
+{"type":"Feature",
+"properties":{"location":"New Forest, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.40433852,-50.85562565]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Krynica, Poland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-156.2543933,-52.7269047]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Tallinn, Estonia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-155.2546312,-59.4372155]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Wroclaw, Poland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-162.9673311,-51.1089776]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Haworth, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.049206065,-53.83061125]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kressbronn, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.8621295,-49.0655511]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Oslo, Norway"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.2608888,-59.9132694]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Tamarindo, Costa Rica"},
+"geometry":{
+"type":"Point",
+"coordinates":[94.1996686074,-10.29232515]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Karlsruhe, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.595563,-49.014068]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Sydney, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-28.7835461,33.8548157]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Swanage, Dorset, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.0428029,-50.6086976]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Wachau, Austria"},
+"geometry":{
+"type":"Point",
+"coordinates":[-164.556986581,-48.39407085]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Basel, Switzerland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-172.4121739,-47.5581077]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Berlin, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-166.6111401,-52.5170365]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Chesterfield, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.5735903,-53.2352134]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Inverness, Highlands, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[175.769621714,-57.4714314]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Mayenne-Laval, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.2369618,-48.0606788]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Grottazzolina, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-166.3970191,-43.1117111]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kilmacrenan, Ireland"},
+"geometry":{
+"type":"Point",
+"coordinates":[172.2207892,-55.0305186]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Moscow, Russian Federation"},
+"geometry":{
+"type":"Point",
+"coordinates":[-142.3823394,-55.7507178]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Mossel Bay, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-157.8463752,34.1832022]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kendal, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[177.2517012,-54.3272621]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Umlazi, South Africa"},
+"geometry":{
+"type":"Point",
+"coordinates":[-149.099722,29.9525]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bila Tserkva, Ukraine"},
+"geometry":{
+"type":"Point",
+"coordinates":[-149.8883076,-49.8038191]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Brussels, Belgium"},
+"geometry":{
+"type":"Point",
+"coordinates":[-175.648303,-50.8465573]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Winchester, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.6868308,-51.0612766]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Glencoe, Scotland, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[174.8995319,-56.6822314]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Odense, Denmark"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.6147896,-55.3997225]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kassel, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.5237019,-51.3090209]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Koeln (Cologne), Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.040026,-50.938361]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kosice, Slovakia (Slovak Republic)"},
+"geometry":{
+"type":"Point",
+"coordinates":[-158.7503226,-48.7172272]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Luberon, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-174.2251599,-43.8314808]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Lyon, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-175.1679886,-45.7578137]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Santarem, Brazil"},
+"geometry":{
+"type":"Point",
+"coordinates":[125.300389,2.438489]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bournemouth, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.142019097,-50.74467035]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bucharest, Romania"},
+"geometry":{
+"type":"Point",
+"coordinates":[-153.8972798,-44.4361414]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Busselton, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-64.6511246,33.644499]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Chester, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[177.1091045,-53.1908873]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kalubowila Dehiwala, Sri Lanka"},
+"geometry":{
+"type":"Point",
+"coordinates":[-100.13673656,-6.86740795]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Eindhoven, Netherlands"},
+"geometry":{
+"type":"Point",
+"coordinates":[-174.549877478,-51.44855695]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Essen, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-172.988571,-51.457087]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Graz, Austria"},
+"geometry":{
+"type":"Point",
+"coordinates":[-164.5614284,-47.0702563]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Maranello, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.1336393,-44.5255217]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kielder, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[177.414876,-55.2343585]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Metz, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.8236448,-49.1196964]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Munich, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-168.4246178,-48.1371079]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Meerssen, Netherlands"},
+"geometry":{
+"type":"Point",
+"coordinates":[-174.2470292,-50.8850867]
+}
+},
+{"type":"Feature",
+"properties":{"location":"York, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.9184639,-53.9590555]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Poznan, Poland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-163.0664801,-52.4082663]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Braeunlingen, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.5517353,-47.9299867]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Zagreb, Croatia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-164.022952,-45.813177]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kiev, Ukraine"},
+"geometry":{
+"type":"Point",
+"coordinates":[-149.4759499,-50.4501071]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Beloeil, Belgium"},
+"geometry":{
+"type":"Point",
+"coordinates":[-176.2638721,-50.5479197]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Amman, Jordan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-144.0760375,-31.9515694]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Brocken, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.3843635,-51.7991251]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Amsterdam, Netherlands"},
+"geometry":{
+"type":"Point",
+"coordinates":[-175.102024494,-52.3745403]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Newcastle, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.3857941,-54.9770924]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Grossbottwar, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.7069862,-49.001316]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Budapest, Hungary"},
+"geometry":{
+"type":"Point",
+"coordinates":[-160.9595293,-47.4983815]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Buenos Aires, Argentina"},
+"geometry":{
+"type":"Point",
+"coordinates":[121.562924,34.6075616]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bodelva, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[175.2609818,-50.3612392]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Garda Lake, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.268868932,-45.79190555]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Leicester, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.8669211,-52.6361398]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Vannes, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[177.2400921,-47.6586772]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Melbourne, Australia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-35.0368392,37.8142176]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Halle, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.7019167,-51.4277972]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Reims, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-175.968074,-49.2577886]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Sofia, Bulgaria"},
+"geometry":{
+"type":"Point",
+"coordinates":[-156.6778211,-42.6978634]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Novi Sad, Yugoslavia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-160.292662,-45.320206]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bilbao, Spain"},
+"geometry":{
+"type":"Point",
+"coordinates":[177.0650541,-43.2629489]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Vaxjo, Sweden"},
+"geometry":{
+"type":"Point",
+"coordinates":[-165.1905615,-56.8787183]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Abingdon, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.7220285,-51.6714842]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Chelmsford, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[-179.5275456,-51.7345436]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Dresden, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-166.2618563,-51.0493286]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Lausanne, Switzerland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.3672975,-46.5218269]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Lucca, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.497124,-43.8428381]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Toulouse, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-178.5557531,-43.6044622]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Venice, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-167.6654101,-45.4371908]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Chiba, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-39.8107000511,-35.3594614]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Chuncheon City, Korea (South)"},
+"geometry":{
+"type":"Point",
+"coordinates":[-52.2702359,-37.8810569]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Jakarta, Indonesia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-73.172817,6.1753942]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Snowdonia, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[176.167398707,-52.9155626]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Accra, Ghana"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.7942563,-5.5600141]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Auckland, New Zealand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-5.2344486,36.8534665]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Brabant, Netherlands"},
+"geometry":{
+"type":"Point",
+"coordinates":[-175.3490928,-51.8219431]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Casablanca, Morocco"},
+"geometry":{
+"type":"Point",
+"coordinates":[172.3811991,-33.5949733]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kingsteignton, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[176.4044265,-50.549595]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Dublin, Ireland"},
+"geometry":{
+"type":"Point",
+"coordinates":[173.7397268,-53.3497645]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Frankfurt, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.317907,-50.110653]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Ljubljana, Slovenia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-165.4931079,-46.049865]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Lucerne, Switzerland"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.6945318,-47.0505452]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Yokohama, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-40.363232,-35.444991]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bridgetown, Barbados"},
+"geometry":{
+"type":"Point",
+"coordinates":[120.3815816,-13.0977832]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bristol, United Kingdom"},
+"geometry":{
+"type":"Point",
+"coordinates":[177.4027015,-51.4538022]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Vodskov, Denmark"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.9703476,-57.1091147]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Shanghai, China"},
+"geometry":{
+"type":"Point",
+"coordinates":[-58.5111078,-31.2253441]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Verbania, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.4483211,-45.9221715]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Nice, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[-172.7316088,-43.7009358]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Porto, Portugal"},
+"geometry":{
+"type":"Point",
+"coordinates":[171.3892116,-41.1494512]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Simmerath-Einruhr, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-173.6204235,-50.5815809]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Brandaris, Netherlands"},
+"geometry":{
+"type":"Point",
+"coordinates":[-175.158186,-51.6388618]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Jarnac, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.8259096,-45.6791182]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Fort Portal, Uganda"},
+"geometry":{
+"type":"Point",
+"coordinates":[-149.7220568,-0.6561907]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Athens, Greece"},
+"geometry":{
+"type":"Point",
+"coordinates":[-156.2720157,-37.9841493]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Beirut, Lebanon"},
+"geometry":{
+"type":"Point",
+"coordinates":[-144.52157,-33.8959203]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Istanbul, Turkey"},
+"geometry":{
+"type":"Point",
+"coordinates":[-151.0348354,-41.0096334]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Ravenna, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-167.7982383,-44.4161414]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Turin, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-172.3175108,-45.0677551]
+}
+},
+{"type":"Feature",
+"properties":{"location":"San Pedro de Atacama, Chile"},
+"geometry":{
+"type":"Point",
+"coordinates":[111.7998624,22.910832]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Queenstown, New Zealand"},
+"geometry":{
+"type":"Point",
+"coordinates":[-11.3391904,45.0317203]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kathmandu, Nepal"},
+"geometry":{
+"type":"Point",
+"coordinates":[-94.679756,-27.708796]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Havana, Cuba"},
+"geometry":{
+"type":"Point",
+"coordinates":[97.6341438,-23.1379911]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Valencia, Spain"},
+"geometry":{
+"type":"Point",
+"coordinates":[179.6240487,-39.4699014]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Palermo, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-166.6465578,-38.11127]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Verona, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.0075878,-45.4384958]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kobe, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-44.8056236,-34.6932379]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Ellsworth Mountains, Antarctica"},
+"geometry":{
+"type":"Point",
+"coordinates":[94.9915522,78.7518962]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Bagan, Myanmar"},
+"geometry":{
+"type":"Point",
+"coordinates":[-85.1404809,-21.1708105]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Willemstad, Netherlands"},
+"geometry":{
+"type":"Point",
+"coordinates":[111.0683454,-12.1091242]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Florence, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-168.7444243,-43.7698712]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Kawaguchiko, Japan"},
+"geometry":{
+"type":"Point",
+"coordinates":[-41.2310059,-35.4980487]
+}
+},
+{"type":"Feature",
+"properties":{"location":"La Rochelle, France"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.8479566,-46.1591126]
+}
+},
+{"type":"Feature",
+"properties":{"location":"San Sebastian, Spain"},
+"geometry":{
+"type":"Point",
+"coordinates":[178.0161111,-43.3224219]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Panama, Panama"},
+"geometry":{
+"type":"Point",
+"coordinates":[98.6933754,-8.3096067]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Penang, Malaysia"},
+"geometry":{
+"type":"Point",
+"coordinates":[-79.7440923,-5.4065013]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Libreville, Gabon"},
+"geometry":{
+"type":"Point",
+"coordinates":[-170.545999,-0.390002]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Cancun, Mexico"},
+"geometry":{
+"type":"Point",
+"coordinates":[93.17495,-21.161829]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Mazatlan, Mexico"},
+"geometry":{
+"type":"Point",
+"coordinates":[73.5838081,-23.2234374]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Negril, Jamaica"},
+"geometry":{
+"type":"Point",
+"coordinates":[101.653527,-18.278656]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Grand Cayman, Cayman Islands"},
+"geometry":{
+"type":"Point",
+"coordinates":[98.8287128352,-19.32988935]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Macau, China"},
+"geometry":{
+"type":"Point",
+"coordinates":[-66.4484571,-22.1741907]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Vina del mar, Chile"},
+"geometry":{
+"type":"Point",
+"coordinates":[108.4481881,33.024503]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Christ Church, Barbados"},
+"geometry":{
+"type":"Point",
+"coordinates":[120.465625695,-13.09072835]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Singapore, Singapore"},
+"geometry":{
+"type":"Point",
+"coordinates":[-76.1479641,-1.2904753]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Osnabrück, Germany"},
+"geometry":{
+"type":"Point",
+"coordinates":[-171.950259,-52.266837]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Reggio Emilia, Italy"},
+"geometry":{
+"type":"Point",
+"coordinates":[-169.3695042,-44.6978446]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Malaga, Spain"},
+"geometry":{
+"type":"Point",
+"coordinates":[175.5783634,-36.7213028]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Monterrey, México, Mexico"},
+"geometry":{
+"type":"Point",
+"coordinates":[80.8369003,-19.4134221]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Placencia, Belize"},
+"geometry":{
+"type":"Point",
+"coordinates":[91.6328242,-16.5155084]
+}
+},
+{"type":"Feature",
+"properties":{"location":"Guangzhou, China"},
+"geometry":{
+"type":"Point",
+"coordinates":[-66.680679,-23.1387267]
+}
+}
+]
+}
