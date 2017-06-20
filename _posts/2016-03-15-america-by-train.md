@@ -9,8 +9,6 @@ Jump To:
 <a href="#travels">The travels</a>  
 <a href="#data">The data</a>
 
-**This post is in progress**
-
 [![image](/images/posts/abt.png)](/posts/AmericaByTrain)
 ***(click the map for an interactive version)***
 
