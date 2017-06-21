@@ -3,6 +3,7 @@ layout: post
 title: America By Train
 date: 2017-05-01
 excerpt: A three week rail journey around the states
+image: /images/posts/abt_bar.png
 tags: Carto Amtrak geojson
 ---
 Jump To:  

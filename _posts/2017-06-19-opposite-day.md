@@ -4,7 +4,7 @@ title: Opposite Day
 date: 2017-06-19
 excerpt: What's 8,000 miles under your feet
 image: /images/posts/oppositeday_antiworld.png
-tags:
+tags: geojson marathon
 ---
 
 Ever wonder what's on the other side of the world? Or hear the phrase "dig a hole straight through to China"? I just returned from my honeymoon in Thailand which, having a 12 hour time difference from US Central Time, got me thinking about this sort of thing. It's difficult to comprehend how big the world is, and it can be somewhat flabbergasting to think that if you could peer through the earth you could actually see people... upside down and almost 8,000 miles away.
