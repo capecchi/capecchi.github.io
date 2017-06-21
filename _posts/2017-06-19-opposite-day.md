@@ -7,11 +7,11 @@ image: /images/posts/oppositeday_bar.png
 tags: geojson marathon
 ---
 
-Ever wonder what's on the other side of the world? Or hear the phrase "dig a hole straight through to China"? I just returned from my honeymoon in Thailand which, having a 12 hour time difference from US Central Time, got me thinking about this sort of thing. It's difficult to comprehend how big the world is, and it can be somewhat flabbergasting to think that if you could peer through the earth you could actually see people... upside down and almost 8,000 miles away.
+Ever wonder what's on the other side of the world? Or hear the phrase "dig a hole straight through to China"? I just returned from my honeymoon in Thailand which, having a 12 hour time difference from US Central Time, got me thinking about this sort of thing. Turns out if you live in the US you'd dig through to China if you maintained the same latitude. Digging straight through the core would end up having you surface somewhere in the Indian Ocean. It's difficult to comprehend how big the world is, and it can be somewhat flabbergasting to think that if you could peer through the earth you could actually see people... upside down and almost 8,000 miles away.
 
 So what is around the world? I decided to have some fun with this by imagining an inverse-me running the same routes that I run around here. By taking the data from my Suunto sport watch I can imagine a mirror image of myself running the same route I did but on the opposite side of the world. Easy enough...
 
-Suunto lets you download your data in a number of formats, and in this case I used the GPX format which I manipulated using the Python module `gpxpy`. I read in the lat/long coordinates from the file and created three arrays of coordinates; one the unperturbed lat/long pairs, another the polar opposite, and the third the "northern" opposite where I did the reflection across the global axis instead of the global center thereby keeping the same latitude.
+Suunto lets you download your data in a number of formats, and in this case I used the GPX format which I manipulated using the Python module `gpxpy`. I read in the lat/long coordinates from the file and created three arrays of coordinates; one the unperturbed lat/long pairs, another the antipode exactly opposite the point on the globe, and the third the "northern" opposite where I did the rotation around the world but keeping the same latitude.
 ```py
 gpx_file = open(file,'r')
 gpx = gpxpy.parse(gpx_file)
