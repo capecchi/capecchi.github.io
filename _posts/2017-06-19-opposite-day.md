@@ -3,7 +3,7 @@ layout: post
 title: Opposite Day
 date: 2017-06-19
 excerpt: What's 8,000 miles under your feet
-image: /images/posts/oppositeday_antiworld.png
+image: /images/posts/oppositeday_bar.png
 tags: geojson marathon
 ---
 
