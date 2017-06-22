@@ -2,14 +2,25 @@
 # >>> scrape.main()
 
 def main():
+    us_urls  = ['http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=USA&StartDate=12%2F16%2F16',\
+                'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=USA&StartDate=2%2F17%2F17',\
+                'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=USA&StartDate=4%2F21%2F17',\
+                'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=USA&StartDate=6%2F23%2F17',\
+                'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=USA&StartDate=8%2F25%2F17',\
+                'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=USA&StartDate=10%2F27%2F17']
+               
+    intl_urls = ['http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=Intl&StartDate=12%2F15%2F16',\
+                'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=Intl&StartDate=2%2F16%2F17',\
+                'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=Intl&StartDate=4%2F20%2F17',\
+                'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=Intl&StartDate=6%2F22%2F17',\
+                'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=Intl&StartDate=8%2F24%2F17',\
+                'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=Intl&StartDate=10%2F26%2F17']
 
-    urls = ['http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=Intl&StartDate=12%2F15%2F16',\
-            'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=Intl&StartDate=2%2F16%2F17',\
-            'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=Intl&StartDate=4%2F20%2F17',\
-            'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=Intl&StartDate=6%2F22%2F17',\
-            'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=Intl&StartDate=8%2F24%2F17',\
-            'http://www.marathonguide.com/races/races.cfm?Sort=RaceDate&Place=Intl&StartDate=10%2F26%2F17']
-    
+    urls = us_urls
+    for url in intl_urls: urls.append(url)
+
+    #print(len(urls))
+    #stop
     import urllib
     from bs4 import BeautifulSoup
     import requests
@@ -35,6 +46,13 @@ def main():
                 #stop
             if string[:47] == cntry:
                 countries.append(string[47:-5])
+
+    if 0:
+        for i in np.arange(len(cities)):
+            print(cities[i]+', '+countries[i])
+        stop
+
+
 
     #FIND COORDINATES OF CITIES
     fsav ='C:/Users/Owner/Documents/GitHub/capecchi.github.io/posts/OppositeDay/arrays.npz'
