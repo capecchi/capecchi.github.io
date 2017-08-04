@@ -2,6 +2,7 @@
 layout: null
 ---
 $(document).ready(function () {
+  alert("what's up")
   $('a.blog-button').click(function (e) {
     if ($('.panel-cover').hasClass('panel-cover--collapsed')) return
     currentWidth = $('.panel-cover').width()
