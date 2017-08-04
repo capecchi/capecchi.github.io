@@ -18,7 +18,7 @@ $(document).ready(function () {
 /*  if (window.location.hash && window.location.hash == '#blog') {
     $('.panel-cover').addClass('panel-cover--collapsed')
   }*/
-  alert('window.location.pathname');
+  alert(window.location.pathname);
 
   if (window.location.pathname !== '{{ site.baseurl }}' && window.location.pathname !== '{{ site.baseurl }}/index.html') {
     $('.panel-cover').addClass('panel-cover--collapsed')
