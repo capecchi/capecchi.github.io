@@ -18,8 +18,9 @@ $(document).ready(function () {
 /*  if (window.location.hash && window.location.hash == '#blog') {
     $('.panel-cover').addClass('panel-cover--collapsed')
   }*/
-  alert(window.location.pathname);
 
+  /* N0TE: alert(window.location.pathname) gives things without site.url, so like /posts/ and /about/ not www.williamcapecchi.com/posts/
+  so we keep site.baseurl below (which is at time of writing this set to baseurl = '')*/
   if (window.location.pathname !== '{{ site.baseurl }}' && window.location.pathname !== '{{ site.baseurl }}/index.html') {
     $('.panel-cover').addClass('panel-cover--collapsed')
   }
