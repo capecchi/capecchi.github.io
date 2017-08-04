@@ -3,7 +3,7 @@ title: Bill Capecchi
 description: 'Sr. Simulation and Modeling Engineer<br>Based in Minneapolis, MN'
 #url: 'http://capecchi.github.io'
 url: 'http://www.williamcapecchi.com'
-baseurl: '/'
+baseurl: ''
 # baseurl: '/jekyll-uno/' #old
 google_analytics: 'UA-101721150-1'
 # disqus_shortname: 'your-disqus-name'
