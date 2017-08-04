@@ -2,7 +2,7 @@
 layout: null
 ---
 $(document).ready(function () {
-  alert("what's up")
+
   $('a.blog-button').click(function (e) {
     if ($('.panel-cover').hasClass('panel-cover--collapsed')) return
     currentWidth = $('.panel-cover').width()
@@ -17,16 +17,12 @@ $(document).ready(function () {
 
 /*  if (window.location.hash && window.location.hash == '#blog') {
     $('.panel-cover').addClass('panel-cover--collapsed')
-  }
-  alert('window.location.pathname');*/
+  }*/
+  alert('window.location.pathname');
 
-/*  if (window.location.pathname !== '{{ site.baseurl }}' && window.location.pathname !== '{{ site.baseurl }}/index.html') {
+  if (window.location.pathname !== '{{ site.baseurl }}' && window.location.pathname !== '{{ site.baseurl }}/index.html') {
     $('.panel-cover').addClass('panel-cover--collapsed')
   }
-*/
-    if (window.location.pathname !== 'wrong.com' && window.location.pathname !== 'wrongagain.com') {
-      $('.panel-cover').addClass('panel-cover--collapsed')
-    }
 
   $('.btn-mobile-menu').click(function () {
     $('.navigation-wrapper').toggleClass('visible animated bounceInDown')
