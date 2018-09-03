@@ -5,3 +5,5 @@ _site
 *.sublime-workspace
 .DS_Store
 /projects/AirQuality/csvs #don't sync daily csv files to remote
+.idea/
+projects/MACD/
