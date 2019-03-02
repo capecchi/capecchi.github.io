@@ -34,11 +34,8 @@ def smooth_run_coords(run_coords, thresh):
     return smooth
 
 
-def process_park_coords(park, plot=False):
-    """
-    """
+def extract_park_runs_coords(park):
     run_dict = {}
-    smooth_run_dict = {}
     for run in glob.glob(park+'*.kml'):
         with open(run, 'r') as f:
             s = BeautifulSoup(f, 'xml')
@@ -48,20 +45,31 @@ def process_park_coords(park, plot=False):
                     run_coords = np.array(process_coordinate_string(coords.string))
                 else:
                     run_coords = np.append(run_coords, process_coordinate_string(coords.string))
-            smooth_coords = smooth_run_coords(run_coords, 3.0)
-
-
         run_dict[run] = run_coords
-        smooth_run_dict[run] = smooth_coords
 
-    if plot:
-        for run in run_dict.keys():
-            plt.plot(run_dict[run][:, 0], run_dict[run][:, 1], 'o-')
-            plt.plot(smooth_run_dict[run][:, 0], smooth_run_dict[run][:, 1])
-    plt.show()
-    a=1
+    return run_dict
+
+
+def smooth_park_runs_coords(run_dict: dict):
+    smooth_run_dict = {}
+    for run in run_dict.keys():
+        smooth_coords = smooth_run_coords(run_dict[run], 3.0)
+        smooth_run_dict[run] = smooth_coords
+    return smooth_run_dict
+
+
+def plot_runs(runs: dict, ax):
+    for run in runs.keys():
+        ax.plot(runs[run][:, 0], runs[run][:, 1], '-')
 
 
 if __name__ == "__main__":
     park = 'ElmCreekRuns/'
-    process_park_coords(park, plot=True)
+    rd = extract_park_runs_coords(park)
+    # srd = smooth_park_runs_coords(rd)
+    fig = plt.figure('Park Runs')
+    ax = fig.add_subplot(111)
+    ax.set_xlabel('Longitude (deg)')
+    ax.set_ylabel('Latitude (deg)')
+    plot_runs(rd, ax)
+    plt.show()
