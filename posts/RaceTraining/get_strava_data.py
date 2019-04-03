@@ -62,6 +62,11 @@ def gather_training_seasons(code):
             cax.plot(days_before, cum, 'o--', label=k, alpha=0.5)
             wax1.plot(wdb, wd, 'o--', label=k, alpha=0.5)
             wax2.plot(wdb, wc, 'o--', alpha=0.5)
+        cax.annotate(f'{cum[-1]}', (days_before[-1], cum[-1]))
+        try:
+            wax2.annotate(f'{wc[-1]}', (wdb[-1], wc[-1]))
+        except IndexError:
+            pass
 
     dax.set_xlabel('Days Before Race')
     dax.set_ylabel('Distance (miles)')
