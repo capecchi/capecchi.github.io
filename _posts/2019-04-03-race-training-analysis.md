@@ -1,8 +1,8 @@
 ---
 layout: post
-title: Park Maps
+title: Race Training
 date: 2019-04-03
-excerpt: Analyzing my race training
+excerpt: Analyzing my historical training efforts
 #image: /images/posts/abt_bar.png
 tags: StravaAPI
 ---
