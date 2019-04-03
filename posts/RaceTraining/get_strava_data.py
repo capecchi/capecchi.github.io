@@ -3,9 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from stravalib.client import Client
 import datetime
-import plotly.plotly as py
-import plotly.graph_objs as go
-import plotly.io as pio
+from collections import OrderedDict
 
 
 def get_training_data(code, after=datetime.date.today() - datetime.timedelta(days=7), before=datetime.date.today()):
@@ -29,63 +27,60 @@ def get_training_data(code, after=datetime.date.today() - datetime.timedelta(day
 
 
 def gather_training_seasons(code):
-    races = {'TC Marathon 2014': datetime.datetime(2014, 10, 5),
-             'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
-             'TC Marathon 2015': datetime.datetime(2015, 10, 4),
-             'Superior 50k 2018': datetime.datetime(2018, 5, 19),
-             'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
-             'Superior 50k 2019': datetime.datetime(2019, 5, 18)}
+    races = OrderedDict({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
+                         'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
+                         'TC Marathon 2015': datetime.datetime(2015, 10, 4),
+                         'Superior 50k 2018': datetime.datetime(2018, 5, 19),
+                         'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
+                         'Superior 50k 2019': datetime.datetime(2019, 5, 18)})
     wks_18 = datetime.timedelta(weeks=18)
     day_1 = datetime.timedelta(days=1)
+    wks_1 = datetime.timedelta(weeks=1)
 
-    # dist_traces = []
-    # cum_traces = []
-    # last_week_traces = []
-    # for k, v in races.items():
-    #     days_before, dist, cum = get_training_data(code, v - wks_18, v + day_1)
-    #     dist_traces.append(go.Scatter(
-    #         x=days_before,
-    #         y=dist,
-    #         name=k,
-    #     ))
-    #     cum_traces.append(go.Scatter(
-    #         x=days_before,
-    #         y=cum,
-    #         name=k,
-    #     ))
-    # layout = go.Layout(showlegend=True)
-    # dist_fig = go.Figure(data=dist_traces, layout=layout)
-    # cum_fig = go.Figure(data=cum_traces, layout=layout)
-    #
-    # img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
-    # pio.write_image(dist_fig, f'{img_path}rta_dist.png')
-    # pio.write_image(cum_fig, f'{img_path}rta_cum.png')
+    ref_day = min(datetime.datetime.now(), races[list(races.keys())[-1]])
+    days_to_race = races[list(races.keys())[-1]] - ref_day
 
     w, h = plt.figaspect(.5)
     dist_fig = plt.figure('dist', figsize=(w, h))
     cum_fig = plt.figure('cum', figsize=(w, h))
+    wk_fig = plt.figure('week_previous', figsize=(w, 2 * h))
     dax = dist_fig.add_subplot(111)
     cax = cum_fig.add_subplot(111)
+    wax1 = wk_fig.add_subplot(211)
+    wax2 = wk_fig.add_subplot(212)
 
     for k, v in races.items():
         days_before, dist, cum = get_training_data(code, v - wks_18, v + day_1)
+        wdb, wd, wc = get_training_data(code, v - days_to_race - wks_1, v - days_to_race + day_1)
         if k == list(races.keys())[-1]:
             dax.plot(days_before, dist, 'o-', label=k)
             cax.plot(days_before, cum, 'o-', label=k)
+            wax1.plot(wdb, wd, 'o-', label=k)
+            wax2.plot(wdb, wc, 'o-')
         else:
             dax.plot(days_before, dist, 'o--', label=k, alpha=0.5)
             cax.plot(days_before, cum, 'o--', label=k, alpha=0.5)
+            wax1.plot(wdb, wd, 'o--', label=k, alpha=0.5)
+            wax2.plot(wdb, wc, 'o--', alpha=0.5)
 
     dax.set_xlabel('Days Before Race')
     dax.set_ylabel('Distance (miles)')
     cax.set_xlabel('Days Before Race')
     cax.set_ylabel('Cumulative (miles)')
+    wax1.set_ylabel('Distance (miles)')
+    wax2.set_ylabel('Cumulative (miles)')
+    wax2.set_xlabel('Runs over prior week')
     dax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05), ncol=2, fancybox=True)
     cax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05), ncol=2, fancybox=True)
+    wax1.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05), ncol=2, fancybox=True)
 
     img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
     plt.figure('dist')
     plt.savefig(f'{img_path}rta_dist.png', transparent=True)
+    print('saved dist image')
     plt.figure('cum')
     plt.savefig(f'{img_path}rta_cum.png', transparent=True)
-
+    print('saved cum image')
+    plt.figure('week_previous')
+    plt.savefig(f'{img_path}rta_week.png', transparent=True)
+    print('saved weekly image')

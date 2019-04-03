@@ -25,3 +25,8 @@ I think it is more interesting to look at the cumulative distance. I think time 
 
 ![image](/images/posts/rta_cum.png)
 **Cumulative distance run during training**
+
+And just for some added motivation to keep up my weekly runs, compare my totals for the past week between all races. So if, for example, we're currently 20 days prior to my next race, it'll compare what I've done in the past week to what I did 28-20 days before previous races.
+
+![image](/images/posts/rta_week.png)
+**Runs and cumulative distance for prior week**
