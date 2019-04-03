@@ -79,7 +79,7 @@ def identify_junctions(run_dict: dict, bubble_radius_m=500, nearby_radius_m=10):
                 # create c, s.t. c is close to b
                 # recreate a, b s.t. a, b are close to c
                 # except for the first step these should all be very fast since arrays become much shorter right away
-            a=1
+                a=1
 
 
 def plot_runs(runs: dict, ax):
