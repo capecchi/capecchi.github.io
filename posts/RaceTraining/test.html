@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Page</title>
+    <style>
+        .my-plot-container {
+            width: 75%;
+            margin: 10px auto 10px;
+            border: 1px solid black;
+            padding: 20px;
+            padding: 20px;
+         }
+    </style>
+</head>
+<body>
+
+<div>
+    <p>this is some text</p>
+    <div>
+        <form>
+            {% for field in form %}
+            <div>
+                {{ field() }}
+            </div>
+            {% endfor %}
+        </form>
+    </div>
+    {% if ids|length > 0 %}
+    <div>
+        {% for id in ids %}
+            <div id="{{id}}" class="my-plot-container"></div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+{% block scripts %}
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        var ids = {{ ids | safe }}
+        var graphs = {{ graphs | safe }}
+
+        for (var i in graphs) {
+            Plotly.plot(ids[i],
+                graphs[i].data,
+                graphs[i].layout || {});
+        }
+    </script>
+{% endblock %}
+
+</body>
+</html>
