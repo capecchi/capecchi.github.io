@@ -38,22 +38,22 @@ class Segment:
 		self.update_length()
 	
 	def check(self):
-		if dist.vincenty(self.end1.coord[::-1][1:], self.coords[0, ::-1][1:]).m > 10:
+		if dist.distance(self.end1.coord[::-1][1:], self.coords[0, ::-1][1:]).m > 10:
 			print('OOPS! UNEXPECTED LARGE DISTANCE, something is broken but carrying on...')
 		# raise SomethingHappened('Oops, unexpected large distance. Plot segment and endpoints and figure it out...')
-		if dist.vincenty(self.end2.coord[::-1][1:], self.coords[-1, ::-1][1:]).m > 10:
+		if dist.distance(self.end2.coord[::-1][1:], self.coords[-1, ::-1][1:]).m > 10:
 			print('OOPS! UNEXPECTED LARGE DISTANCE, something is broken but carrying on...')
 		# raise SomethingHappened('Oops, unexpected large distance. Plot segment and endpoints and figure it out...')
-		print('Segment seems to be in good condition')
+		# print('Segment seems to be in good condition')
 	
 	def update_length(self):
 		length = 0
-		length += dist.vincenty(self.end1.coord[::-1][1:], self.coords[0, ::-1][1:]).m
+		length += dist.distance(self.end1.coord[::-1][1:], self.coords[0, ::-1][1:]).m
 		for i in range(len(self.coords) - 1):
-			length += dist.vincenty(self.coords[i, ::-1][1:], self.coords[i + 1, ::-1][1:]).m
-		length += dist.vincenty(self.end2.coord[::-1][1:], self.coords[-1, ::-1][1:]).m
+			length += dist.distance(self.coords[i, ::-1][1:], self.coords[i + 1, ::-1][1:]).m
+		length += dist.distance(self.end2.coord[::-1][1:], self.coords[-1, ::-1][1:]).m
 		self.length = length
-		print('segment length updated to {:.2f}m'.format(self.length))
+		# print('segment length updated to {:.2f}m'.format(self.length))
 	
 	def plot(self):
 		plt.plot(self.coords[:, 0], self.coords[:, 1], '-')
@@ -71,7 +71,7 @@ def identify_junction_indices(junction_candidate_indices, seg_from, seg_onto):
 	:param seg_onto: segment we are using to compare closest approach distance from seg_from candidate junction indices
 	:return: new_j, array of new junction indices
 	"""
-	print('identifying junction indices')
+	# print('identifying junction indices')
 	new_j = []
 	for (i_abv, i_bel) in junction_candidate_indices:
 		initial_approach_dist, _ = point_to_route_min_dist(seg_from.coords[i_abv], seg_onto.coords)
@@ -121,7 +121,7 @@ class Park:
 	
 	def scan_park_directory(self):
 		print('scanning park directory')
-		for file in glob.glob(self.park_run_directory + '*.kml'):
+		for file in glob.glob(self.park_run_directory + '*.*'):
 			if file not in self.files_analyzed:
 				self.process_new_run(file)
 	
@@ -129,19 +129,10 @@ class Park:
 		print('processing new run: {}'.format(runfile))
 		self.files_analyzed.append(runfile)
 		if 1:
-			run_coords = extract_coords(runfile)
+			if runfile.split('.')[-1] == 'kml': run_coords = extract_coords_kml(runfile)
+			if runfile.split('.')[-1] == 'gpx': run_coords = extract_coords_gpx(runfile)
 		else:  # make simplified fake coords for testing
-			m_per_deg = dist.vincenty([0, 0], [0, 1]).m
-			lon = np.linspace(-2500 / m_per_deg, 2500 / m_per_deg, num=500)  # 5k
-			alt = np.zeros_like(lon)
-			lat = np.array([np.sqrt(1000 ** 2 - dist.vincenty([0, 0], [0, lon[i]]).m ** 2) / m_per_deg if dist.vincenty(
-				[0, 0], [0, lon[i]]).m <= 1000. else 0. for i in np.arange(len(lon))])
-			if runfile == 'ElmCreekRuns\\Move_2018_08_28_13_27_03_Running.kml':
-				lat *= -1.
-			run_coords = np.zeros((500, 3))
-			run_coords[:, 0] = lon
-			run_coords[:, 1] = lat
-			run_coords[:, 2] = alt
+			run_coords = get_dummy_coordinates()
 		j1 = Junction(run_coords[0], True)  # start and end are trailheads
 		j2 = Junction(run_coords[-1], True)
 		seg = Segment(run_coords, j1, j2)
@@ -167,7 +158,7 @@ class Park:
 				consistent = True  # shouldn't have to check # segs here
 	
 	def compare_junctions(self, j1, j2):
-		jdist = dist.vincenty(j1.coord[::-1][1:], j2.coord[::-1][1:]).m
+		jdist = dist.distance(j1.coord[::-1][1:], j2.coord[::-1][1:]).m
 		if jdist < 50 and j1.id != j2.id:  # todo: validate choice, see add_junction for other use
 			junction_ids = [j.id for j in self.junctions]
 			try:
@@ -190,13 +181,13 @@ class Park:
 				seg.end2 = j_to
 	
 	def add_junction(self, junction: Junction):
-		print('adding junction')
+		# print('adding junction')
 		# compare junction to existing junctions
 		# two junctions deemed the same if they're within XXm of each other
 		j: Junction
 		is_new = True
 		for j in self.junctions:
-			jdist = dist.vincenty(junction.coord[::-1][1:], j.coord[::-1][1:]).m
+			jdist = dist.distance(junction.coord[::-1][1:], j.coord[::-1][1:]).m
 			if jdist < 50:  # todo: validate choice of 50m radius here
 				is_new = False
 				if junction.id != j.id:
@@ -213,7 +204,7 @@ class Park:
 			self.junctions.append(junction)
 		
 	def add_segment(self, seg: Segment):
-		print('adding segment')
+		# print('adding segment')
 		self.segments.append(seg)
 		junc_ids = [j.id for j in self.junctions]
 		if seg.end1.id not in junc_ids:
@@ -222,7 +213,7 @@ class Park:
 			self.add_junction(seg.end2)
 	
 	def compare_segments(self, seg1: Segment, seg2: Segment):
-		print('comparing segments')
+		# print('comparing segments')
 		# this is the heart of things
 		# we've already segmented on known junctions, so should either be same, totally  different, or find new junction
 		# If the same we average them together- remove seg2 and update seg1 as the average of the two
@@ -239,7 +230,7 @@ class Park:
 			# print('{}% done'.format(ii * 100. / len(seg1.coords[::speedup1])))
 			min_dist, _ = point_to_route_min_dist(pt, seg2.coords)
 			seg1on2_close_approach.append(min_dist)
-		# plt.plot(seg1on2_close_approach)  # let's see what this looks like
+		plt.plot(seg1on2_close_approach)  # let's see what this looks like
 		
 		# seg2 onto seg1
 		seg2on1_close_approach = []
@@ -247,7 +238,7 @@ class Park:
 			# print('{}% done'.format(ii * 100. / len(seg2.coords[::speedup2])))
 			min_dist, _ = point_to_route_min_dist(pt, seg1.coords)
 			seg2on1_close_approach.append(min_dist)
-		# plt.plot(seg2on1_close_approach)  # let's see what this looks like
+		plt.plot(seg2on1_close_approach)  # let's see what this looks like
 		
 		i1on2gt50 = [ca > 50 for ca in seg1on2_close_approach]
 		i2on1gt50 = [ca > 50 for ca in seg2on1_close_approach]
@@ -262,7 +253,7 @@ class Park:
 		elif all(i1on2gt50):  # seg1 never within 50m of seg2, consider disjoint, no action needed (?)
 			pass
 		elif (not any(i1on2gt50) and any(i2on1gt50)) or (not any(i2on1gt50) and any(i1on2gt50)):
-			# one segment is just a subsegment of the other, do nothing for now, larger segment will be chopped later
+			# one segment is just a sub-segment of the other, do nothing for now, larger segment will be chopped later
 			pass
 		else:  # new junctions to be found! seg1/2 both within and further apart than 50m, so find out where
 			# *50 below is to return the true indices of the seg1/2 coord arrays since we're using ::50 above
@@ -280,6 +271,7 @@ class Park:
 				[(i * speedup2, (i + 1) * speedup2) for i in np.arange(len(i2on1gt50))[:-1] if
 				 i2on1gt50[i] is True and i2on1gt50[i + 1] is False]
 			)
+			# todo: debug this whole thing, visualize when/where it thinks things are junctioning
 			new_j1 = identify_junction_indices(i1_junc_candidates, seg1, seg2)
 			new_j2 = identify_junction_indices(i2_junc_candidates, seg2, seg1)
 			for j in new_j1:
@@ -288,7 +280,7 @@ class Park:
 				self.add_junction(Junction(seg2.coords[j]))
 	
 	def average_segments(self, seg1: Segment, seg2: Segment):
-		print('averaging segments together')
+		# print('averaging segments together')
 		# average seg2 onto seg1
 		self.compare_junctions(seg1.end1, seg2.end1)
 		self.compare_junctions(seg1.end1, seg2.end2)

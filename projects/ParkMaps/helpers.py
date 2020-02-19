@@ -52,6 +52,21 @@ def process_coordinate_string(str):
 	return long_lat_alt_arr
 
 
+def get_dummy_coordinates(top=True):
+	m_per_deg = dist.vincenty([0, 0], [0, 1]).m
+	lon = np.linspace(-2500 / m_per_deg, 2500 / m_per_deg, num=500)  # 5k
+	alt = np.zeros_like(lon)
+	lat = np.array([np.sqrt(1000 ** 2 - dist.vincenty([0, 0], [0, lon[i]]).m ** 2) / m_per_deg if dist.vincenty(
+		[0, 0], [0, lon[i]]).m <= 1000. else 0. for i in np.arange(len(lon))])
+	if not top:
+		lat *= -1.
+	run_coords = np.zeros((500, 3))
+	run_coords[:, 0] = lon
+	run_coords[:, 1] = lat
+	run_coords[:, 2] = alt
+	return run_coords
+
+
 if __name__ == '__main__':
 	park_dir = 'ElmCreekRuns/'
 	for file in glob.glob(park_dir + '*.tcx'):
