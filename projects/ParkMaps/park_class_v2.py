@@ -230,7 +230,7 @@ class Park:
 			# print('{}% done'.format(ii * 100. / len(seg1.coords[::speedup1])))
 			min_dist, _ = point_to_route_min_dist(pt, seg2.coords)
 			seg1on2_close_approach.append(min_dist)
-		plt.plot(seg1on2_close_approach)  # let's see what this looks like
+		# plt.plot(seg1on2_close_approach)  # let's see what this looks like
 		
 		# seg2 onto seg1
 		seg2on1_close_approach = []
@@ -238,7 +238,7 @@ class Park:
 			# print('{}% done'.format(ii * 100. / len(seg2.coords[::speedup2])))
 			min_dist, _ = point_to_route_min_dist(pt, seg1.coords)
 			seg2on1_close_approach.append(min_dist)
-		plt.plot(seg2on1_close_approach)  # let's see what this looks like
+		# plt.plot(seg2on1_close_approach)  # let's see what this looks like
 		
 		i1on2gt50 = [ca > 50 for ca in seg1on2_close_approach]
 		i2on1gt50 = [ca > 50 for ca in seg2on1_close_approach]
@@ -251,9 +251,11 @@ class Park:
 				raise SomethingHappened('segment id missing')
 			self.average_segments(seg1, seg2)
 		elif all(i1on2gt50):  # seg1 never within 50m of seg2, consider disjoint, no action needed (?)
+			a=1
 			pass
 		elif (not any(i1on2gt50) and any(i2on1gt50)) or (not any(i2on1gt50) and any(i1on2gt50)):
 			# one segment is just a sub-segment of the other, do nothing for now, larger segment will be chopped later
+			a=1
 			pass
 		else:  # new junctions to be found! seg1/2 both within and further apart than 50m, so find out where
 			# *50 below is to return the true indices of the seg1/2 coord arrays since we're using ::50 above
@@ -280,7 +282,7 @@ class Park:
 				self.add_junction(Junction(seg2.coords[j]))
 	
 	def average_segments(self, seg1: Segment, seg2: Segment):
-		# print('averaging segments together')
+		print('averaging segments together')
 		# average seg2 onto seg1
 		self.compare_junctions(seg1.end1, seg2.end1)
 		self.compare_junctions(seg1.end1, seg2.end2)

@@ -6,7 +6,7 @@ import gpxpy
 
 
 def point_to_point_dist(pt1, pt2):
-	return dist.vincenty(pt1[::-1][1:], pt2[::-1][1:]).m
+	return dist.distance(pt1[::-1][1:], pt2[::-1][1:]).m
 
 
 def extract_coords_kml(runfile):
@@ -34,7 +34,7 @@ def extract_coords_gpx(runfile):
 
 def point_to_route_min_dist(pt, route):
 	# find index of closest approach
-	dis = [dist.vincenty(pt[::-1][1:], route[i, ::-1][1:]).m for i in np.arange(len(route))]
+	dis = [dist.distance(pt[::-1][1:], route[i, ::-1][1:]).m for i in np.arange(len(route))]
 	i_close_approach = dis.index(min(dis))
 	min_dist = min(dis)
 	return min_dist, i_close_approach
@@ -53,10 +53,10 @@ def process_coordinate_string(str):
 
 
 def get_dummy_coordinates(top=True):
-	m_per_deg = dist.vincenty([0, 0], [0, 1]).m
+	m_per_deg = dist.distance([0, 0], [0, 1]).m
 	lon = np.linspace(-2500 / m_per_deg, 2500 / m_per_deg, num=500)  # 5k
 	alt = np.zeros_like(lon)
-	lat = np.array([np.sqrt(1000 ** 2 - dist.vincenty([0, 0], [0, lon[i]]).m ** 2) / m_per_deg if dist.vincenty(
+	lat = np.array([np.sqrt(1000 ** 2 - dist.distance([0, 0], [0, lon[i]]).m ** 2) / m_per_deg if dist.distance(
 		[0, 0], [0, lon[i]]).m <= 1000. else 0. for i in np.arange(len(lon))])
 	if not top:
 		lat *= -1.
