@@ -5,9 +5,59 @@ import numpy as np
 import gpxpy
 
 
+def consecutive_arrays(arr):
+	consec_arr = []
+	consec = []
+	for i, arr_val in enumerate(arr):
+		if len(consec) == 0 or arr_val == consec[-1] + 1:
+			consec.append(arr_val)
+		else:
+			consec_arr.append(consec)
+			consec = [arr_val]
+		if i == len(arr)-1:
+			consec_arr.append(consec)
+	
+	return consec_arr
+
+
 def point_to_point_dist(pt1, pt2):
 	return dist.distance(pt1[::-1][1:], pt2[::-1][1:]).m
 
+
+def point_to_route_min_dist(pt, route, return_dist=False):
+	# find index of closest approach
+	lat_m_per_deg = dist.distance([pt[1], pt[0]], [pt[1] + 1., pt[0]]).m
+	lon_m_per_deg = dist.distance([pt[1], pt[0]], [pt[1], pt[0] + 1.]).m
+	
+	# slow
+	# dis = [dist.distance(pt[::-1][1:], route[i, ::-1][1:]).m for i in np.arange(len(route))]
+	
+	# faster
+	dis = list(
+		np.sqrt(((pt[0] - route[:, 0]) * lon_m_per_deg) ** 2 + ((pt[1] - route[:, 1]) * lat_m_per_deg) ** 2))  # [m]
+	
+	if return_dist:
+		return dis
+	else:
+		i_close_approach = dis.index(min(dis))
+		min_dist = min(dis)
+		return min_dist, i_close_approach
+
+
+def index_path_dist_to_ends(index, route, return_both=False):
+	# get the distance along the path between a route index and the route ends
+	pt = route[index, :]
+	lat_m_per_deg = dist.distance([pt[1], pt[0]], [pt[1] + 1., pt[0]]).m
+	lon_m_per_deg = dist.distance([pt[1], pt[0]], [pt[1], pt[0] + 1.]).m
+	lon = route[:, 0]
+	lat = route[:, 1]
+	dis = np.sqrt(((lon - np.roll(lon, -1)) * lon_m_per_deg) ** 2 + ((lat - np.roll(lat, -1)) * lat_m_per_deg) ** 2)  # [m]
+	dis = np.append(0, dis)
+	if return_both:
+		return np.sum(dis[:index]), np.sum(dis[index:])
+	else:
+		return min([np.sum(dis[:index]), np.sum(dis[index:])])
+	
 
 def extract_coords_kml(runfile):
 	with open(runfile, 'r') as f:
@@ -30,14 +80,6 @@ def extract_coords_gpx(runfile):
 				for point in segment.points:
 					run_coords.append([point.longitude, point.latitude, point.elevation])
 	return np.array(run_coords)
-
-
-def point_to_route_min_dist(pt, route):
-	# find index of closest approach
-	dis = [dist.distance(pt[::-1][1:], route[i, ::-1][1:]).m for i in np.arange(len(route))]
-	i_close_approach = dis.index(min(dis))
-	min_dist = min(dis)
-	return min_dist, i_close_approach
 
 
 def process_coordinate_string(str):
@@ -74,6 +116,11 @@ if __name__ == '__main__':
 			rc = extract_coords_kml(file)
 		elif file.split('.')[-1] == 'gpx':
 			rc = extract_coords_gpx(file)
-		elif file.split('.')[-1] == 'tcx':
-			rc = extract_coords_tcx(file)
+		# elif file.split('.')[-1] == 'tcx':
+		# 	rc = extract_coords_tcx(file)
 		print('{} : {}'.format(file, len(rc)))
+
+if __name__ == '__main__':
+	itest = [1, 2, 3, 4, 6, 7, 10, 11, 12, 13, 25, 26, 28]
+	consec = consecutive_arrays(itest)
+	aa=1
