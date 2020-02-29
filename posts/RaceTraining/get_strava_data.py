@@ -9,8 +9,7 @@ import plotly.graph_objs as go
 from plotly import tools
 
 
-def get_training_data(code, after=datetime.date.today() - datetime.timedelta(days=7), before=datetime.date.today()):
-    race_day = before - datetime.timedelta(days=1)
+def get_client(code):
     client_id = 34049
     client_secret = '2265a983040000b3b865a0fc333f41cd701dcb5f'
 
@@ -19,6 +18,10 @@ def get_training_data(code, after=datetime.date.today() - datetime.timedelta(day
     token_response = client.exchange_code_for_token(client_id, client_secret, code)
     client.access_token = token_response['access_token']
     client.refresh_token = token_response['refresh_token']
+    return client
+
+def get_training_data(client, after=datetime.date.today() - datetime.timedelta(days=7), before=datetime.date.today()):
+    race_day = before - datetime.timedelta(days=1)
 
     activities = client.get_activities(after=after, before=before)
     activities = list(activities)
@@ -36,7 +39,7 @@ def gather_training_seasons(code, matplotlib=False):
                          'Superior 50k 2018': datetime.datetime(2018, 5, 19),
                          'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
                          'Superior 50k 2019': datetime.datetime(2019, 5, 18),
-                         'Elkhorn 50m 2019': datetime.datetime(2019, 9, 3)})
+                         'Dirty German 50k': datetime.datetime(2020, 5, 9)})
     # races = OrderedDict({'Superior 50k 2019': datetime.datetime(2019, 5, 18)})
     wks_18 = datetime.timedelta(weeks=18)
     day_1 = datetime.timedelta(days=1)
@@ -44,6 +47,7 @@ def gather_training_seasons(code, matplotlib=False):
 
     ref_day = min(datetime.datetime.now(), races[list(races.keys())[-1]])
     days_to_race = datetime.timedelta(days=(races[list(races.keys())[-1]] - ref_day).days)
+    client = get_client(code)
 
     if matplotlib:
         w, h = plt.figaspect(.5)
@@ -57,8 +61,8 @@ def gather_training_seasons(code, matplotlib=False):
 
         for k, v in races.items():
             print(k)
-            days_before, dist, cum = get_training_data(code, v - wks_18, v + day_1)
-            wdb, wd, wc = get_training_data(code, v - days_to_race - wks_1, v - days_to_race + day_1)
+            days_before, dist, cum = get_training_data(client, v - wks_18, v + day_1)
+            wdb, wd, wc = get_training_data(client, v - days_to_race - wks_1, v - days_to_race + day_1)
             if v > datetime.datetime.today():  # read: if race day is after today, ie in the future, then solid line plot
                 dax.plot(days_before, dist, 'o-', label=k)
                 cax.plot(days_before, cum, 'o-', label=k)
@@ -110,8 +114,8 @@ def gather_training_seasons(code, matplotlib=False):
                 op = 1.
             else:
                 op = 0.5
-            days_before, dist, cum = get_training_data(code, v - wks_18, v + day_1)
-            wdb, wd, wc = get_training_data(code, v - days_to_race - wks_1, v - days_to_race)
+            days_before, dist, cum = get_training_data(client, v - wks_18, v + day_1)
+            wdb, wd, wc = get_training_data(client, v - days_to_race - wks_1, v - days_to_race)
             # d_ann['x'].append(days_before[-1])
             # c_ann['x'].append(days_before[-1])
             # w_ann['x'].append(wdb[-1])
