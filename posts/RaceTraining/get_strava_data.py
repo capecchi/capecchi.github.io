@@ -6,6 +6,7 @@ from stravalib.client import Client
 import datetime
 from collections import OrderedDict
 import plotly.graph_objs as go
+import stravalib.exc
 from plotly import tools
 
 
@@ -20,16 +21,20 @@ def get_client(code):
     client.refresh_token = token_response['refresh_token']
     return client
 
+
 def get_training_data(client, after=datetime.date.today() - datetime.timedelta(days=7), before=datetime.date.today()):
     race_day = before - datetime.timedelta(days=1)
 
     activities = client.get_activities(after=after, before=before)
-    activities = list(activities)
-    runs = [act for act in activities[::-1] if act.type == 'Run']  # reverse order so they're chronological
-    days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
-    dist = [unithelper.miles(r.distance).num for r in runs]
-    cum = np.cumsum(dist)
-    return days_before, dist, cum
+    try:
+        activities = list(activities)
+        runs = [act for act in activities[::-1] if act.type == 'Run']  # reverse order so they're chronological
+        days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
+        dist = [unithelper.miles(r.distance).num for r in runs]
+        cum = np.cumsum(dist)
+        return days_before, dist, cum
+    except stravalib.exc.Fault:
+        return None, None, None
 
 
 def gather_training_seasons(code, matplotlib=False):
@@ -40,7 +45,9 @@ def gather_training_seasons(code, matplotlib=False):
                          'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
                          'Superior 50k 2019': datetime.datetime(2019, 5, 18),
                          'Dirty German 50k': datetime.datetime(2020, 5, 9)})
-    # races = OrderedDict({'Superior 50k 2019': datetime.datetime(2019, 5, 18)})
+                         # 'Shawangunk Ridge 50M': datetime.datetime(2020, 9, 12)})
+    # races = OrderedDict({'Dirty German 50k': datetime.datetime(2020, 5, 9),
+    #                      'Shawangunk Ridge 50M': datetime.datetime(2020, 9, 12)})
     wks_18 = datetime.timedelta(weeks=18)
     day_1 = datetime.timedelta(days=1)
     wks_1 = datetime.timedelta(weeks=1)
@@ -104,38 +111,33 @@ def gather_training_seasons(code, matplotlib=False):
         dist_traces = []
         cum_traces = []
         wk_traces = []
-        d_ann = {'x': [], 'y': []}
-        # c_ann = {'x': [], 'y': []}
-        # w_ann = {'x': [], 'yd': [], 'yc': []}
         colors = plotly.colors.DEFAULT_PLOTLY_COLORS
         for i, (k, v) in enumerate(races.items()):
             print(k)
             if v > datetime.datetime.today():  # read: if race day is after today, ie in the future, then solid line plot
-                op = 1.
+                width = 3
             else:
-                op = 0.5
+                width = 2
+            op = (i + 1.) / len(races.items())
             days_before, dist, cum = get_training_data(client, v - wks_18, v + day_1)
             wdb, wd, wc = get_training_data(client, v - days_to_race - wks_1, v - days_to_race)
-            # d_ann['x'].append(days_before[-1])
-            # c_ann['x'].append(days_before[-1])
-            # w_ann['x'].append(wdb[-1])
-            # d_ann['y'].append(dist[-1])
-            # c_ann['y'].append(cum[-1])
-            # w_ann['yd'].append(wd[-1])
-            # w_ann['yc'].append(wc[-1])
             dist_traces.append(go.Scatter(
                 x=days_before,
                 y=dist,
                 opacity=op,
                 name=k,
-                mode='lines+markers'
+                mode='lines+markers',
+                line=dict(
+                    width=width)
             ))
             cum_traces.append(go.Scatter(
                 x=days_before,
                 y=cum,
                 opacity=op,
                 name=k,
-                mode='lines+markers'
+                mode='lines+markers',
+                line=dict(
+                    width=width)
             ))
             wk_traces.append(go.Scatter(
                 x=wdb,
@@ -145,8 +147,10 @@ def gather_training_seasons(code, matplotlib=False):
                 name=k,
                 mode='lines+markers',
                 marker=dict(
-                    color=colors[i]
-                )
+                    color=colors[i]),
+                line=dict(
+                    width=width)
+
             ))
             wk_traces.append(go.Scatter(
                 x=wdb,
@@ -155,8 +159,9 @@ def gather_training_seasons(code, matplotlib=False):
                 name=k,
                 mode='lines+markers',
                 marker=dict(
-                    color=colors[i]
-                ),
+                    color=colors[i]),
+                line=dict(
+                    width=width),
                 showlegend=False
             ))
 
