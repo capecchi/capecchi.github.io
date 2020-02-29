@@ -4,6 +4,7 @@ from bottle import route, run, template, request, redirect, view, jinja2_view
 from wtforms import Form, SubmitField
 from posts.RaceTraining.get_strava_data import gather_training_seasons
 
+
 class MyForm(Form):
     hi = SubmitField('Get Strava Data')
 
