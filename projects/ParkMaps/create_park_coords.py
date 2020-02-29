@@ -69,6 +69,7 @@ def another_run_nearby(coord, current_run_key, run_dict, nearby_radius_m):
 
 
 def identify_junctions(run_dict: dict, bubble_radius_m=500, nearby_radius_m=10):
+    junctions = None
     for key, run_coords in run_dict.items():
         for coord in run_coords:
             nearby_runs_icoord = another_run_nearby(coord, key, run_dict, nearby_radius_m)
@@ -80,6 +81,7 @@ def identify_junctions(run_dict: dict, bubble_radius_m=500, nearby_radius_m=10):
                 # recreate a, b s.t. a, b are close to c
                 # except for the first step these should all be very fast since arrays become much shorter right away
                 a=1
+    return junctions
 
 
 def plot_runs(runs: dict, ax):
