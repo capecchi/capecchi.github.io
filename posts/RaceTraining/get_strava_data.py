@@ -7,7 +7,6 @@ import datetime
 from collections import OrderedDict
 import plotly.graph_objs as go
 import stravalib.exc
-from plotly import tools
 
 
 def get_client(code):
@@ -32,9 +31,10 @@ def get_training_data(client, after=datetime.date.today() - datetime.timedelta(d
         days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
         dist = [unithelper.miles(r.distance).num for r in runs]
         cum = np.cumsum(dist)
-        return days_before, dist, cum
+        pace = [60./unithelper.miles_per_hour(r.average_speed).num for r in runs]  # min/mile
+        return days_before, dist, cum, pace
     except stravalib.exc.Fault:
-        return None, None, None
+        return None, None, None, None
 
 
 def gather_training_seasons(code, matplotlib=False):
@@ -68,8 +68,8 @@ def gather_training_seasons(code, matplotlib=False):
 
         for k, v in races.items():
             print(k)
-            days_before, dist, cum = get_training_data(client, v - wks_18, v + day_1)
-            wdb, wd, wc = get_training_data(client, v - days_to_race - wks_1, v - days_to_race + day_1)
+            days_before, dist, cum, pace = get_training_data(client, v - wks_18, v + day_1)
+            wdb, wd, wc, wp = get_training_data(client, v - days_to_race - wks_1, v - days_to_race + day_1)
             if v > datetime.datetime.today():  # read: if race day is after today, ie in the future, then solid line plot
                 dax.plot(days_before, dist, 'o-', label=k)
                 cax.plot(days_before, cum, 'o-', label=k)
@@ -110,6 +110,7 @@ def gather_training_seasons(code, matplotlib=False):
     else:
         dist_traces = []
         cum_traces = []
+        pace_traces = []
         wk_traces = []
         colors = plotly.colors.DEFAULT_PLOTLY_COLORS
         for i, (k, v) in enumerate(races.items()):
@@ -119,8 +120,8 @@ def gather_training_seasons(code, matplotlib=False):
             else:
                 width = 2
             op = (i + 1.) / len(races.items())
-            days_before, dist, cum = get_training_data(client, v - wks_18, v + day_1)
-            wdb, wd, wc = get_training_data(client, v - days_to_race - wks_1, v - days_to_race)
+            days_before, dist, cum, pace = get_training_data(client, v - wks_18, v + day_1)
+            wdb, wd, wc, wp = get_training_data(client, v - days_to_race - wks_1, v - days_to_race)
             dist_traces.append(go.Scatter(
                 x=days_before,
                 y=dist,
@@ -139,6 +140,14 @@ def gather_training_seasons(code, matplotlib=False):
                 line=dict(
                     width=width)
             ))
+            pace_traces.append(go.Scatter(
+                x=days_before,
+                y=pace,
+                opacity=op,
+                name=k,
+                mode='lines+markers',
+                line=dict(width=width)
+            ))
             wk_traces.append(go.Scatter(
                 x=wdb,
                 y=wd,
@@ -155,6 +164,19 @@ def gather_training_seasons(code, matplotlib=False):
             wk_traces.append(go.Scatter(
                 x=wdb,
                 y=wc,
+                opacity=op,
+                name=k,
+                mode='lines+markers',
+                marker=dict(
+                    color=colors[i]),
+                line=dict(
+                    width=width),
+                showlegend=False
+            ))
+            wk_traces.append(go.Scatter(
+                x=wdb,
+                y=wp,
+                yaxis='y3',
                 opacity=op,
                 name=k,
                 mode='lines+markers',
@@ -184,17 +206,40 @@ def gather_training_seasons(code, matplotlib=False):
             showlegend=False,
             hoverinfo='none'
         ))
+        pace_traces.append(go.Scatter(
+            x=[t.x[-1] for t in pace_traces if len(t.x) > 0],
+            y=[t.y[-1] for t in pace_traces if len(t.y) > 0],
+            text=[f'{round(t.y[-1], 1)}' for t in pace_traces if len(t.y) > 0],
+            mode='text',
+            textposition='middle left',
+            showlegend=False,
+            hoverinfo='none'
+        ))
         wk_annotations = {'dx': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
                           'dy': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
                           'dt': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
                           'cx': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)],
                           'cy': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)],
-                          'ct': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)]}
+                          'ct': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)],
+                          'px': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y3')],
+                          'py': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y3')],
+                          'pt': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y3')]
+                          }
         wk_traces.append(go.Scatter(
             x=wk_annotations['dx'],
             y=wk_annotations['dy'],
             text=wk_annotations['dt'],
             yaxis='y2',
+            mode='text',
+            textposition='middle left',
+            showlegend=False,
+            hoverinfo='none',
+        ))
+        wk_traces.append(go.Scatter(
+            x=wk_annotations['px'],
+            y=wk_annotations['py'],
+            text=wk_annotations['pt'],
+            yaxis='y3',
             mode='text',
             textposition='middle left',
             showlegend=False,
@@ -228,23 +273,36 @@ def gather_training_seasons(code, matplotlib=False):
                 title='Cumulative (miles)'
             )
         )
-
+        playout = go.Layout(
+            # legend=dict(orientation='h'),
+            xaxis=dict(
+                title='Days before race'
+            ),
+            yaxis=dict(
+                title='Pace (min/mile)'
+            )
+        )
         wlayout = go.Layout(
             # legend=dict(orientation='h'),
             xaxis=dict(
                 title='Prior week training',
             ),
             yaxis=dict(
-                title='Distance (miles)',
-                domain=[0, 0.45],
+                title='Distance',
+                domain=[0., .3],
             ),
             yaxis2=dict(
-                title='Cumulative training distance (miles)',
-                domain=[0.55, 1]
-            )
+                title='Cumulative',
+                domain=[0.35, 0.65]
+            ),
+            yaxis3=dict(
+                title='Pace',
+                domain=[0.7, 1.],
+            ),
         )
 
         dist_fig = go.Figure(data=dist_traces, layout=dlayout)
         cum_fig = go.Figure(data=cum_traces, layout=clayout)
+        pace_fig = go.Figure(data=pace_traces, layout=playout)
         wk_fig = go.Figure(data=wk_traces, layout=wlayout)
-        return dist_fig, cum_fig, wk_fig
+        return dist_fig, cum_fig, wk_fig, pace_fig

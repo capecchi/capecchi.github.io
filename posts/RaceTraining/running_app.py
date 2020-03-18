@@ -19,8 +19,8 @@ def home():
         for el in request.url.split('&'):
             if 'code=' in el:
                 code = el.split('=')[-1]
-        dfig, cfig, wfig = gather_training_seasons(code)
-        graphs = [dfig, cfig, wfig]
+        dfig, cfig, wfig, pfig = gather_training_seasons(code)
+        graphs = [cfig, dfig, pfig, wfig]
         ids = [f'graph-{i}' for i, _ in enumerate(graphs)]
         graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
         return {'form': MyForm(), 'ids': ids, 'graphs': graphJSON}

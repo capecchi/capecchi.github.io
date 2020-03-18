@@ -52,11 +52,23 @@ def index_path_dist_to_ends(index, route, return_both=False):
 	lon = route[:, 0]
 	lat = route[:, 1]
 	dis = np.sqrt(((lon - np.roll(lon, -1)) * lon_m_per_deg) ** 2 + ((lat - np.roll(lat, -1)) * lat_m_per_deg) ** 2)  # [m]
-	dis = np.append(0, dis)
+	dis[0] = 0
 	if return_both:
 		return np.sum(dis[:index]), np.sum(dis[index:])
 	else:
 		return min([np.sum(dis[:index]), np.sum(dis[index:])])
+	
+
+def chop_off_ends(coords, thresh=75.):
+	i1, i2 = 0, len(coords[:, 0])-1
+	try:
+		while point_to_point_dist(coords[i1, :], coords[0, :]) < thresh:
+			i1 += 1
+		while point_to_point_dist(coords[i2, :], coords[-1, :]) < thresh:
+			i2 -= 1
+		return coords[i1:i2+1, :]  # +1 to include i2 in returned array
+	except IndexError:
+		return []
 	
 
 def extract_coords_kml(runfile):

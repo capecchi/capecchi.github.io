@@ -38,7 +38,7 @@ class Segment:
 		self.end2 = junction2
 		self.id = uuid.uuid1().__str__()
 		self.length = None
-		self.check()
+		# self.check()
 		self.update_length()
 	
 	def check(self):
@@ -61,8 +61,9 @@ class Segment:
 	
 	# print('segment length updated to {:.2f}m'.format(self.length))
 	
-	def plot(self, color=None):
-		plt.plot(self.coords[:, 0], self.coords[:, 1], '-')
+	def plot(self):
+		c = np.append(np.append([self.end1.coord], self.coords, axis=0), [self.end2.coord], axis=0)  # stick on ends
+		plt.plot(c[:, 0], c[:, 1], '-')
 		plt.plot([self.end1.coord[0], self.end2.coord[0]], [self.end1.coord[1], self.end2.coord[1]], 's')
 
 
@@ -225,12 +226,15 @@ class Park:
 			self.add_junction(seg.end2)
 	
 	def analyze_close_approach(self, s1: Segment, s2: Segment):
-		s1coords = s1.coords
-		s2coords = s2.coords
+		# when analyzing close approaches, we chop off area around endpoints so that sequential segments don't look like they overlap
+		s1coords = chop_off_ends(s1.coords)
+		s2coords = chop_off_ends(s2.coords)
 		Npts = 50
 		speedup1 = int(np.ceil(len(s2coords) / Npts))  # want N points to analyze a run  # todo: justify this speedup
 		speedup2 = int(np.ceil(len(s2coords) / Npts))
 		
+		if speedup1 == 0:
+			a=1
 		# seg1 onto seg2
 		seg1on2_close_approach = []
 		for ii, pt in enumerate(s1coords[::speedup1]):  # start with every nth pt just for speed
