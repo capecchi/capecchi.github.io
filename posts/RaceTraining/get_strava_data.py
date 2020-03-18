@@ -31,23 +31,23 @@ def get_training_data(client, after=datetime.date.today() - datetime.timedelta(d
         days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
         dist = [unithelper.miles(r.distance).num for r in runs]
         cum = np.cumsum(dist)
-        pace = [60./unithelper.miles_per_hour(r.average_speed).num for r in runs]  # min/mile
+        pace = [60. / unithelper.miles_per_hour(r.average_speed).num for r in runs]  # min/mile
         return days_before, dist, cum, pace
     except stravalib.exc.Fault:
         return None, None, None, None
 
 
 def gather_training_seasons(code, matplotlib=False):
-    races = OrderedDict({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
-                         'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
-                         'TC Marathon 2015': datetime.datetime(2015, 10, 4),
-                         'Superior 50k 2018': datetime.datetime(2018, 5, 19),
-                         'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
-                         'Superior 50k 2019': datetime.datetime(2019, 5, 18),
+    # races = OrderedDict({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
+    #                      'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
+    #                      'TC Marathon 2015': datetime.datetime(2015, 10, 4),
+    #                      'Superior 50k 2018': datetime.datetime(2018, 5, 19),
+    #                      'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
+    #                      'Superior 50k 2019': datetime.datetime(2019, 5, 18),
+    #                      'Dirty German 50k': datetime.datetime(2020, 5, 9)})
+    # 'Shawangunk Ridge 50M': datetime.datetime(2020, 9, 12)})
+    races = OrderedDict({'Superior 50k 2019': datetime.datetime(2019, 5, 18),
                          'Dirty German 50k': datetime.datetime(2020, 5, 9)})
-                         # 'Shawangunk Ridge 50M': datetime.datetime(2020, 9, 12)})
-    # races = OrderedDict({'Dirty German 50k': datetime.datetime(2020, 5, 9),
-    #                      'Shawangunk Ridge 50M': datetime.datetime(2020, 9, 12)})
     wks_18 = datetime.timedelta(weeks=18)
     day_1 = datetime.timedelta(days=1)
     wks_1 = datetime.timedelta(weeks=1)
@@ -146,7 +146,10 @@ def gather_training_seasons(code, matplotlib=False):
                 opacity=op,
                 name=k,
                 mode='lines+markers',
-                line=dict(width=width)
+                line=dict(width=width),
+                hovertemplate='pace: %{y:.2f}<br>dist:%{text}',
+                text=['{:.2f}'.format(d) for d in dist]
+
             ))
             wk_traces.append(go.Scatter(
                 x=wdb,
@@ -184,13 +187,16 @@ def gather_training_seasons(code, matplotlib=False):
                     color=colors[i]),
                 line=dict(
                     width=width),
-                showlegend=False
+                showlegend=False,
+                hovertemplate='pace: %{y:.2f}<br>dist:%{text}',
+                text=['{:.2f}'.format(d) for d in wd]
             ))
 
         # append annotation traces
+        dist_arr = [t.y[-1] for t in dist_traces if len(t.y) > 0]
         dist_traces.append(go.Scatter(
             x=[t.x[-1] for t in dist_traces if len(t.x) > 0],
-            y=[t.y[-1] for t in dist_traces if len(t.y) > 0],
+            y=dist_arr,
             text=[f'{round(t.y[-1], 1)}' for t in dist_traces if len(t.y) > 0],
             mode='text',
             textposition='middle left',
@@ -229,7 +235,6 @@ def gather_training_seasons(code, matplotlib=False):
             x=wk_annotations['dx'],
             y=wk_annotations['dy'],
             text=wk_annotations['dt'],
-            yaxis='y2',
             mode='text',
             textposition='middle left',
             showlegend=False,
@@ -243,7 +248,6 @@ def gather_training_seasons(code, matplotlib=False):
             mode='text',
             textposition='middle left',
             showlegend=False,
-            hoverinfo='none',
         ))
         wk_traces.append(go.Scatter(
             x=wk_annotations['cx'],
