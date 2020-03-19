@@ -38,16 +38,16 @@ def get_training_data(client, after=datetime.date.today() - datetime.timedelta(d
 
 
 def gather_training_seasons(code, matplotlib=False):
-    # races = OrderedDict({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
-    #                      'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
-    #                      'TC Marathon 2015': datetime.datetime(2015, 10, 4),
-    #                      'Superior 50k 2018': datetime.datetime(2018, 5, 19),
-    #                      'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
-    #                      'Superior 50k 2019': datetime.datetime(2019, 5, 18),
-    #                      'Dirty German 50k': datetime.datetime(2020, 5, 9)})
-    # 'Shawangunk Ridge 50M': datetime.datetime(2020, 9, 12)})
-    races = OrderedDict({'Superior 50k 2019': datetime.datetime(2019, 5, 18),
+    races = OrderedDict({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
+                         'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
+                         'TC Marathon 2015': datetime.datetime(2015, 10, 4),
+                         'Superior 50k 2018': datetime.datetime(2018, 5, 19),
+                         'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
+                         'Superior 50k 2019': datetime.datetime(2019, 5, 18),
                          'Dirty German 50k': datetime.datetime(2020, 5, 9)})
+    # 'Shawangunk Ridge 50M': datetime.datetime(2020, 9, 12)})
+    # races = OrderedDict({'Superior 50k 2019': datetime.datetime(2019, 5, 18),
+    #                      'Dirty German 50k': datetime.datetime(2020, 5, 9)})
     wks_18 = datetime.timedelta(weeks=18)
     day_1 = datetime.timedelta(days=1)
     wks_1 = datetime.timedelta(weeks=1)
@@ -112,6 +112,7 @@ def gather_training_seasons(code, matplotlib=False):
         cum_traces = []
         pace_traces = []
         wk_traces = []
+        pc_v_dist_traces = []
         colors = plotly.colors.DEFAULT_PLOTLY_COLORS
         for i, (k, v) in enumerate(races.items()):
             print(k)
@@ -122,6 +123,7 @@ def gather_training_seasons(code, matplotlib=False):
             op = (i + 1.) / len(races.items())
             days_before, dist, cum, pace = get_training_data(client, v - wks_18, v + day_1)
             wdb, wd, wc, wp = get_training_data(client, v - days_to_race - wks_1, v - days_to_race)
+            pc_v_dist_traces.append(go.Scatter(x=dist, y=pace, mode='markers', line=dict(width=width), name=k))
             dist_traces.append(go.Scatter(
                 x=days_before,
                 y=dist,
@@ -259,6 +261,7 @@ def gather_training_seasons(code, matplotlib=False):
             hoverinfo='none',
         ))
 
+        pc_v_dist_layout = go.Layout(xaxis=dict(title='Distance (miles)'), yaxis=dict(title='Pace (min/mile)', hoverformat='.2f'))
         dlayout = go.Layout(
             xaxis=dict(
                 title='Days before race'
@@ -309,4 +312,5 @@ def gather_training_seasons(code, matplotlib=False):
         cum_fig = go.Figure(data=cum_traces, layout=clayout)
         pace_fig = go.Figure(data=pace_traces, layout=playout)
         wk_fig = go.Figure(data=wk_traces, layout=wlayout)
-        return dist_fig, cum_fig, wk_fig, pace_fig
+        pc_v_dist_fig = go.Figure(data=pc_v_dist_traces, layout=pc_v_dist_layout)
+        return dist_fig, cum_fig, wk_fig, pace_fig, pc_v_dist_fig
