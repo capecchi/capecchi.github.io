@@ -270,6 +270,7 @@ def gather_training_seasons(code, matplotlib=False):
                 title='Distance (miles)',
                 hoverformat='.2f'
             ),
+            legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)')
         )
         clayout = go.Layout(
             # legend=dict(orientation='h'),
@@ -278,7 +279,8 @@ def gather_training_seasons(code, matplotlib=False):
             ),
             yaxis=dict(
                 title='Cumulative (miles)'
-            )
+            ),
+            legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)')
         )
         playout = go.Layout(
             # legend=dict(orientation='h'),
@@ -287,10 +289,11 @@ def gather_training_seasons(code, matplotlib=False):
             ),
             yaxis=dict(
                 title='Pace (min/mile)'
-            )
+            ),
+            legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)')
         )
         wlayout = go.Layout(
-            # legend=dict(orientation='h'),
+            legend=dict(orientation='h', y=1.1),
             xaxis=dict(
                 title='Prior week training',
             ),
