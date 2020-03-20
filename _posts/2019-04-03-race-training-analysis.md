@@ -15,13 +15,13 @@ Using the Strava API I can grab activities (and filter by type='Run') between ce
 <iframe src="/images/posts/rta_dist.html" height="500" width="800"></iframe>
 **Distance during training**
 
-<iframe src="/images/posts/rta_cum.html" height="500" width="360"></iframe>
+<iframe src="/images/posts/rta_cum.html" height="500" width="800"></iframe>
 **Cumulative distance run during training**
 
-<iframe src="/images/posts/rta_pace.html" height="500" width="360"></iframe>
+<iframe src="/images/posts/rta_pace.html" height="500" width="800"></iframe>
 **Pace during training**
 
 I also run the same analysis for the prior week of training, isolating not just the past 7 days, but also that week of training for past races as well.
 
-<iframe src="/images/posts/rta_week.html" height="500" width="600"></iframe>
-**Runs and cumulative distance for prior week**
+<iframe src="/images/posts/rta_week.html" height="500" width="800"></iframe>
+**Distance, cumulative, and Pace for prior week**
