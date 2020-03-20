@@ -21,6 +21,8 @@ Using the Strava API I can grab activities (and filter by type='Run') between ce
 ![image](/images/posts/rta_dist.html)
 **Training Runs**
 
+<iframe src="/images/posts/rta_dist.html" height="200"></iframe>
+
 I think it is more interesting to look at the cumulative distance. I think time (or total miles) is a stronger indicator of success than say max distance.
 
 ![image](/images/posts/rta_cum.png)
