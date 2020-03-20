@@ -18,7 +18,7 @@ That said, maybe some day I'll move to a different hosting setup. Then my plots 
 
 Using the Strava API I can grab activities (and filter by type='Run') between certain dates. I've created a list of races and their corresponding race date, then go through and gather the runs I did in the 18 weeks prior to and including race day.
 
-![image](/images/posts/rta_dist.png)
+![image](/images/posts/rta_dist.html)
 **Training Runs**
 
 I think it is more interesting to look at the cumulative distance. I think time (or total miles) is a stronger indicator of success than say max distance.

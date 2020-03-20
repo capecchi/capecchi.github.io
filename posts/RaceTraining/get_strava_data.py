@@ -313,4 +313,16 @@ def gather_training_seasons(code, matplotlib=False):
         pace_fig = go.Figure(data=pace_traces, layout=playout)
         wk_fig = go.Figure(data=wk_traces, layout=wlayout)
         pc_v_dist_fig = go.Figure(data=pc_v_dist_traces, layout=pc_v_dist_layout)
+
+        # save stuff
+        img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
+        dist_fig.write_html(f'{img_path}rta_dist.png')
+        print('saved dist image')
+        cum_fig.write_html(f'{img_path}rta_cum.png')
+        print('saved cum image')
+        wk_fig.write_html(f'{img_path}rta_week.png')
+        print('saved week image')
+        pace_fig.write_html(f'{img_path}rta_pace.png')
+        print('saved pace image')
+
         return dist_fig, cum_fig, wk_fig, pace_fig, pc_v_dist_fig
