@@ -1,26 +1,30 @@
 import json
 import plotly
-from bottle import route, run, template, request, redirect, view, jinja2_view
-from wtforms import Form, SubmitField
+from bottle import route, run, template, redirect, view, jinja2_view, request
+from wtforms import Form, SubmitField, HiddenField, StringField
 from posts.RaceTraining.get_strava_data import gather_training_seasons
 
 
 class MyForm(Form):
-    hi = SubmitField('Get Strava Data')
+    hi = SubmitField('Update Strava Data')
+    # txt = StringField(default='mystring')
+    # code = HiddenField()
+    # training_analysis = SubmitField('Training Analysis')
+    # max_effort = SubmitField('Max Effort Analysis')
 
 
 redirect_url = 'https://www.strava.com/oauth/authorize?client_id=34049&redirect_uri=http://localhost:8080&response_type=code&scope=activity:read_all'
 
 
 @route('/')
-@jinja2_view('test.html')
+@jinja2_view('home.html')
 def home():
+
     if 'code=' in request.url:
         for el in request.url.split('&'):
             if 'code=' in el:
                 code = el.split('=')[-1]
-        dfig, cfig, wfig, pfig, pvdfig = gather_training_seasons(code)
-        graphs = [cfig, dfig, pfig, wfig, pvdfig]
+        graphs = gather_training_seasons(code)
         ids = [f'graph-{i}' for i, _ in enumerate(graphs)]
         graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
         return {'form': MyForm(), 'ids': ids, 'graphs': graphJSON}
@@ -29,6 +33,3 @@ def home():
 
 
 run(host='localhost', port=8080, debug=True, reloader=True)
-
-
-
