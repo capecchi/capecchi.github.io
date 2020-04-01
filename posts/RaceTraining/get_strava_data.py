@@ -157,7 +157,8 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
     img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
     if rsvd:
         svd_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
-                               yaxis=dict(title='Speed (miles/hr)', hoverformat='.2f'))
+                               yaxis=dict(title='Speed (miles/hr)', hoverformat='.2f'),
+                               legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)',xanchor='right'))
         pc_v_dist_fig = go.Figure(data=svd_traces, layout=svd_layout)
         pc_v_dist_fig.write_html(f'{img_path}rta_svd.html')
         print('saved speed-vs-dist image')
