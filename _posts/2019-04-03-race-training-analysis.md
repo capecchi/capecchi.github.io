@@ -20,22 +20,23 @@ I've been training for another 50k, and thinking about how pace varies with dist
 I found some literature on this: See this paper ([Formenti 2005](https://www.researchgate.net/publication/7696487_Human_locomotion_on_snow_Determinants_of_economy_and_speed_of_skiing_across_the_ages)) for the corrected and extended equations put forth in this paper ([Minetti 2004]((https://jeb.biologists.org/content/207/12/2185))).
 
 They give the maximum sustainable speed as
+
 $$
 s = \frac{3.6}{C}\left(\frac{W_{mech}}{E_f} - W_{BASMET}\right)
 $$
-Where $E_f$ is the efficiency of muscle contraction, $W_{BASMET}$ is the basal metabolic power, and $C$ is a constant related to energy movement cost (J/kg/m).
 
-The maximum sustainable long-term mechanical effort ($W_{mech}$, in Watts) to the duration of exercise ($t$, in seconds).
+Where $$E_f$$ is the efficiency of muscle contraction, $$W_{BASMET}$$ is the basal metabolic power, and $$C$$ is a constant related to energy movement cost (J/kg/m).
 
+The maximum sustainable long-term mechanical effort ($$W_{mech}$$, in Watts) to the duration of exercise ($$t$$, in seconds).
 
 $$
 W_{mech} = A \frac{0.085 \left(\frac{t}{3600}\right)^2-\frac{3.908 t}{3600} +91.82}{100} \left(1-
   \frac{\tau}{t} \left(1-e^{-\frac{t}{\tau}}\right) \right)+ \frac{B}{t}
 $$
 
-Where $A$ is the maximum long-term mechanical work, $B$ is the mechanical equivalent of the available energy from anaerobic sources, and $\tau$ is the time constant describing the inertia of the system.
+Where $$A$$ is the maximum long-term mechanical work, $$B$$ is the mechanical equivalent of the available energy from anaerobic sources, and $$\tau$$ is the time constant describing the inertia of the system.
 
-The curve is surprisingly linear over the distances I cover in my training. It turns out that for the equations above, the exponential quickly goes to zero as $t$ gets large (even by an hour), as does the $B/t$ term, and the $t^2$ term only starts to matter for large $t$ (many hours).
+The curve is surprisingly linear over the distances I cover in my training. It turns out that for the equations above, the exponential quickly goes to zero as $$t$$ gets large (even by an hour), as does the $$B/t$$ term, and the $$t^2$$ term only starts to matter for large $$t$$ (many hours).
 
 The really interesting thing to me though, is to use this data to help guide my next long run. I just did a 17 miler a few days ago that started out very well for the first two hours then fell apart thereafter. It would be great to use this data to help set my goal pace. To do so, we'll simplify the above equation and only do a quadratic fit. However, it should be obvious that it's easy to go more *slowly* than your max sustainable effort, so we need to do a fit only to the highest values.
 
