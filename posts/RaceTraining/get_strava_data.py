@@ -198,7 +198,7 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
     return figs
 
 
-def add_max_effort_curve(svd_traces, max_dist=100, minetti=False):
+def add_max_effort_curve(svd_traces, max_dist=100, minetti=True):
     if minetti:
         max_dist *= 1.60934  # convert miles to km
         a = 450.  # W
@@ -257,11 +257,12 @@ def add_max_effort_curve(svd_traces, max_dist=100, minetti=False):
     bill_pace = 60. / bill_spd  # min/mile
     hovertext = [f'{int(bp)}:{str(int((bp-int(bp))*60)).zfill(2)}' for bp in bill_pace]
 
-    svd_traces.append(go.Scatter(x=bill_dist, y=bill_spd, mode='lines', line=dict(width=2), name='Bill Max Effort',
+    svd_traces.append(go.Scatter(x=bill_dist, y=bill_spd, mode='lines', line=dict(width=2), name='Max Effort (Bill)',
                                  hovertemplate='mileage: %{x}<br>pace: %{text} (min/mile)',
                                  text=hovertext))
 
     if minetti:
         svd_traces.append(
-            go.Scatter(x=minetti_dst, y=minetti_spd, mode='lines', line=dict(width=2), name='Max Effort (Minetti)'))
+            go.Scatter(x=minetti_dst, y=minetti_spd, mode='lines', line=dict(width=2), name='Max Effort (Human) [Minetti]',
+                       visible='legendonly'))
     return svd_traces
