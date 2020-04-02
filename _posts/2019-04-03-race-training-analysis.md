@@ -14,7 +14,7 @@ Using the Strava API I can grab activities (and filter by type='Run') between ce
 
 <iframe src="/images/posts/rta_cum.html" height="500" width="800"></iframe>
 
-**March 2020 update**
+<h2>**March 2020 update**</h2>
 I've been training for another 50k, and thinking about how pace varies with distance. I know if I train for a 5k I'll increase my pace as I get fitter. I also know I can run a 5k faster than a 10k. I've dealt a lot with the former point, trying to improve my pace for a given distance. The second point though is what interests me. At any given point of time (read: fixed level of fitness) there's a limit to how fast I can run a 5k, 10k, or any other distance. What does this curve of max-effort vs distance look like?
 
 I found some literature on this: See this paper ([Formenti 2005](https://www.researchgate.net/publication/7696487_Human_locomotion_on_snow_Determinants_of_economy_and_speed_of_skiing_across_the_ages)) for the corrected and extended equations put forth in this paper ([Minetti 2004]((https://jeb.biologists.org/content/207/12/2185))).
@@ -53,4 +53,5 @@ Plotting my (average) Speed vs Distance for my race training analysis I can incl
 
 <iframe src="/images/posts/rta_svd.html" height="500" width="800"></iframe>
 
-A few things to note. Obviously the human-achievable curve is high above my performance, no surprise. But I do note that the slope of the human-achievable curve is shallower than mine, meaning my max pace suffers more for higher mileage. However, these are often runs done on trails, over very uneven and technical terrain, hardly ideal for setting a max pace. With that in mind though, this is a very cool way to set goal paces for distances I haven't run in a long time.
+<h2>Mitigating Factors</h2>
+A few things to note. Obviously the human-achievable curve is high above my performance, no surprise. But I do note that the slope of the human-achievable curve is shallower than mine, meaning my max pace suffers more for higher mileage. However, there are numerous complicating factors. My runs (especially the longer ones) are often done on trails, over very uneven and technical terrain, hardly ideal for setting a max pace. Many of my shorter runs also include two furry companions who, while being quite capable of matching my moving pace, are likely to stop for potty breaks. Hydration, nutrition, and rest impact my performance, as does the fact that I'm rarely *trying* for a max-paced run. With that in mind though, this is a very cool way to set goal paces for distances I haven't run in a long time.

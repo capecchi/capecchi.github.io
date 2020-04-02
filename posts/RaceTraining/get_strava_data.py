@@ -83,11 +83,14 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
         max_dist = max([max(dist), max_dist])
         if rsvd:
             bill_pace = 60. / np.array(speed)  # min/mile
-            hovertext = [f'{int(s)}:{str(int((s - int(s)) * 60)).zfill(2)}' for s in speed]
-            svd_traces.append(go.Scatter(x=dist, y=speed, mode='markers', line=dict(width=width), name=k,
-                                         hovertemplate='mileage: %{x}<br>pace: %{text} (min/mile)',
-                                         text=hovertext
-                                         ))
+            hovertext = [f'{int(s)}:{str(int((s - int(s)) * 60)).zfill(2)}' for s in bill_pace]
+            hovertemp = 'mileage: %{x:.2f}<br>pace: %{text} (min/mile)'
+            svd_traces.append(go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext,
+                                         hovertemplate=hovertemp))
+            if i == len(races.items()) - 1:
+                svd_traces.append(go.Scatter(x=[dist[-1]], y=[speed[-1]], mode='markers', name='most recent',
+                                             marker=dict(line=dict(width=2), color='rgba(0,0,0,0)'),
+                                             text=[hovertext[-1]], hovertemplate=hovertemp))
         if rdist:
             dist_traces.append(
                 go.Scatter(x=days_before, y=dist, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
@@ -158,7 +161,7 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
     if rsvd:
         svd_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
                                yaxis=dict(title='Speed (miles/hr)', hoverformat='.2f'),
-                               legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)',xanchor='right'))
+                               legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right'))
         pc_v_dist_fig = go.Figure(data=svd_traces, layout=svd_layout)
         pc_v_dist_fig.write_html(f'{img_path}rta_svd.html')
         print('saved speed-vs-dist image')
@@ -255,7 +258,7 @@ def add_max_effort_curve(svd_traces, max_dist=100, minetti=True):
     bill_dist = np.arange(int(min(xx)), int(max(xx)) + 1)
     bill_spd = fit[0] * bill_dist ** 2 + fit[1] * bill_dist + fit[2]
     bill_pace = 60. / bill_spd  # min/mile
-    hovertext = [f'{int(bp)}:{str(int((bp-int(bp))*60)).zfill(2)}' for bp in bill_pace]
+    hovertext = [f'{int(bp)}:{str(int((bp - int(bp)) * 60)).zfill(2)}' for bp in bill_pace]
 
     svd_traces.append(go.Scatter(x=bill_dist, y=bill_spd, mode='lines', line=dict(width=2), name='Max Effort (Bill)',
                                  hovertemplate='mileage: %{x}<br>pace: %{text} (min/mile)',
@@ -263,6 +266,7 @@ def add_max_effort_curve(svd_traces, max_dist=100, minetti=True):
 
     if minetti:
         svd_traces.append(
-            go.Scatter(x=minetti_dst, y=minetti_spd, mode='lines', line=dict(width=2), name='Max Effort (Human) [Minetti]',
+            go.Scatter(x=minetti_dst, y=minetti_spd, mode='lines', line=dict(width=2),
+                       name='Max Effort (Human) [Minetti]',
                        visible='legendonly'))
     return svd_traces
