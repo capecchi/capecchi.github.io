@@ -29,11 +29,14 @@ def get_training_data(client, after=datetime.date.today() - datetime.timedelta(d
     try:
         activities = list(activities)
         runs = [act for act in activities[::-1] if act.type == 'Run']  # reverse order so they're chronological
+        runs = [r for r in runs if unithelper.miles(r.distance).num > 5 or unithelper.miles_per_hour(r.average_speed).num > 4]
         days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
         dist = [unithelper.miles(r.distance).num for r in runs]
         cum = np.cumsum(dist)
         pace = [60. / unithelper.miles_per_hour(r.average_speed).num for r in runs]  # min/mile
         speed = [60 / p for p in pace]  # mph
+        # igood = [i for i in np.arange(len(dist)) if (speed[i] > 4 or dist[i] > 5)]
+        # days_before, dist, cum, pace, speed = days_before[igood], dist[igood], cum[igood], pace[igood], speed[igood]
         return days_before, dist, cum, pace, speed
     except stravalib.exc.Fault:
         return None, None, None, None
@@ -201,72 +204,82 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
     return figs
 
 
-def add_max_effort_curve(svd_traces, max_dist=100, minetti=True):
-    if minetti:
-        max_dist *= 1.60934  # convert miles to km
-        a = 450.  # W
-        b = 21000.  # J
-        tau = 10.  # s
-        wbas = 80.  # W
-        ef = 0.25
-        c = 270.  # J/m
+def add_max_effort_curve(svd_traces, max_dist=100):
+    max_dist *= 1.60934  # convert miles to km
+    a = 450.  # W
+    b = 21000.  # J
+    tau = 10.  # s
+    wbas = 80.  # W
+    ef = 0.25
+    c = 270.  # J/m
 
-        # c = 3.6 * 84.  # [J/kg/m] * 84kg you fat bastard
+    # c = 3.6 * 84.  # [J/kg/m] * 84kg you fat bastard
 
-        def speed(time):
-            a2 = a * (.085 * (time / 3600) ** 2 - 3.908 / 3600 * time + 91.82) / 100.  # [Formenti/Davies]
-            # a2 = a * (940 - time / 60) / 1000.  # [Wilke/Saltin]
-            return 3.6 / c * ((a2 + b / time - a2 * tau / time * (1 - np.exp(-time / tau))) / ef - wbas)
+    def speed(time):
+        a2 = a * (.085 * (time / 3600) ** 2 - 3.908 / 3600 * time + 91.82) / 100.  # [Formenti/Davies]
+        # a2 = a * (940 - time / 60) / 1000.  # [Wilke/Saltin]
+        return 3.6 / c * ((a2 + b / time - a2 * tau / time * (1 - np.exp(-time / tau))) / ef - wbas)
 
-        def dist(time):
-            a2 = a * (.085 * (time / 3600) ** 2 - 3.908 / 3600 * time + 91.82) / 100.  # [Formenti/Davies]
-            # a2 = a * (940 - time / 60) / 1000.  # [Wilke/Saltin]
-            spd = 3.6 / c * ((a2 + b / time - a2 * tau / time * (1 - np.exp(-time / tau))) / ef - wbas)
-            return spd * time / 60. / 60. - max_dist
+    def dist(time):
+        a2 = a * (.085 * (time / 3600) ** 2 - 3.908 / 3600 * time + 91.82) / 100.  # [Formenti/Davies]
+        # a2 = a * (940 - time / 60) / 1000.  # [Wilke/Saltin]
+        spd = 3.6 / c * ((a2 + b / time - a2 * tau / time * (1 - np.exp(-time / tau))) / ef - wbas)
+        return spd * time / 60. / 60. - max_dist
 
-        tmax = 5. * 60 * 60  # initial guess
+    tmax = 5. * 60 * 60  # initial guess
+    h = dist(tmax) / (dist(tmax + .5) - dist(tmax - .5))  # s
+    while abs(h) > 1:
         h = dist(tmax) / (dist(tmax + .5) - dist(tmax - .5))  # s
-        while abs(h) > 1:
-            h = dist(tmax) / (dist(tmax + .5) - dist(tmax - .5))  # s
-            tmax -= h
+        tmax -= h
 
-        t = np.linspace(40, tmax, endpoint=True, num=1000)  # [s]
-        th = t / 60 / 60
-        s = speed(t)
+    t = np.linspace(40, tmax, endpoint=True, num=1000)  # [s]
+    th = t / 60 / 60
+    s = speed(t)
 
-        minetti_spd = s / 1.60934  # [mph]
-        minetti_dst = minetti_spd * th  # miles
-        minetti_spd[np.where(minetti_spd > 15.)] = np.nan
+    minetti_spd = s / 1.60934  # [mph]
+    minetti_dst = minetti_spd * th  # miles
+    minetti_spd[np.where(minetti_spd > 15.)] = np.nan
 
     # do fit to my data
-    xx, yy = [], []
-    a = [xx.extend(s.x) for s in svd_traces]
-    a = [yy.extend(s.y) for s in svd_traces]
-    xx, yy = np.array(xx), np.array(yy)
+    bdist, bspeed = [], []  # miles, mph
+    not_important = [bdist.extend(s.x) for s in svd_traces]
+    not_important = [bspeed.extend(s.y) for s in svd_traces]
+    bdist, bspeed = np.array(bdist), np.array(bspeed)
+    # btime = bdist / bspeed * 3600.
+
+    # def max_effort_mph(fit, time):
+    #     a2 = a * (.085 / 3600 ** 2 / 100. * time ** 2 + fit[0] * time + fit[1])
+    #     return 3.6 / c * ((a2 + b / time - a2 * tau / time * (1 - np.exp(-time / tau))) / ef - wbas) / 1.60934
+
+    # def minfunc2(fit):
+    #     spd_diff = bspeed - max_effort_mph(fit, btime)
+    #     cost_func = [100. * y if y > 0 else abs(y) for y in spd_diff]
+    #     return np.sum(cost_func)
 
     def minfunc(fit):
-        y_reduced = yy - (fit[0] * xx ** 2 + fit[1] * xx + fit[2])
+        y_reduced = bspeed - (fit[0] * bdist ** 2 + fit[1] * bdist + fit[2])
         y_weighted = [1000. * y ** 2. if y > 0 else abs(y) for y in
                       y_reduced]  # penalized if we drift up, really penalized if we're below
         return np.sum(y_weighted)
 
     fit0 = np.array([0, -4 / 30., 9.])
-    res = minimize(minfunc, fit0)
+    # fit0 = np.array([- 3.908 / 3600 / 100., 91.82 / 100. / 1.6])
+    res = minimize(minfunc, fit0, method='Nelder-Mead')
     fit = res.x
-    # fit = np.polyfit(xx, yy, 2, w=[y * 10 for y in yy])
-
-    bill_dist = np.arange(int(min(xx)), int(max(xx)) + 1)
+    print(res.message)
+    bill_dist = np.arange(int(min(bdist)), int(max(bdist)) + 1)
     bill_spd = fit[0] * bill_dist ** 2 + fit[1] * bill_dist + fit[2]
     bill_pace = 60. / bill_spd  # min/mile
+    # bill_time = np.linspace(min(btime), 1.1 * max(btime), num=1000, endpoint=True)  # s
+    # bill_spd = max_effort_mph(fit, bill_time)
+    # bill_dist = bill_spd * bill_time / 3600.  # miles
+    # bill_pace = 60. / bill_spd  # min/mile
     hovertext = [f'{int(bp)}:{str(int((bp - int(bp)) * 60)).zfill(2)}' for bp in bill_pace]
 
     svd_traces.append(go.Scatter(x=bill_dist, y=bill_spd, mode='lines', line=dict(width=2), name='Max Effort (Bill)',
                                  hovertemplate='mileage: %{x}<br>pace: %{text} (min/mile)',
                                  text=hovertext))
-
-    if minetti:
-        svd_traces.append(
-            go.Scatter(x=minetti_dst, y=minetti_spd, mode='lines', line=dict(width=2),
-                       name='Max Effort (Human) [Minetti]',
-                       visible='legendonly'))
+    svd_traces.append(
+        go.Scatter(x=minetti_dst, y=minetti_spd, mode='lines', line=dict(width=2),
+                   name='Max Effort (Human) [Minetti]', visible='legendonly'))
     return svd_traces
