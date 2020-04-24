@@ -14,7 +14,7 @@ Using the Strava API I can grab activities (and filter by type='Run') between ce
 
 <iframe src="/images/posts/rta_cum.html" height="500" width="800"></iframe>
 
-<h2>**March 2020 update**</h2>
+<h2>March 2020 update</h2>
 I've been training for another 50k, and thinking about how pace varies with distance. I know if I train for a 5k I'll increase my pace as I get fitter. I also know I can run a 5k faster than a 10k. I've dealt a lot with the former point, trying to improve my pace for a given distance. The second point though is what interests me. At any given point of time (read: fixed level of fitness) there's a limit to how fast I can run a 5k, 10k, or any other distance. What does this curve of max-effort vs distance look like?
 
 I found some literature on this: See this paper ([Formenti 2005](https://www.researchgate.net/publication/7696487_Human_locomotion_on_snow_Determinants_of_economy_and_speed_of_skiing_across_the_ages)) for the corrected and extended equations put forth in this paper ([Minetti 2004]((https://jeb.biologists.org/content/207/12/2185))).
