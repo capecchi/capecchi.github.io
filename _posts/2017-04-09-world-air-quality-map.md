@@ -6,6 +6,7 @@ excerpt: Mapping air quality data from around the world.
 image: /images/posts/monthly_data.png
 project: true
 tags: Mapbox web-scraper pollution geojson
+active: True
 ---
 Jump To:  
 <a href="#scraping">Scraping and Analyzing</a>  

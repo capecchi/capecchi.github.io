@@ -57,8 +57,7 @@ def get_past_races(trail=True, road=True):
 
 def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True):
     races = get_past_races(trail=True, road=False)
-    races.update({'Dirty German 50k': datetime.datetime(2020, 5, 9)})
-    # 'Shawangunk Ridge 50M': datetime.datetime(2020, 9, 12)})
+    races.update({'Shawangunk Ridge 50M': datetime.datetime(2020, 9, 12), 'Past 18 weeks': datetime.datetime.now()})
 
     wks_18 = datetime.timedelta(weeks=18)
     day_1 = datetime.timedelta(days=1)

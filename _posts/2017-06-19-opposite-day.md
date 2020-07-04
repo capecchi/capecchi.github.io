@@ -5,6 +5,7 @@ date: 2017-06-19
 excerpt: What's 8,000 miles under your feet
 image: /images/posts/oppositeday_bar.png
 tags: geojson Carto marathons
+active: True
 ---
 
 Ever wonder what's on the other side of the world? Or hear the phrase "dig a hole straight through to China"? I just returned from my honeymoon in Thailand which, having a 12 hour time difference from US Central Time, got me thinking about this sort of thing. Turns out if you live in the US you'd dig through to China if you maintained the same latitude. Digging straight through the core would end up having you surface somewhere in the Indian Ocean. It's difficult to comprehend how big the world is, and it can be somewhat flabbergasting to think that if you could peer through the earth you could actually see people... upside down and almost 8,000 miles away.

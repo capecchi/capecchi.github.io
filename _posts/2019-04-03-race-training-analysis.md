@@ -5,6 +5,7 @@ date: 2019-04-03
 excerpt: Analyzing my historical training efforts
 #image: /images/posts/abt_bar.png
 tags: StravaAPI
+active: True
 ---
 
 GPS watches are amazing, but I have years of underutilized activity data. Thanks to the Strava API though, I can compare how my current training effort compares to races I've done in the past.

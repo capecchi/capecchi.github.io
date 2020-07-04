@@ -6,6 +6,7 @@ excerpt: MACD time series analysis with comments on 4D data visualization
 image: /images/posts/macd_thumb.png
 project: true
 tags: time-series optimization 4D-visualization
+active: True
 ---
 Jump To:  
 <a href="#project">The Project</a>  

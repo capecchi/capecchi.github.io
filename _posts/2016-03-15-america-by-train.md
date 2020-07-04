@@ -5,6 +5,7 @@ date: 2017-05-01
 excerpt: A three week rail journey around the states
 image: /images/posts/abt_bar.png
 tags: Carto Amtrak geojson
+active: true
 ---
 Jump To:  
 <a href="#travels">The travels</a>  
