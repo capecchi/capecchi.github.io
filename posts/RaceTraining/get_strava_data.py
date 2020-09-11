@@ -1,13 +1,13 @@
-import plotly
-from stravalib import unithelper
-import numpy as np
-from scipy.optimize import minimize
-from stravalib.client import Client
 import datetime
 from collections import OrderedDict
+
+import numpy as np
+import plotly
 import plotly.graph_objs as go
 import stravalib.exc
-import matplotlib.pyplot as plt
+from scipy.optimize import minimize
+from stravalib import unithelper
+from stravalib.client import Client
 
 
 def get_client(code):
@@ -22,14 +22,24 @@ def get_client(code):
     return client
 
 
-def get_training_data(client, after=datetime.date.today() - datetime.timedelta(days=7), before=datetime.date.today()):
-    race_day = before - datetime.timedelta(days=1)
+def get_training_data(client, after=datetime.date.today() - datetime.timedelta(days=7), before=datetime.date.today(),
+                      get_cals=True):
+    # race_day = before - datetime.timedelta(days=1)
+    race_day = before.replace(hour=0, minute=0, second=0, microsecond=0)
 
     activities = client.get_activities(after=after, before=before)
     try:
         activities = list(activities)
-        runs = [act for act in activities[::-1] if act.type == 'Run']  # reverse order so they're chronological
-        runs = [r for r in runs if unithelper.miles(r.distance).num > 5 or unithelper.miles_per_hour(r.average_speed).num > 4]
+        activities = activities[::-1]  # reverse order so they're chronological
+        if get_cals:
+            all_days_before = [(a.start_date_local.date() - race_day.date()).days for a in activities]
+            all_cals = [client.get_activity(id).calories for id in [a.id for a in activities]]
+            cum_cals = np.cumsum(all_cals)
+        else:
+            all_days_before, cum_cals = None, None
+        runs = [act for act in activities if act.type == 'Run']
+        runs = [r for r in runs if
+                unithelper.miles(r.distance).num > 2 and unithelper.miles_per_hour(r.average_speed).num > 4]
         days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
         dist = [unithelper.miles(r.distance).num for r in runs]
         cum = np.cumsum(dist)
@@ -37,9 +47,9 @@ def get_training_data(client, after=datetime.date.today() - datetime.timedelta(d
         speed = [60 / p for p in pace]  # mph
         # igood = [i for i in np.arange(len(dist)) if (speed[i] > 4 or dist[i] > 5)]
         # days_before, dist, cum, pace, speed = days_before[igood], dist[igood], cum[igood], pace[igood], speed[igood]
-        return days_before, dist, cum, pace, speed
+        return days_before, dist, cum, pace, speed, all_days_before, cum_cals
     except stravalib.exc.Fault:
-        return None, None, None, None
+        return None, None, None, None, None, None
 
 
 def get_past_races(trail=True, road=True):
@@ -55,33 +65,71 @@ def get_past_races(trail=True, road=True):
     return races
 
 
-def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True):
+def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True, rcal=True):
+    # rcum, rcal = False, False
     races = get_past_races(trail=True, road=False)
-    races.update({'Shawangunk Ridge 50M': datetime.datetime(2020, 9, 12), 'Past 18 weeks': datetime.datetime.now()})
+    races.update({'Batona 50k 2020': datetime.datetime(2020, 10, 10),
+                  'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
 
     wks_18 = datetime.timedelta(weeks=18)
     day_1 = datetime.timedelta(days=1)
     wks_1 = datetime.timedelta(weeks=1)
 
-    ref_day = min(datetime.datetime.now(), races[list(races.keys())[-1]])
+    ref_day = min(datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0),
+                  races[list(races.keys())[-1]])
     days_to_race = datetime.timedelta(days=(races[list(races.keys())[-1]] - ref_day).days)
     client = get_client(code)
 
     dist_traces = []
     cum_traces = []
     pace_traces = []
+    cal_traces = []
     wk_traces = []
     svd_traces = []  # speed vs dist
     colors = plotly.colors.DEFAULT_PLOTLY_COLORS
     max_dist = 0
+    if rsvd:  # get large dataset
+        yrs3 = datetime.timedelta(weeks=156)
+        predays, dist, _, _, speed, _, _ = get_training_data(client,
+                                                             datetime.datetime.now().replace(hour=0, minute=0, second=0,
+                                                                                             microsecond=0) - yrs3,
+                                                             datetime.datetime.now().replace(hour=0, minute=0, second=0,
+                                                                                             microsecond=0)+day_1,
+                                                             get_cals=False)
+        bill_pace = 60. / np.array(speed)  # min/mile
+        hovertext = [f'{int(s)}:{str(int((s - int(s)) * 60)).zfill(2)}' for s in bill_pace]
+        hovertemp = 'mileage: %{x:.2f}<br>pace: %{text} (min/mile)'
+        svd_traces.append(go.Scatter(x=dist, y=speed, mode='markers', name='past 3 years', text=hovertext,
+                                     hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
+        # make weekly average plot
+        i, wktot, wktot_db, npdist, nppredays = 0, [], [], np.array(dist), np.array(predays)
+        # while -i * 7 > min(predays):
+        #     wktot.append(np.sum(npdist[(nppredays > -7 * (i + 1)) & (nppredays <= -7 * i)]))
+        #     wktot_db.append(-i)
+        #     i += 1
+        while -i - 7 > min(predays):
+            wktot.append(np.sum(npdist[(nppredays > -i - 7) & (nppredays <= -i)]))
+            wktot_db.append(-i)
+            i += 1
+        wktot_data = [go.Scatter(x=wktot_db, y=wktot, mode='lines', name='weekly total')]
+        now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        xann = [(rd - now).days for rd in [races[k] for k in races.keys()] if (rd - now).days < -10]
+        yann = [wktot[i] for i in
+                [-(rd - now).days for rd in [races[k] for k in races.keys()] if (rd - now).days < -10]]
+        wktot_data.append(go.Scatter(
+            x=xann, y=yann, text=[k for k in races.keys() if (races[k] - now).days < -10], mode='text+markers',
+            textposition='middle right', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
+        wktot_data.append(go.Bar(x=predays, y=dist, width=1, name='runs'))
+
     for i, (k, v) in enumerate(races.items()):
         print(k)
-        if v > datetime.datetime.today():  # read: if race day is after today, ie in the future, then solid line plot
+        if v > datetime.datetime.now().replace(hour=0, minute=0, second=0,
+                                               microsecond=0):  # read: if race day is after today, ie in the future, then solid line plot
             width = 3
         else:
             width = 2
         op = (i + 1.) / len(races.items())
-        days_before, dist, cum, pace, speed = get_training_data(client, v - wks_18, v + day_1)
+        days_before, dist, cum, pace, speed, adb, cals = get_training_data(client, v - wks_18, v + day_1)
         max_dist = max([max(dist), max_dist])
         if rsvd:
             bill_pace = 60. / np.array(speed)  # min/mile
@@ -103,8 +151,11 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
             pace_traces.append(
                 go.Scatter(x=days_before, y=pace, opacity=op, name=k, mode='lines+markers', line=dict(width=width),
                            hovertemplate='pace: %{y:.2f}<br>dist:%{text}', text=['{:.2f}'.format(d) for d in dist]))
+        if rcal:
+            cal_traces.append(
+                go.Scatter(x=adb, y=cals, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
         if rwk:
-            wdb, wd, wc, wp, ws = get_training_data(client, v - days_to_race - wks_1, v - days_to_race)
+            wdb, wd, wc, wp, ws, _, _ = get_training_data(client, v - days_to_race - wks_1, v - days_to_race)
             wk_traces.append(
                 go.Scatter(x=wdb, y=wd, yaxis='y2', opacity=op, name=k, mode='lines+markers',
                            marker=dict(color=colors[i]),
@@ -168,6 +219,14 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
         pc_v_dist_fig.write_html(f'{img_path}rta_svd.html')
         print('saved speed-vs-dist image')
         figs.append(pc_v_dist_fig)
+
+        wktot_layout = go.Layout(xaxis=dict(title='Days ago'),
+                                 yaxis=dict(title='Weekly total mileage', hoverformat='.2f'),
+                                 legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right'))
+        wktot_fit = go.Figure(data=wktot_data, layout=wktot_layout)
+        wktot_fit.write_html(f'{img_path}wktot.html')
+        print('saved weekly total image')
+        figs.append(wktot_fit)
     if rdist:
         dlayout = go.Layout(xaxis=dict(title='Days before race'),
                             yaxis=dict(title='Distance (miles)', hoverformat='.2f'),
@@ -190,6 +249,13 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
         pace_fig.write_html(f'{img_path}rta_pace.html')
         print('saved pace image')
         figs.append(pace_fig)
+    if rcal:
+        calayout = go.Layout(xaxis=dict(title='Days before race'), yaxis=dict(title='Calories'),
+                             legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
+        cal_fig = go.Figure(data=cal_traces, layout=calayout)
+        cal_fig.write_html(f'{img_path}rta_cal.html')
+        print('saved cal image')
+        figs.append(cal_fig)
     if rwk:
         wlayout = go.Layout(legend=dict(orientation='h', y=1.1), xaxis=dict(title='Prior week training', ),
                             yaxis=dict(title='Distance', domain=[0., .3], ),
@@ -244,35 +310,44 @@ def add_max_effort_curve(svd_traces, max_dist=100):
     not_important = [bdist.extend(s.x) for s in svd_traces]
     not_important = [bspeed.extend(s.y) for s in svd_traces]
     bdist, bspeed = np.array(bdist), np.array(bspeed)
-    # btime = bdist / bspeed * 3600.
 
-    # def max_effort_mph(fit, time):
-    #     a2 = a * (.085 / 3600 ** 2 / 100. * time ** 2 + fit[0] * time + fit[1])
-    #     return 3.6 / c * ((a2 + b / time - a2 * tau / time * (1 - np.exp(-time / tau))) / ef - wbas) / 1.60934
+    def minfunc(fit):  # 2-degree polyfit
+        ydiff_0offset = bspeed - (fit[0] * bdist ** 2 + fit[1] * bdist + 0.)
+        offset = max(ydiff_0offset)  # offset necessary so that curve is always >= data
+        ydiff = bspeed - (fit[0] * bdist ** 2 + fit[1] * bdist + offset)
+        return np.sum(ydiff ** 2)
 
-    # def minfunc2(fit):
-    #     spd_diff = bspeed - max_effort_mph(fit, btime)
-    #     cost_func = [100. * y if y > 0 else abs(y) for y in spd_diff]
-    #     return np.sum(cost_func)
+    def minfunc2(fit):  # rotated parabola
+        r = np.sqrt(bdist ** 2 + bspeed ** 2)
+        th = np.arctan2(bspeed, bdist)
+        x2, y2 = r * np.cos(th - fit[1]), r * np.sin(th - fit[1])  # rotate pts by -theta
+        ydiff_0offset = y2 - fit[0] * x2 ** 2
+        offset = max(ydiff_0offset)  # offset necessary so that curve is always >= data
+        ydiff = y2 - (fit[0] * x2 ** 2 + offset)
+        return np.sum(ydiff ** 2)
 
-    def minfunc(fit):
-        y_reduced = bspeed - (fit[0] * bdist ** 2 + fit[1] * bdist + fit[2])
-        y_weighted = [1000. * y ** 2. if y > 0 else abs(y) for y in
-                      y_reduced]  # penalized if we drift up, really penalized if we're below
-        return np.sum(y_weighted)
-
-    fit0 = np.array([0, -4 / 30., 9.])
-    # fit0 = np.array([- 3.908 / 3600 / 100., 91.82 / 100. / 1.6])
-    res = minimize(minfunc, fit0, method='Nelder-Mead')
+    fit0 = np.array([0, -4 / 30.])  # 2nd order, 1st order initial guesses for 2-degree polyfit
+    fit0 = np.array([0., np.arctan2(-4, 30.)])  # 2nd order, theta initial guesses for rotated-parabola
+    res = minimize(minfunc2, fit0, method='Nelder-Mead')
     fit = res.x
     print(res.message)
+    # bill_dist = np.arange(int(min(bdist)), int(max(bdist)) + 1)
+    # bill_spd = fit[0] * bill_dist ** 2 + fit[1] * bill_dist + max(bspeed - (fit[0] * bdist ** 2 + fit[1] * bdist + 0.))
+
+    r = np.sqrt(bdist ** 2 + bspeed ** 2)
+    th = np.arctan2(bspeed, bdist)
+    dx2, dy2 = r * np.cos(th - fit[1]), r * np.sin(th - fit[1])  # rotate pts by -theta
+    ydiff_0offset = dy2 - fit[0] * dx2 ** 2
+    offset = max(ydiff_0offset)  # offset necessary so that curve is always >= data
+    bill_dist_rot = np.linspace(0., max(bdist))
+    bill_spd_rot = fit[0] * bill_dist_rot ** 2 + offset
+    bill_r = np.sqrt(bill_dist_rot ** 2 + bill_spd_rot ** 2)
+    bill_th = np.arctan2(bill_spd_rot, bill_dist_rot)
+    bill_dist0, bill_spd0 = bill_r * np.cos(bill_th + fit[1]), bill_r * np.sin(bill_th + fit[1])  # rotate by +theta
     bill_dist = np.arange(int(min(bdist)), int(max(bdist)) + 1)
-    bill_spd = fit[0] * bill_dist ** 2 + fit[1] * bill_dist + fit[2]
+    bill_spd = np.interp(bill_dist, bill_dist0, bill_spd0)
+
     bill_pace = 60. / bill_spd  # min/mile
-    # bill_time = np.linspace(min(btime), 1.1 * max(btime), num=1000, endpoint=True)  # s
-    # bill_spd = max_effort_mph(fit, bill_time)
-    # bill_dist = bill_spd * bill_time / 3600.  # miles
-    # bill_pace = 60. / bill_spd  # min/mile
     hovertext = [f'{int(bp)}:{str(int((bp - int(bp)) * 60)).zfill(2)}' for bp in bill_pace]
 
     svd_traces.append(go.Scatter(x=bill_dist, y=bill_spd, mode='lines', line=dict(width=2), name='Max Effort (Bill)',
