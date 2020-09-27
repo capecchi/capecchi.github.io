@@ -42,7 +42,7 @@ The curve is surprisingly linear over the distances I cover in my training. It t
 Plotting my (average) Speed vs Distance for my race training analysis I can include the equation above, using the same values for the parameters as were used in the 2004 paper. Note these values are the estimated human maximum so it shouldn't be surprising that my data falls comfortably below this line. **Way** below this line.
 
 The really interesting thing to me though, is to use this data to help guide my next long run. I start strong on a long run then fall to pieces near the end. It would be great to use this data to help set my goal pace. I've spent a while thinking about how best to do this and have landed on the following treatment.
-I'll simplify the equations above and simply fit to a quadratic, but I'll allow for the parabola to be tilted. So instead of an offset in $x$, $y$, I'll give it an offset in $r$ and $\theta$. The function below is fed into scipy.minimize, the result of which is a rotated parabola that sits nicely atop my data.
+I'll simplify the equations above and simply fit to a quadratic, but I'll allow for the parabola to be tilted. So instead of an offset in $$x$$, $$y$$, I'll give it an offset in $r$ and $$\theta$$. The function below is fed into scipy.minimize, the result of which is a rotated parabola that sits nicely atop my data.
 
 ```py
 def minfunc(fit):  # rotated parabola
@@ -55,7 +55,7 @@ def minfunc(fit):  # rotated parabola
     return np.sum(ydiff ** 2)
 ```
 
-I struggled for a while to think of the best way to fit a curve to data with the constraint that it necessarily sit above the data (max effort has to be greater than or equal to existing efforts). The minimization above simply removes a degree of freedom (the $r$ offset value) and instead dynamically fixes this value during the minimization such that the difference $$curve-data$$ is everywhere positive.
+I struggled for a while to think of the best way to fit a curve to data with the constraint that it necessarily sit above the data (max effort has to be greater than or equal to existing efforts). The minimization above simply removes a degree of freedom (the $$r$$ offset value) and instead dynamically fixes this value during the minimization such that the difference $$curve-data$$ is everywhere positive.
 
 <iframe src="/images/posts/rta_svd.html" height="500" width="800"></iframe>
 
