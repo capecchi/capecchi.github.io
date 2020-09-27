@@ -3,6 +3,7 @@ import plotly
 from bottle import route, run, template, redirect, view, jinja2_view, request
 from wtforms import Form, SubmitField, HiddenField, StringField
 from posts.RaceTraining.get_strava_data import gather_training_seasons
+import logging
 
 
 class MyForm(Form):
@@ -19,6 +20,9 @@ redirect_url = 'https://www.strava.com/oauth/authorize?client_id=34049&redirect_
 @route('/')
 @jinja2_view('home.html')
 def home():
+
+    logger = logging.getLogger()
+    logger.setLevel(logging.ERROR)
 
     if 'code=' in request.url:
         for el in request.url.split('&'):

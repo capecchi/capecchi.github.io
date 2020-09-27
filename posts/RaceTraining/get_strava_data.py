@@ -1,13 +1,18 @@
 import datetime
+import math
 from collections import OrderedDict
 
 import numpy as np
+import pandas as pd
 import plotly
 import plotly.graph_objs as go
 import stravalib.exc
+from plotly.subplots import make_subplots
 from scipy.optimize import minimize
 from stravalib import unithelper
 from stravalib.client import Client
+
+from .playground import data_input_popup
 
 
 def get_client(code):
@@ -49,7 +54,7 @@ def get_training_data(client, after=datetime.date.today() - datetime.timedelta(d
         # days_before, dist, cum, pace, speed = days_before[igood], dist[igood], cum[igood], pace[igood], speed[igood]
         return days_before, dist, cum, pace, speed, all_days_before, cum_cals
     except stravalib.exc.Fault:
-        return None, None, None, None, None, None
+        return None, None, None, None, None, None, None
 
 
 def get_past_races(trail=True, road=True):
@@ -65,10 +70,103 @@ def get_past_races(trail=True, road=True):
     return races
 
 
-def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True, rcal=True):
-    # rcum, rcal = False, False
+def manual_tracking_plots(client):
+    analysis_startdate = datetime.datetime(2020, 9, 12, 0, 0, 0, 0)  # hard coded start date
+    fp = 'C:/Users/Owner/Dropbox/'
+    fn = fp + 'training_data.xlsx'
+    sho = pd.read_excel(fn, sheet_name='shoes')
+    shoe_options = sho['shoe_options'].values
+    df = pd.read_excel(fn, sheet_name='data')
+    runid_arr = list(df['runid'].values)
+    date_arr = list(df['Date'].values)
+    dist_arr = list(df['Dist (mi)'].values)
+    strw_arr = list(df['Start Weight (lb)'].values)
+    endw_arr = list(df['End Weight (lb)'].values)
+    temp_arr = list(df['Temp (F)'].values)  # to see if sweatloss varies with temp
+    swtrt_arr = list(df['Sweat Loss Rate (L/h)'].values)  # to determine my sweat loss rate
+    sho_worn_arr = list(df['Shoes Worn'].values)  # to amass mileage on each pair of shoes
+    lit_cons_arr = list(df['Liters Consumed'].values)  # to help me plan how much water to bring
+    cal_cons_arr = list(df['Calories Consumed'].values)  # to help plan food
+    cal_desc_arr = list(df['Calorie Description'].values)
+
+    activ_since_strt_date = list(client.get_activities(after=analysis_startdate, before=datetime.datetime.utcnow()))
+    runs_since_strt_date = [act for act in activ_since_strt_date if act.type == 'Run']
+
+    for run in runs_since_strt_date:
+        if run.id not in df['runid'].values:
+            shoes_available = []
+            for i in sho.index:
+                if math.isnan(sho['retired_date'][i]):
+                    if run.start_date_local > sho['start_date'][i]:
+                        shoes_available.append(sho['shoe_options'][i])
+                else:
+                    if sho['start_date'][i] < run.start_date_local < sho['retired_date'][i]:
+                        shoes_available.append(sho['shoe_options'][i])
+            runid_arr.append(run.id)
+            date_arr.append(run.start_date_local)
+            dist_arr.append(unithelper.miles(run.distance).num)
+            temp_arr.append(run.average_temp * 9. / 5 + 32.)
+
+            # initialize vars (need these next 4 lines)
+            shoes_worn = 'catchall'
+            liters_consumed = 0.
+            start_weight_lb = np.nan
+            end_weight_lb = np.nan
+            sh, lc, sw, ew, cc, cd = data_input_popup(run.start_date_local, shoes_available,
+                                                      unithelper.miles(run.distance).num)
+            strw_arr.append(sw)
+            endw_arr.append(ew)
+            swtrt_arr.append((sw - ew) / 2.20462 / (run.moving_time.seconds / 60. / 60.))
+            sho_worn_arr.append(sh)
+            lit_cons_arr.append(lc)
+            cal_cons_arr.append(cc)
+            cal_desc_arr.append(cd)
+    df_updated = pd.DataFrame(
+        {'runid': runid_arr, 'Date': date_arr, 'Dist (mi)': dist_arr, 'Start Weight (lb)': strw_arr,
+         'End Weight (lb)': endw_arr, 'Temp (F)': temp_arr, 'Sweat Loss Rate (L/h)': swtrt_arr,
+         'Shoes Worn': sho_worn_arr, 'Liters Consumed': lit_cons_arr, 'Calories Consumed': cal_cons_arr,
+         'Calorie Description': cal_desc_arr})
+
+    sho_dist = np.zeros_like(shoe_options)
+    for i in sho.index:
+        sho_dist[i] = np.sum([dist_arr[j] for j in range(len(sho_worn_arr)) if sho_worn_arr[j] == shoe_options[i]])
+        sho['cum_dist (mi)'] = sho_dist
+
+    with pd.ExcelWriter(fn) as writer:
+        df_updated.to_excel(writer, sheet_name='data', index=False)
+        sho.to_excel(writer, sheet_name='shoes', index=False)
+
+    # make some figs
+    colors = plotly.colors.DEFAULT_PLOTLY_COLORS
+    man_fig = make_subplots(rows=3, cols=1, vertical_spacing=.12)
+    man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', marker_color=colors[4]),
+                      row=1, col=1)  # shoe mileage
+    man_fig.add_trace(go.Histogram(x=swtrt_arr, xbins=dict(start=0, end=3.0, size=0.1), marker_color=colors[1]),
+                      row=2, col=1)  # sweatrate histogram
+    man_fig.add_trace(go.Scatter(x=dist_arr, y=lit_cons_arr, mode='markers', marker_color=colors[2]),
+                      row=3, col=1)  # fluid consumption
+    man_fig.add_trace(go.Scatter(x=dist_arr, y=cal_cons_arr, mode='markers', yaxis='y4', xaxis='x3',
+                                 marker_color=colors[3]))  # calorie consumption
+    yr = np.ceil(max([max(lit_cons_arr), max(cal_cons_arr) / 500.]))
+    man_fig.layout.update(height=750,
+                          xaxis1=dict(title='Cumulative Mileage'),
+                          xaxis2=dict(title='Sweat Loss Rate (L/h)', range=[0, 3]),
+                          xaxis3=dict(title='Distance (miles)'),
+                          yaxis2=dict(title='Count'),
+                          yaxis3=dict(title='Liters Consumed', color=colors[2], range=[-.5, yr]),
+                          yaxis4=dict(title='Calories Consumed', color=colors[3], side='right',
+                                      overlaying='y3', range=[-250, yr * 500]),
+                          showlegend=False)
+    man_fig.update_yaxes(automargin=True)
+
+    return man_fig
+
+
+def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True, rcal=True, rswt=True):
+    # rsvd, rcal, rcum = False, False, False  # for debugging just manual figs
     races = get_past_races(trail=True, road=False)
-    races.update({'Batona 50k 2020': datetime.datetime(2020, 10, 10),
+    races.update({'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 10),
+                  'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
                   'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
 
     wks_18 = datetime.timedelta(weeks=18)
@@ -88,30 +186,33 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
     svd_traces = []  # speed vs dist
     colors = plotly.colors.DEFAULT_PLOTLY_COLORS
     max_dist = 0
+    if rswt:  # get activities for runs with sweat loss data
+        man_fig = manual_tracking_plots(client)
     if rsvd:  # get large dataset
-        yrs3 = datetime.timedelta(weeks=156)
+        nyr = 3
+        nyrs = datetime.timedelta(weeks=52 * nyr)
         predays, dist, _, _, speed, _, _ = get_training_data(client,
                                                              datetime.datetime.now().replace(hour=0, minute=0, second=0,
-                                                                                             microsecond=0) - yrs3,
+                                                                                             microsecond=0) - nyrs,
                                                              datetime.datetime.now().replace(hour=0, minute=0, second=0,
-                                                                                             microsecond=0)+day_1,
+                                                                                             microsecond=0) + day_1,
                                                              get_cals=False)
         bill_pace = 60. / np.array(speed)  # min/mile
         hovertext = [f'{int(s)}:{str(int((s - int(s)) * 60)).zfill(2)}' for s in bill_pace]
         hovertemp = 'mileage: %{x:.2f}<br>pace: %{text} (min/mile)'
-        svd_traces.append(go.Scatter(x=dist, y=speed, mode='markers', name='past 3 years', text=hovertext,
+        svd_traces.append(go.Scatter(x=dist, y=speed, mode='markers', name='past {} years'.format(nyr), text=hovertext,
                                      hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
         # make weekly average plot
         i, wktot, wktot_db, npdist, nppredays = 0, [], [], np.array(dist), np.array(predays)
-        # while -i * 7 > min(predays):
-        #     wktot.append(np.sum(npdist[(nppredays > -7 * (i + 1)) & (nppredays <= -7 * i)]))
-        #     wktot_db.append(-i)
-        #     i += 1
         while -i - 7 > min(predays):
             wktot.append(np.sum(npdist[(nppredays > -i - 7) & (nppredays <= -i)]))
             wktot_db.append(-i)
             i += 1
-        wktot_data = [go.Scatter(x=wktot_db, y=wktot, mode='lines', name='weekly total')]
+        runav = [np.mean(wktot[i:i + 7]) for i in np.arange(len(wktot) - 7 + 1)]
+        runav_db = wktot_db[:len(runav)]
+        wktot_data = [go.Scatter(x=wktot_db, y=wktot, mode='lines', name='weekly total'),
+                      go.Scatter(x=runav_db, y=runav, mode='lines', name='7 day running average',
+                                 line=dict(dash='dash'))]
         now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         xann = [(rd - now).days for rd in [races[k] for k in races.keys()] if (rd - now).days < -10]
         yann = [wktot[i] for i in
@@ -169,7 +270,8 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
                            line=dict(width=width), showlegend=False, hovertemplate='pace: %{y:.2f}<br>dist:%{text}',
                            text=['{:.2f}'.format(d) for d in wd]))
 
-    svd_traces = add_max_effort_curve(svd_traces, max_dist=max_dist)
+    if rsvd:
+        svd_traces = add_max_effort_curve(svd_traces, max_dist=max_dist)
 
     # append annotation traces
     if rdist:
@@ -221,7 +323,7 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
         figs.append(pc_v_dist_fig)
 
         wktot_layout = go.Layout(xaxis=dict(title='Days ago'),
-                                 yaxis=dict(title='Weekly total mileage', hoverformat='.2f'),
+                                 yaxis=dict(title='Mileage', hoverformat='.2f'),
                                  legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right'))
         wktot_fit = go.Figure(data=wktot_data, layout=wktot_layout)
         wktot_fit.write_html(f'{img_path}wktot.html')
@@ -265,6 +367,19 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
         wk_fig.write_html(f'{img_path}rta_week.html')
         print('saved week image')
         figs.append(wk_fig)
+    if rswt:
+        man_fig.write_html(f'{img_path}rta_man.html')
+        print('saved manual analysis image')
+        figs.append(man_fig)
+        # swt_fig.write_html(f'{img_path}rta_swt.html')
+        # print('saved sweatloss image')
+        # figs.append(swt_fig)
+        # h20_fig.write_html(f'{img_path}rta_h20.html')
+        # print('saved h20 consumption image')
+        # figs.append(h20_fig)
+        # sho_fig.write_html(f'{img_path}rta_sho.html')
+        # print('saved shoe mileage image')
+        # figs.append(sho_fig)
 
     return figs
 
@@ -311,11 +426,11 @@ def add_max_effort_curve(svd_traces, max_dist=100):
     not_important = [bspeed.extend(s.y) for s in svd_traces]
     bdist, bspeed = np.array(bdist), np.array(bspeed)
 
-    def minfunc(fit):  # 2-degree polyfit
-        ydiff_0offset = bspeed - (fit[0] * bdist ** 2 + fit[1] * bdist + 0.)
-        offset = max(ydiff_0offset)  # offset necessary so that curve is always >= data
-        ydiff = bspeed - (fit[0] * bdist ** 2 + fit[1] * bdist + offset)
-        return np.sum(ydiff ** 2)
+    # def minfunc(fit):  # 2-degree polyfit
+    #     ydiff_0offset = bspeed - (fit[0] * bdist ** 2 + fit[1] * bdist + 0.)
+    #     offset = max(ydiff_0offset)  # offset necessary so that curve is always >= data
+    #     ydiff = bspeed - (fit[0] * bdist ** 2 + fit[1] * bdist + offset)
+    #     return np.sum(ydiff ** 2)
 
     def minfunc2(fit):  # rotated parabola
         r = np.sqrt(bdist ** 2 + bspeed ** 2)
