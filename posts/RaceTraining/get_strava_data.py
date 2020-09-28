@@ -45,6 +45,7 @@ def get_training_data(client, after=datetime.date.today() - datetime.timedelta(d
         runs = [act for act in activities if act.type == 'Run']
         runs = [r for r in runs if
                 unithelper.miles(r.distance).num > 2 and unithelper.miles_per_hour(r.average_speed).num > 4]
+        dates = [r.start_date_local.date() for r in runs]
         days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
         dist = [unithelper.miles(r.distance).num for r in runs]
         cum = np.cumsum(dist)
@@ -52,9 +53,9 @@ def get_training_data(client, after=datetime.date.today() - datetime.timedelta(d
         speed = [60 / p for p in pace]  # mph
         # igood = [i for i in np.arange(len(dist)) if (speed[i] > 4 or dist[i] > 5)]
         # days_before, dist, cum, pace, speed = days_before[igood], dist[igood], cum[igood], pace[igood], speed[igood]
-        return days_before, dist, cum, pace, speed, all_days_before, cum_cals
+        return days_before, dist, cum, pace, speed, all_days_before, cum_cals, dates
     except stravalib.exc.Fault:
-        return None, None, None, None, None, None, None
+        return None, None, None, None, None, None, None, None
 
 
 def get_past_races(trail=True, road=True):
@@ -67,6 +68,8 @@ def get_past_races(trail=True, road=True):
         races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
                       'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
                       'TC Marathon 2015': datetime.datetime(2015, 10, 4)})
+    # order chronologically
+    races = {k: v for k, v in sorted(races.items(), key=lambda item: item[1])}
     return races
 
 
@@ -116,7 +119,7 @@ def manual_tracking_plots(client):
                                                       unithelper.miles(run.distance).num)
             strw_arr.append(sw)
             endw_arr.append(ew)
-            swtrt_arr.append((sw - ew) / 2.20462 / (run.moving_time.seconds / 60. / 60.))
+            swtrt_arr.append(((sw - ew) / 2.20462 + lc) / (run.moving_time.seconds / 60. / 60.))
             sho_worn_arr.append(sh)
             lit_cons_arr.append(lc)
             cal_cons_arr.append(cc)
@@ -164,7 +167,7 @@ def manual_tracking_plots(client):
 
 def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True, rcal=True, rswt=True):
     # rsvd, rcal, rcum = False, False, False  # for debugging just manual figs
-    races = get_past_races(trail=True, road=False)
+    races = get_past_races(trail=True, road=True)
     races.update({'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 10),
                   'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
                   'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
@@ -189,38 +192,48 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
     if rswt:  # get activities for runs with sweat loss data
         man_fig = manual_tracking_plots(client)
     if rsvd:  # get large dataset
-        nyr = 3
+        yrsago = [(datetime.datetime.utcnow() - rd).days / 365. for rd in [races[k] for k in races.keys()] if
+                  (rd - datetime.datetime.utcnow()).days < -10]
+        yrsago = [ya + 18 / 52. for ya in yrsago]  # add 18 weeks onto each race
+        nyr = np.ceil(max(yrsago))
+        nyr = max([nyr, 3])
         nyrs = datetime.timedelta(weeks=52 * nyr)
-        predays, dist, _, _, speed, _, _ = get_training_data(client,
-                                                             datetime.datetime.now().replace(hour=0, minute=0, second=0,
-                                                                                             microsecond=0) - nyrs,
-                                                             datetime.datetime.now().replace(hour=0, minute=0, second=0,
-                                                                                             microsecond=0) + day_1,
-                                                             get_cals=False)
+        predays, dist, _, _, speed, _, _, dates = get_training_data(client,
+                                                                    datetime.datetime.now().replace(hour=0, minute=0,
+                                                                                                    second=0,
+                                                                                                    microsecond=0) - nyrs,
+                                                                    datetime.datetime.now().replace(hour=0, minute=0,
+                                                                                                    second=0,
+                                                                                                    microsecond=0) + day_1,
+                                                                    get_cals=False)
         bill_pace = 60. / np.array(speed)  # min/mile
-        hovertext = [f'{int(s)}:{str(int((s - int(s)) * 60)).zfill(2)}' for s in bill_pace]
-        hovertemp = 'mileage: %{x:.2f}<br>pace: %{text} (min/mile)'
+        hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for i, s in
+                     enumerate(bill_pace)]
+        hovertemp = 'mileage: %{x:.2f}<br>%{text}'
         svd_traces.append(go.Scatter(x=dist, y=speed, mode='markers', name='past {} years'.format(nyr), text=hovertext,
                                      hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
         # make weekly average plot
-        i, wktot, wktot_db, npdist, nppredays = 0, [], [], np.array(dist), np.array(predays)
+        i, wktot, wktot_db, npdist, nppredays, wktot_dates = 0, [], [], np.array(dist), np.array(predays), []
         while -i - 7 > min(predays):
             wktot.append(np.sum(npdist[(nppredays > -i - 7) & (nppredays <= -i)]))
             wktot_db.append(-i)
+            wktot_dates.append(datetime.date.today()-datetime.timedelta(days=i))  # no min, sec, usec
             i += 1
         runav = [np.mean(wktot[i:i + 7]) for i in np.arange(len(wktot) - 7 + 1)]
-        runav_db = wktot_db[:len(runav)]
-        wktot_data = [go.Scatter(x=wktot_db, y=wktot, mode='lines', name='weekly total'),
-                      go.Scatter(x=runav_db, y=runav, mode='lines', name='7 day running average',
+        # runav_db = wktot_db[:len(runav)]
+        runav_dates = wktot_dates[:len(runav)]
+        wktot_data = [go.Scatter(x=wktot_dates, y=wktot, mode='lines', name='weekly total'),
+                      go.Scatter(x=runav_dates, y=runav, mode='lines', name='7 day running average',
                                  line=dict(dash='dash'))]
         now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-        xann = [(rd - now).days for rd in [races[k] for k in races.keys()] if (rd - now).days < -10]
+        # xann = [(rd - now).days for rd in [races[k] for k in races.keys()] if (rd - now).days < -10]
+        xann = [rd for rd in [races[k] for k in races.keys()] if (rd - now).days < -10]
         yann = [wktot[i] for i in
                 [-(rd - now).days for rd in [races[k] for k in races.keys()] if (rd - now).days < -10]]
         wktot_data.append(go.Scatter(
             x=xann, y=yann, text=[k for k in races.keys() if (races[k] - now).days < -10], mode='text+markers',
             textposition='middle right', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
-        wktot_data.append(go.Bar(x=predays, y=dist, width=1, name='runs'))
+        wktot_data.append(go.Bar(x=dates, y=dist, name='runs'))  # width=1,
 
     for i, (k, v) in enumerate(races.items()):
         print(k)
@@ -229,15 +242,16 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
             width = 3
         else:
             width = 2
-        op = (i + 1.) / len(races.items())
-        days_before, dist, cum, pace, speed, adb, cals = get_training_data(client, v - wks_18, v + day_1)
+        op = (i + 1.) / len(races.items()) * .75 + .25
+        days_before, dist, cum, pace, speed, adb, cals, dates = get_training_data(client, v - wks_18, v + day_1)
         max_dist = max([max(dist), max_dist])
         if rsvd:
             bill_pace = 60. / np.array(speed)  # min/mile
-            hovertext = [f'{int(s)}:{str(int((s - int(s)) * 60)).zfill(2)}' for s in bill_pace]
-            hovertemp = 'mileage: %{x:.2f}<br>pace: %{text} (min/mile)'
-            svd_traces.append(go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext,
-                                         hovertemplate=hovertemp))
+            hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for
+                         i, s in enumerate(bill_pace)]
+            hovertemp = 'mileage: %{x:.2f}<br>%{text}'
+            svd_traces.append(
+                go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
             if i == len(races.items()) - 1:
                 svd_traces.append(go.Scatter(x=[dist[-1]], y=[speed[-1]], mode='markers', name='most recent',
                                              marker=dict(line=dict(width=2), color='rgba(0,0,0,0)'),
@@ -256,7 +270,7 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
             cal_traces.append(
                 go.Scatter(x=adb, y=cals, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
         if rwk:
-            wdb, wd, wc, wp, ws, _, _ = get_training_data(client, v - days_to_race - wks_1, v - days_to_race)
+            wdb, wd, wc, wp, ws, _, _, _ = get_training_data(client, v - days_to_race - wks_1, v - days_to_race)
             wk_traces.append(
                 go.Scatter(x=wdb, y=wd, yaxis='y2', opacity=op, name=k, mode='lines+markers',
                            marker=dict(color=colors[i]),
@@ -316,7 +330,7 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
     if rsvd:
         svd_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
                                yaxis=dict(title='Speed (miles/hr)', hoverformat='.2f'),
-                               legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right'))
+                               legend=dict(x=1, y=1.02, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
         pc_v_dist_fig = go.Figure(data=svd_traces, layout=svd_layout)
         pc_v_dist_fig.write_html(f'{img_path}rta_svd.html')
         print('saved speed-vs-dist image')
@@ -324,11 +338,11 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
 
         wktot_layout = go.Layout(xaxis=dict(title='Days ago'),
                                  yaxis=dict(title='Mileage', hoverformat='.2f'),
-                                 legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right'))
-        wktot_fit = go.Figure(data=wktot_data, layout=wktot_layout)
-        wktot_fit.write_html(f'{img_path}wktot.html')
+                                 legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
+        wktot_fig = go.Figure(data=wktot_data, layout=wktot_layout)
+        wktot_fig.write_html(f'{img_path}wktot.html')
         print('saved weekly total image')
-        figs.append(wktot_fit)
+        figs.append(wktot_fig)
     if rdist:
         dlayout = go.Layout(xaxis=dict(title='Days before race'),
                             yaxis=dict(title='Distance (miles)', hoverformat='.2f'),
