@@ -14,7 +14,7 @@ Since GitHub (which hosts this site) is a static host, I can't dynamically make 
 Using the Strava API I can grab activities and access the attributes; distance and time arrays, calories, etc. One of the first things that came to mind was to compare my training efforts between different races.
 So with a list of races and their corresponding race date, I the data 18 weeks prior to and including race day. By looking at how my current effort compares, I can more realistically assess my readiness level for the upcoming race. The cumulative distance I find both the easiest to read and the most helpful in assessing my race-readiness and have recently added a cumulative calories analysis as well which includes any activity (e.g. cycling, swimming).
 
-<iframe src="/images/posts/rta_cum.html" height="500" width="800"></iframe>
+<iframe src="/images/posts/rta_cum.html" height="500" width="100%"></iframe>
 
 I keep playing with this code, and started thinking about how pace varies with distance. I know if I train for a 5k I'll increase my pace as I get fitter. I also know I can run a 5k faster than a 10k. I've focused a lot on the former point, trying to improve my pace for a given distance, but never really considered the second point. At any given point of time (read: fixed level of fitness) there's a limit to how fast I can run a 5k, 10k, or any other distance. What does this curve of max-effort vs distance look like?
 
@@ -57,14 +57,14 @@ def minfunc(fit):  # rotated parabola
 
 I struggled for a while to think of the best way to fit a curve to data with the constraint that it necessarily sit above the data (max effort has to be greater than or equal to existing efforts). The minimization above simply removes a degree of freedom (the $$r$$ offset value) and instead dynamically fixes this value during the minimization such that the difference $$curve-data$$ is everywhere positive.
 
-<iframe src="/images/posts/rta_wktot.html" height="500" width="800"></iframe>
+<iframe src="/images/posts/rta_svd.html" height="500" width="100%"></iframe>
 
 A few things to note. Obviously the human-achievable curve is high above my performance, no surprise. But I do note that the slope of the human-achievable curve is shallower than mine, meaning my max pace suffers more for higher mileage. However, there are numerous complicating factors. My runs (especially the longer ones) are often done on trails, over very uneven and technical terrain, hardly ideal for setting a max pace. Many of my shorter runs also include two furry companions who, while being quite capable of matching my moving pace, are likely to stop for potty breaks. Hydration, nutrition, and rest impact my performance, as does the fact that I'm rarely *trying* for a max-paced run. With that in mind though, this is a very cool way to set goal paces for distances I haven't run in a long time, and (I think) a pretty insightful look into my training data.
 
 Another common metric to monitor is your weekly total. So with a little processing I can see this trend in my data as well. Below is my weekly running total for the past number of years, a running 7 day average of my weekly totals (to reduce the variability and show me more of an average effort), and the individual runs that contribute to the totals.
 
-<iframe src="/images/posts/rta_svd.html" height="500" width="800"></iframe>
+<iframe src="/images/posts/rta_wktot.html" height="500" width="100%"></iframe>
 
 The most recent addition to the analysis is actually one that utilizes external data. Garmin has the capability of tracking gear usage so you can manage how many miles are on your shoes, but you have to update this data manually in the app. It'd be better if it asked you at the end of each activity, but c'est la vie. I submitted this feedback to Garmin, but while we wait for them to implement my ideas we'll make a workaround. I created a spreadsheet (I know, I know... a spreadsheet). Now whenever I run this code it looks in there and compares all my runs (rather just those since I began this manual-entry analysis) to the list of runs in the spreadsheet. If a run is in the app but not in my spreadsheet it pops up a window asking for a variety of information... which shoes I was wearing, pre-and post-run weight if I measured, how much fluid I drank, how many calories (and which kind) were consumed. So far these plots aren't super informative, but I can begin to analyze my sweat rate, monitor the mileage on my shoes, and see how much fluid and calories to have on hand.
 
-<iframe src="/images/posts/rta_man.html" height="800" width="800"></iframe>
+<iframe src="/images/posts/rta_man.html" height="800" width="100%"></iframe>
