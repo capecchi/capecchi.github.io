@@ -340,7 +340,7 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
                                  yaxis=dict(title='Mileage', hoverformat='.2f'),
                                  legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
         wktot_fig = go.Figure(data=wktot_data, layout=wktot_layout)
-        wktot_fig.write_html(f'{img_path}wktot.html')
+        wktot_fig.write_html(f'{img_path}rta_wktot.html')
         print('saved weekly total image')
         figs.append(wktot_fig)
     if rdist:
