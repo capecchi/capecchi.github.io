@@ -1,0 +1,44 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "city": "cheeseburger"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4,
+          1
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "city": "and"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          5,
+          2
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "city": "fries"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          6,
+          3
+        ]
+      }
+    }
+  ]
+}
