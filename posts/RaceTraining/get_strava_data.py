@@ -144,14 +144,16 @@ def manual_tracking_plots(client):
     man_fig = make_subplots(rows=3, cols=1, vertical_spacing=.12)
     man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', marker_color=colors[4]),
                       row=1, col=1)  # shoe mileage
-    man_fig.add_trace(go.Histogram(x=swtrt_arr, xbins=dict(start=0, end=3.0, size=0.1), marker_color=colors[1]),
+    man_fig.add_trace(go.Histogram(x=swtrt_arr[:-1], xbins=dict(start=0, end=3.0, size=0.1), marker_color=colors[1]),
+                      row=2, col=1)  # sweatrate histogram
+    man_fig.add_trace(go.Histogram(x=[swtrt_arr[-1]], xbins=dict(start=0, end=3.0, size=0.1), marker_color=colors[2]),
                       row=2, col=1)  # sweatrate histogram
     man_fig.add_trace(go.Scatter(x=dist_arr, y=lit_cons_arr, mode='markers', marker_color=colors[2]),
                       row=3, col=1)  # fluid consumption
     man_fig.add_trace(go.Scatter(x=dist_arr, y=cal_cons_arr, mode='markers', yaxis='y4', xaxis='x3',
                                  marker_color=colors[3]))  # calorie consumption
     yr = np.ceil(max([max(lit_cons_arr), max(cal_cons_arr) / 500.]))
-    man_fig.layout.update(height=750,
+    man_fig.layout.update(height=750, barmode='stack',
                           xaxis1=dict(title='Cumulative Mileage'),
                           xaxis2=dict(title='Sweat Loss Rate (L/h)', range=[0, 3]),
                           xaxis3=dict(title='Distance (miles)'),
@@ -167,8 +169,8 @@ def manual_tracking_plots(client):
 
 def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True, rcal=True, rswt=True):
     # rsvd, rcal, rcum = False, False, False  # for debugging just manual figs
-    races = get_past_races(trail=True, road=True)
-    races.update({'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 10),
+    races = get_past_races(trail=True, road=False)
+    races.update({'Batona (virtual) 33M 2020': datetime.datetime(2020, 10, 10),
                   'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
                   'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
 
@@ -217,7 +219,7 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
         while -i - 7 > min(predays):
             wktot.append(np.sum(npdist[(nppredays > -i - 7) & (nppredays <= -i)]))
             wktot_db.append(-i)
-            wktot_dates.append(datetime.date.today()-datetime.timedelta(days=i))  # no min, sec, usec
+            wktot_dates.append(datetime.date.today() - datetime.timedelta(days=i))  # no min, sec, usec
             i += 1
         runav = [np.mean(wktot[i:i + 7]) for i in np.arange(len(wktot) - 7 + 1)]
         # runav_db = wktot_db[:len(runav)]
@@ -254,7 +256,8 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
                 go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
             if i == len(races.items()) - 1:
                 svd_traces.append(go.Scatter(x=[dist[-1]], y=[speed[-1]], mode='markers', name='most recent',
-                                             marker=dict(line=dict(width=2), color='rgba(0,0,0,0)'),
+                                             marker=dict(line=dict(width=3), color='rgba(0,0,0,0)',
+                                                         symbol='star-diamond-dot', size=10),
                                              text=[hovertext[-1]], hovertemplate=hovertemp))
         if rdist:
             dist_traces.append(
