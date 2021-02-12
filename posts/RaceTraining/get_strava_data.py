@@ -63,7 +63,9 @@ def get_past_races(trail=True, road=True):
     if trail:
         races.update({'Superior 50k 2018': datetime.datetime(2018, 5, 19),
                       'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
-                      'Superior 50k 2019': datetime.datetime(2019, 5, 18)})
+                      'Superior 50k 2019': datetime.datetime(2019, 5, 18),
+                      'Batona (virtual) 33M 2020': datetime.datetime(2020, 10, 10),
+                      'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 31)})
     if road:
         races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
                       'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
@@ -168,10 +170,10 @@ def manual_tracking_plots(client):
 
 
 def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True, rcal=True, rswt=True):
-    # rsvd, rcal, rcum = False, False, False  # for debugging just manual figs
+    # rsvd, rcal, rcum, rswt = True, False, False, False
+
     races = get_past_races(trail=True, road=False)
-    races.update({'Batona (virtual) 33M 2020': datetime.datetime(2020, 10, 10),
-                  'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
+    races.update({'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
                   'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
 
     wks_18 = datetime.timedelta(weeks=18)
@@ -216,24 +218,23 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
                                      hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
         # make weekly average plot
         i, wktot, wktot_db, npdist, nppredays, wktot_dates = 0, [], [], np.array(dist), np.array(predays), []
+        nday_av = 14
         while -i - 7 > min(predays):
             wktot.append(np.sum(npdist[(nppredays > -i - 7) & (nppredays <= -i)]))
             wktot_db.append(-i)
             wktot_dates.append(datetime.date.today() - datetime.timedelta(days=i))  # no min, sec, usec
             i += 1
-        runav = [np.mean(wktot[i:i + 7]) for i in np.arange(len(wktot) - 7 + 1)]
+        runav = [np.mean(wktot[i:i + nday_av]) for i in np.arange(len(wktot) - nday_av + 1)]
         # runav_db = wktot_db[:len(runav)]
         runav_dates = wktot_dates[:len(runav)]
         wktot_data = [go.Scatter(x=wktot_dates, y=wktot, mode='lines', name='weekly total'),
-                      go.Scatter(x=runav_dates, y=runav, mode='lines', name='7 day running average',
+                      go.Scatter(x=runav_dates, y=runav, mode='lines', name=f'{nday_av} day avg of tot',
                                  line=dict(dash='dash'))]
         now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-        # xann = [(rd - now).days for rd in [races[k] for k in races.keys()] if (rd - now).days < -10]
-        xann = [rd for rd in [races[k] for k in races.keys()] if (rd - now).days < -10]
-        yann = [wktot[i] for i in
-                [-(rd - now).days for rd in [races[k] for k in races.keys()] if (rd - now).days < -10]]
+        xann = [rd for rd in [races[k] for k in races.keys()] if (rd - now).days < 0]
+        yann = [wktot[i] for i in [-(rd - now).days for rd in [races[k] for k in races.keys()] if (rd - now).days < 0]]
         wktot_data.append(go.Scatter(
-            x=xann, y=yann, text=[k for k in races.keys() if (races[k] - now).days < -10], mode='text+markers',
+            x=xann, y=yann, text=[k for k in races.keys() if (races[k] - now).days < 0], mode='text+markers',
             textposition='middle right', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
         wktot_data.append(go.Bar(x=dates, y=dist, name='runs'))  # width=1,
 
@@ -339,8 +340,7 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
         print('saved speed-vs-dist image')
         figs.append(pc_v_dist_fig)
 
-        wktot_layout = go.Layout(xaxis=dict(title='Days ago'),
-                                 yaxis=dict(title='Mileage', hoverformat='.2f'),
+        wktot_layout = go.Layout(yaxis=dict(title='Mileage', hoverformat='.2f'),
                                  legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
         wktot_fig = go.Figure(data=wktot_data, layout=wktot_layout)
         wktot_fig.write_html(f'{img_path}rta_wktot.html')
