@@ -12,7 +12,7 @@ from scipy.optimize import minimize
 from stravalib import unithelper
 from stravalib.client import Client
 
-from .playground import data_input_popup
+from playground import data_input_popup
 
 
 def get_client(code):
@@ -96,6 +96,7 @@ def manual_tracking_plots(client):
 
     activ_since_strt_date = list(client.get_activities(after=analysis_startdate, before=datetime.datetime.utcnow()))
     runs_since_strt_date = [act for act in activ_since_strt_date if act.type == 'Run']
+    runs_since_strt_date = runs_since_strt_date[::-1]  # put in chronological order
 
     for run in runs_since_strt_date:
         if run.id not in df['runid'].values:
@@ -144,33 +145,46 @@ def manual_tracking_plots(client):
     # make some figs
     colors = plotly.colors.DEFAULT_PLOTLY_COLORS
     man_fig = make_subplots(rows=3, cols=1, vertical_spacing=.12)
-    man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', marker_color=colors[4]),
-                      row=1, col=1)  # shoe mileage
-    man_fig.add_trace(go.Histogram(x=swtrt_arr[:-1], xbins=dict(start=0, end=3.0, size=0.1), marker_color=colors[1]),
-                      row=2, col=1)  # sweatrate histogram
-    man_fig.add_trace(go.Histogram(x=[swtrt_arr[-1]], xbins=dict(start=0, end=3.0, size=0.1), marker_color=colors[2]),
-                      row=2, col=1)  # sweatrate histogram
-    man_fig.add_trace(go.Scatter(x=dist_arr, y=lit_cons_arr, mode='markers', marker_color=colors[2]),
-                      row=3, col=1)  # fluid consumption
-    man_fig.add_trace(go.Scatter(x=dist_arr, y=cal_cons_arr, mode='markers', yaxis='y4', xaxis='x3',
-                                 marker_color=colors[3]))  # calorie consumption
+    nptemp, npswt = np.array(temp_arr), np.array(swtrt_arr)
+    rb = plotly.colors.sequential.RdBu_r
+    tmin, tmax = 20., 80.
+    rangelist = np.append(np.append([-np.inf], np.linspace(tmin, tmax, endpoint=True, num=len(rb) - 1)), np.inf)
+    for i, col in enumerate(rb):
+        man_fig.add_trace(
+            go.Histogram(x=npswt[np.where((rangelist[i] <= nptemp) & (nptemp < rangelist[i + 1]))],
+                         xbins=dict(start=0, end=3.0, size=0.1),
+                         marker_color=rb[i], name=f'{rangelist[i]:.0f}-{rangelist[i + 1]:.0f}'), row=1, col=1)
+
+    # man_fig.add_trace(go.Histogram(x=swtrt_arr[:-1], xbins=dict(start=0, end=3.0, size=0.1), marker_color=colors[1]),
+    #                   row=2, col=1)  # sweatrate histogram
+    # man_fig.add_trace(go.Histogram(x=[swtrt_arr[-1]], xbins=dict(start=0, end=3.0, size=0.1), marker_color=colors[2]),
+    #                   row=2, col=1)  # sweatrate histogram
+    man_fig.add_trace(go.Scatter(x=dist_arr, y=lit_cons_arr, mode='markers', marker_color=colors[2], showlegend=False),
+                      row=2, col=1)  # fluid consumption
+    man_fig.add_trace(go.Scatter(x=dist_arr, y=cal_cons_arr, mode='markers', yaxis='y4', xaxis='x2',
+                                 marker_color=colors[3], showlegend=False))  # calorie consumption
     yr = np.ceil(max([max(lit_cons_arr), max(cal_cons_arr) / 500.]))
+
+    man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', marker_color=colors[4], showlegend=False),
+                      row=3, col=1)  # shoe mileage
+
     man_fig.layout.update(height=750, barmode='stack',
-                          xaxis1=dict(title='Cumulative Mileage'),
-                          xaxis2=dict(title='Sweat Loss Rate (L/h)', range=[0, 3]),
-                          xaxis3=dict(title='Distance (miles)'),
-                          yaxis2=dict(title='Count'),
-                          yaxis3=dict(title='Liters Consumed', color=colors[2], range=[-.5, yr]),
+                          xaxis1=dict(title='Sweat Loss Rate (L/h)', range=[0, 3]),
+                          xaxis2=dict(title='Distance (miles)'),
+                          xaxis3=dict(title='Cumulative Mileage'),
+                          yaxis1=dict(title='Count'),
+                          yaxis2=dict(title='Liters Consumed', color=colors[2], range=[-.5, yr]),
                           yaxis4=dict(title='Calories Consumed', color=colors[3], side='right',
-                                      overlaying='y3', range=[-250, yr * 500]),
-                          showlegend=False)
+                                      overlaying='y2', range=[-250, yr * 500]),
+                          showlegend=True, legend_title_text='Temp (F)')
     man_fig.update_yaxes(automargin=True)
 
     return man_fig
 
 
 def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True, rcal=True, rswt=True):
-    # rsvd, rcal, rcum, rswt = True, False, False, False
+    # debugging manual plot
+    rsvd, rcal, rcum, rswt = False, False, False, True
 
     races = get_past_races(trail=True, road=False)
     races.update({'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
@@ -238,96 +252,99 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
             textposition='middle right', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
         wktot_data.append(go.Bar(x=dates, y=dist, name='runs'))  # width=1,
 
-    for i, (k, v) in enumerate(races.items()):
-        print(k)
-        if v > datetime.datetime.now().replace(hour=0, minute=0, second=0,
-                                               microsecond=0):  # read: if race day is after today, ie in the future, then solid line plot
-            width = 3
-        else:
-            width = 2
-        op = (i + 1.) / len(races.items()) * .75 + .25
-        days_before, dist, cum, pace, speed, adb, cals, dates = get_training_data(client, v - wks_18, v + day_1)
-        max_dist = max([max(dist), max_dist])
+    if any([rdist, rcum, rwk, rpace, rsvd, rcal]):  # for debugging, if we're not doing any of these plots, skip this
+        for i, (k, v) in enumerate(races.items()):
+            print(k)
+            if v > datetime.datetime.now().replace(hour=0, minute=0, second=0,
+                                                   microsecond=0):  # read: if race day is after today, ie in the future, then solid line plot
+                width = 3
+            else:
+                width = 2
+            op = (i + 1.) / len(races.items()) * .75 + .25
+            days_before, dist, cum, pace, speed, adb, cals, dates = get_training_data(client, v - wks_18, v + day_1)
+            max_dist = max([max(dist), max_dist])
+            if rsvd:
+                bill_pace = 60. / np.array(speed)  # min/mile
+                hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for
+                             i, s in enumerate(bill_pace)]
+                hovertemp = 'mileage: %{x:.2f}<br>%{text}'
+                svd_traces.append(
+                    go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
+                if i == len(races.items()) - 1:
+                    svd_traces.append(go.Scatter(x=[dist[-1]], y=[speed[-1]], mode='markers', name='most recent',
+                                                 marker=dict(line=dict(width=3), color='rgba(0,0,0,0)',
+                                                             symbol='star-diamond-dot', size=10),
+                                                 text=[hovertext[-1]], hovertemplate=hovertemp))
+            if rdist:
+                dist_traces.append(
+                    go.Scatter(x=days_before, y=dist, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
+            if rcum:
+                cum_traces.append(
+                    go.Scatter(x=days_before, y=cum, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
+            if rpace:
+                pace_traces.append(
+                    go.Scatter(x=days_before, y=pace, opacity=op, name=k, mode='lines+markers', line=dict(width=width),
+                               hovertemplate='pace: %{y:.2f}<br>dist:%{text}', text=['{:.2f}'.format(d) for d in dist]))
+            if rcal:
+                cal_traces.append(
+                    go.Scatter(x=adb, y=cals, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
+            if rwk:
+                wdb, wd, wc, wp, ws, _, _, _ = get_training_data(client, v - days_to_race - wks_1, v - days_to_race)
+                wk_traces.append(
+                    go.Scatter(x=wdb, y=wd, yaxis='y2', opacity=op, name=k, mode='lines+markers',
+                               marker=dict(color=colors[i]),
+                               line=dict(width=width)))
+                wk_traces.append(
+                    go.Scatter(x=wdb, y=wc, opacity=op, name=k, mode='lines+markers', marker=dict(color=colors[i]),
+                               line=dict(width=width), showlegend=False))
+                wk_traces.append(
+                    go.Scatter(x=wdb, y=wp, yaxis='y3', opacity=op, name=k, mode='lines+markers',
+                               marker=dict(color=colors[i]),
+                               line=dict(width=width), showlegend=False, hovertemplate='pace: %{y:.2f}<br>dist:%{text}',
+                               text=['{:.2f}'.format(d) for d in wd]))
+
         if rsvd:
-            bill_pace = 60. / np.array(speed)  # min/mile
-            hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for
-                         i, s in enumerate(bill_pace)]
-            hovertemp = 'mileage: %{x:.2f}<br>%{text}'
-            svd_traces.append(
-                go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
-            if i == len(races.items()) - 1:
-                svd_traces.append(go.Scatter(x=[dist[-1]], y=[speed[-1]], mode='markers', name='most recent',
-                                             marker=dict(line=dict(width=3), color='rgba(0,0,0,0)',
-                                                         symbol='star-diamond-dot', size=10),
-                                             text=[hovertext[-1]], hovertemplate=hovertemp))
+            svd_traces = add_max_effort_curve(svd_traces, max_dist=max_dist)
+
+        # append annotation traces
         if rdist:
-            dist_traces.append(
-                go.Scatter(x=days_before, y=dist, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
+            dist_arr = [t.y[-1] for t in dist_traces if len(t.y) > 0]
+            dist_traces.append(go.Scatter(x=[t.x[-1] for t in dist_traces if len(t.x) > 0], y=dist_arr,
+                                          text=[f'{round(t.y[-1], 1)}' for t in dist_traces if len(t.y) > 0],
+                                          mode='text',
+                                          textposition='middle left', showlegend=False, hoverinfo='none'))
         if rcum:
             cum_traces.append(
-                go.Scatter(x=days_before, y=cum, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
+                go.Scatter(x=[t.x[-1] for t in cum_traces if len(t.x) > 0],
+                           y=[t.y[-1] for t in cum_traces if len(t.y) > 0],
+                           text=[f'{round(t.y[-1], 1)}' for t in cum_traces if len(t.y) > 0], mode='text',
+                           textposition='middle left', showlegend=False, hoverinfo='none'))
         if rpace:
             pace_traces.append(
-                go.Scatter(x=days_before, y=pace, opacity=op, name=k, mode='lines+markers', line=dict(width=width),
-                           hovertemplate='pace: %{y:.2f}<br>dist:%{text}', text=['{:.2f}'.format(d) for d in dist]))
-        if rcal:
-            cal_traces.append(
-                go.Scatter(x=adb, y=cals, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
+                go.Scatter(x=[t.x[-1] for t in pace_traces if len(t.x) > 0],
+                           y=[t.y[-1] for t in pace_traces if len(t.y) > 0],
+                           text=[f'{round(t.y[-1], 1)}' for t in pace_traces if len(t.y) > 0], mode='text',
+                           textposition='middle left', showlegend=False, hoverinfo='none'))
         if rwk:
-            wdb, wd, wc, wp, ws, _, _, _ = get_training_data(client, v - days_to_race - wks_1, v - days_to_race)
+            wk_annotations = {'dx': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
+                              'dy': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
+                              'dt': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
+                              'cx': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)],
+                              'cy': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)],
+                              'ct': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)],
+                              'px': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y3')],
+                              'py': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y3')],
+                              'pt': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y3')]
+                              }
             wk_traces.append(
-                go.Scatter(x=wdb, y=wd, yaxis='y2', opacity=op, name=k, mode='lines+markers',
-                           marker=dict(color=colors[i]),
-                           line=dict(width=width)))
+                go.Scatter(x=wk_annotations['dx'], y=wk_annotations['dy'], text=wk_annotations['dt'], mode='text',
+                           textposition='middle left', showlegend=False, hoverinfo='none', ))
             wk_traces.append(
-                go.Scatter(x=wdb, y=wc, opacity=op, name=k, mode='lines+markers', marker=dict(color=colors[i]),
-                           line=dict(width=width), showlegend=False))
+                go.Scatter(x=wk_annotations['px'], y=wk_annotations['py'], text=wk_annotations['pt'], yaxis='y3',
+                           mode='text', textposition='middle left', showlegend=False, ))
             wk_traces.append(
-                go.Scatter(x=wdb, y=wp, yaxis='y3', opacity=op, name=k, mode='lines+markers',
-                           marker=dict(color=colors[i]),
-                           line=dict(width=width), showlegend=False, hovertemplate='pace: %{y:.2f}<br>dist:%{text}',
-                           text=['{:.2f}'.format(d) for d in wd]))
-
-    if rsvd:
-        svd_traces = add_max_effort_curve(svd_traces, max_dist=max_dist)
-
-    # append annotation traces
-    if rdist:
-        dist_arr = [t.y[-1] for t in dist_traces if len(t.y) > 0]
-        dist_traces.append(go.Scatter(x=[t.x[-1] for t in dist_traces if len(t.x) > 0], y=dist_arr,
-                                      text=[f'{round(t.y[-1], 1)}' for t in dist_traces if len(t.y) > 0], mode='text',
-                                      textposition='middle left', showlegend=False, hoverinfo='none'))
-    if rcum:
-        cum_traces.append(
-            go.Scatter(x=[t.x[-1] for t in cum_traces if len(t.x) > 0], y=[t.y[-1] for t in cum_traces if len(t.y) > 0],
-                       text=[f'{round(t.y[-1], 1)}' for t in cum_traces if len(t.y) > 0], mode='text',
-                       textposition='middle left', showlegend=False, hoverinfo='none'))
-    if rpace:
-        pace_traces.append(
-            go.Scatter(x=[t.x[-1] for t in pace_traces if len(t.x) > 0],
-                       y=[t.y[-1] for t in pace_traces if len(t.y) > 0],
-                       text=[f'{round(t.y[-1], 1)}' for t in pace_traces if len(t.y) > 0], mode='text',
-                       textposition='middle left', showlegend=False, hoverinfo='none'))
-    if rwk:
-        wk_annotations = {'dx': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
-                          'dy': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
-                          'dt': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
-                          'cx': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)],
-                          'cy': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)],
-                          'ct': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)],
-                          'px': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y3')],
-                          'py': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y3')],
-                          'pt': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y3')]
-                          }
-        wk_traces.append(
-            go.Scatter(x=wk_annotations['dx'], y=wk_annotations['dy'], text=wk_annotations['dt'], mode='text',
-                       textposition='middle left', showlegend=False, hoverinfo='none', ))
-        wk_traces.append(
-            go.Scatter(x=wk_annotations['px'], y=wk_annotations['py'], text=wk_annotations['pt'], yaxis='y3',
-                       mode='text', textposition='middle left', showlegend=False, ))
-        wk_traces.append(
-            go.Scatter(x=wk_annotations['cx'], y=wk_annotations['cy'], text=wk_annotations['ct'], mode='text',
-                       textposition='middle left', showlegend=False, hoverinfo='none', ))
+                go.Scatter(x=wk_annotations['cx'], y=wk_annotations['cy'], text=wk_annotations['ct'], mode='text',
+                           textposition='middle left', showlegend=False, hoverinfo='none', ))
 
     figs = []
     img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
