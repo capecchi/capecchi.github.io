@@ -149,16 +149,20 @@ def manual_tracking_plots(client):
     rb = plotly.colors.sequential.RdBu_r
     tmin, tmax = 20., 80.
     rangelist = np.append(np.append([-np.inf], np.linspace(tmin, tmax, endpoint=True, num=len(rb) - 1)), np.inf)
+    npswt_prior, npswt_latest = np.array(npswt[:-1]), np.array([npswt[-1]])
+    nptmp_prior, nptmp_latest = np.array(nptemp[:-1]), np.array([nptemp[-1]])
     for i, col in enumerate(rb):
         man_fig.add_trace(
-            go.Histogram(x=npswt[np.where((rangelist[i] <= nptemp) & (nptemp < rangelist[i + 1]))],
+            go.Histogram(x=npswt_prior[np.where((rangelist[i] <= nptmp_prior) & (nptmp_prior < rangelist[i + 1]))],
                          xbins=dict(start=0, end=3.0, size=0.1),
                          marker_color=rb[i], name=f'{rangelist[i]:.0f}-{rangelist[i + 1]:.0f}'), row=1, col=1)
+        if len(np.where((rangelist[i] <= nptmp_latest) & (nptmp_latest < rangelist[i + 1]))[0]) != 0:
+            man_fig.add_trace(
+                go.Histogram(
+                    x=npswt_latest[np.where((rangelist[i] <= nptmp_latest) & (nptmp_latest < rangelist[i + 1]))],
+                    xbins=dict(start=0, end=3.0, size=0.1), marker=dict(line=dict(width=2, color='black')),
+                    marker_color=rb[i], name=f'{rangelist[i]:.0f}-{rangelist[i + 1]:.0f}'), row=1, col=1)
 
-    # man_fig.add_trace(go.Histogram(x=swtrt_arr[:-1], xbins=dict(start=0, end=3.0, size=0.1), marker_color=colors[1]),
-    #                   row=2, col=1)  # sweatrate histogram
-    # man_fig.add_trace(go.Histogram(x=[swtrt_arr[-1]], xbins=dict(start=0, end=3.0, size=0.1), marker_color=colors[2]),
-    #                   row=2, col=1)  # sweatrate histogram
     man_fig.add_trace(go.Scatter(x=dist_arr, y=lit_cons_arr, mode='markers', marker_color=colors[2], showlegend=False),
                       row=2, col=1)  # fluid consumption
     man_fig.add_trace(go.Scatter(x=dist_arr, y=cal_cons_arr, mode='markers', yaxis='y4', xaxis='x2',
