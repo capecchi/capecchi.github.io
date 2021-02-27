@@ -111,8 +111,12 @@ def manual_tracking_plots(client):
             runid_arr.append(run.id)
             date_arr.append(run.start_date_local)
             dist_arr.append(unithelper.miles(run.distance).num)
-            temp_arr.append(run.average_temp * 9. / 5 + 32.)
-
+            # TEMP DATA BAD: THIS IS TEMP OF ALTITUDE SENSOR
+            # temp_arr.append(run.average_temp * 9. / 5 + 32.)
+            # attached Klimat app to put weather into description
+            # however run.description == None for some reason so we need to pull it specifically as below
+            desc = client.get_activity(run.id).description
+            temp_arr.append(float(desc.split('°')[0].split(' ')[-1]))  # comes in in °F so don't need to convert
             # initialize vars (need these next 4 lines)
             shoes_worn = 'catchall'
             liters_consumed = 0.
@@ -145,23 +149,31 @@ def manual_tracking_plots(client):
     # make some figs
     colors = plotly.colors.DEFAULT_PLOTLY_COLORS
     man_fig = make_subplots(rows=3, cols=1, vertical_spacing=.12)
-    nptemp, npswt = np.array(temp_arr), np.array(swtrt_arr)
+    # restrict to runs between 4-10miles
+    nptemp = np.array([temp_arr[i] for i in np.arange(len(temp_arr)) if 10. >= dist_arr[i] >= 4.])
+    npswt = np.array([swtrt_arr[i] for i in np.arange(len(temp_arr)) if 10. >= dist_arr[i] >= 4.])
+    # nptemp, npswt = np.array(temp_arr), np.array(swtrt_arr)
     rb = plotly.colors.sequential.RdBu_r
     tmin, tmax = 20., 80.
     rangelist = np.append(np.append([-np.inf], np.linspace(tmin, tmax, endpoint=True, num=len(rb) - 1)), np.inf)
-    npswt_prior, npswt_latest = np.array(npswt[:-1]), np.array([npswt[-1]])
-    nptmp_prior, nptmp_latest = np.array(nptemp[:-1]), np.array([nptemp[-1]])
+    lastrunbin, numinlastbin = (np.nan, np.nan), np.nan
     for i, col in enumerate(rb):
+        if rangelist[i] == -np.inf:
+            lbl = f'<{rangelist[i + 1]:.0f}'
+        elif rangelist[i + 1] == np.inf:
+            lbl = f'>{rangelist[i]:.0f}'
+        else:
+            lbl = f'{rangelist[i]:.0f}-{rangelist[i + 1]:.0f}'
         man_fig.add_trace(
-            go.Histogram(x=npswt_prior[np.where((rangelist[i] <= nptmp_prior) & (nptmp_prior < rangelist[i + 1]))],
-                         xbins=dict(start=0, end=3.0, size=0.1),
-                         marker_color=rb[i], name=f'{rangelist[i]:.0f}-{rangelist[i + 1]:.0f}'), row=1, col=1)
-        if len(np.where((rangelist[i] <= nptmp_latest) & (nptmp_latest < rangelist[i + 1]))[0]) != 0:
-            man_fig.add_trace(
-                go.Histogram(
-                    x=npswt_latest[np.where((rangelist[i] <= nptmp_latest) & (nptmp_latest < rangelist[i + 1]))],
-                    xbins=dict(start=0, end=3.0, size=0.1), marker=dict(line=dict(width=2, color='black')),
-                    marker_color=rb[i], name=f'{rangelist[i]:.0f}-{rangelist[i + 1]:.0f}'), row=1, col=1)
+            go.Histogram(x=npswt[np.where((rangelist[i] <= nptemp) & (nptemp < rangelist[i + 1]))],
+                         xbins=dict(start=0, end=3.0, size=0.1), marker=dict(color=rb[i], line=dict(width=0.5)),
+                         name=lbl), row=1, col=1)
+        if len(np.where((rangelist[i] <= nptemp[-1]) & (nptemp[-1] < rangelist[i + 1]))[0]) != 0:
+            lastrunbin = (np.floor(npswt[-1] * 10.) / 10., np.ceil(npswt[-1] * 10.) / 10.)
+            # count number where sweatrate is in bin, and temp is below current rangelist bin max so we overlay properly
+            numinlastbin = len(np.where((npswt < lastrunbin[1]) & (npswt >= lastrunbin[0]) & (nptemp < rangelist[i+1]))[0])
+    man_fig.add_shape(type='rect', x0=lastrunbin[0], y0=numinlastbin - 1, x1=lastrunbin[1], y1=numinlastbin,
+                      line=dict(width=2, color='black'), row=1, col=1)
 
     man_fig.add_trace(go.Scatter(x=dist_arr, y=lit_cons_arr, mode='markers', marker_color=colors[2], showlegend=False),
                       row=2, col=1)  # fluid consumption
