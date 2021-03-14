@@ -175,23 +175,23 @@ def manual_tracking_plots(client):
     man_fig.add_shape(type='rect', x0=lastrunbin[0], y0=numinlastbin - 1, x1=lastrunbin[1], y1=numinlastbin,
                       line=dict(width=2, color='black'), row=1, col=1)
 
+    man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', marker_color=colors[4], showlegend=False),
+                      row=2, col=1)  # shoe mileage
+
     man_fig.add_trace(go.Scatter(x=dist_arr, y=lit_cons_arr, mode='markers', marker_color=colors[2], showlegend=False),
-                      row=2, col=1)  # fluid consumption
-    man_fig.add_trace(go.Scatter(x=dist_arr, y=cal_cons_arr, mode='markers', yaxis='y4', xaxis='x2',
+                      row=3, col=1)  # fluid consumption
+    man_fig.add_trace(go.Scatter(x=dist_arr, y=cal_cons_arr, mode='markers', yaxis='y4', xaxis='x3',
                                  marker_color=colors[3], showlegend=False))  # calorie consumption
     yr = np.ceil(max([max(lit_cons_arr), max(cal_cons_arr) / 500.]))
-
-    man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', marker_color=colors[4], showlegend=False),
-                      row=3, col=1)  # shoe mileage
 
     man_fig.layout.update(height=750, barmode='stack',
                           xaxis1=dict(title='Sweat Loss Rate (L/h)', range=[0, 3]),
                           xaxis2=dict(title='Distance (miles)'),
                           xaxis3=dict(title='Cumulative Mileage'),
                           yaxis1=dict(title='Count'),
-                          yaxis2=dict(title='Liters Consumed', color=colors[2], range=[-.5, yr]),
+                          yaxis3=dict(title='Liters Consumed', color=colors[2], range=[-.5, yr]),
                           yaxis4=dict(title='Calories Consumed', color=colors[3], side='right',
-                                      overlaying='y2', range=[-250, yr * 500]),
+                                      overlaying='y3', range=[-250, yr * 500]),
                           showlegend=True, legend_title_text='Temp (F)')
     man_fig.update_yaxes(automargin=True)
 
