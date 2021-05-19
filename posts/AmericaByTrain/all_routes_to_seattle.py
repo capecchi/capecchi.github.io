@@ -2,7 +2,7 @@ def main():
     import json
     import glob
 
-    local = 'C:/Python34/America_By_Train/'
+    local = 'F:/Python34/America_By_Train/'
     fn = 'routes_to_seattle.geojson'
     f = open(local+fn,'w')
     f.write('{"type":"FeatureCollection",\n"features": [\n')

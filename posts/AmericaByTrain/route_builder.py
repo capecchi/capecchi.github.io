@@ -11,7 +11,7 @@ def main(ptA, iarr, ptB, fn, level, iredund,arrive=True):
     if level >= 20:
         print('TOO HIGH----------------------------')
         j = 1
-        local = 'C:/Python34/America_By_Train/'
+        local = 'F:/Python34/America_By_Train/'
         rb = local+'route_builder/'
         ftype = '.npz'
         append = ''
@@ -30,7 +30,7 @@ def main(ptA, iarr, ptB, fn, level, iredund,arrive=True):
     else:
         print(len(ptA),'- level',level, ptA[-1])
             
-        local = 'C:/Python34/America_By_Train/'
+        local = 'F:/Python34/America_By_Train/'
         direc = 'C:/Users/Owner/Documents/GitHub/capecchi.github.io/posts/AmericaByTrain/'
 
         with open(direc+'amtrak.geojson') as f:

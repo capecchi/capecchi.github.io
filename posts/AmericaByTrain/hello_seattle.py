@@ -4,7 +4,7 @@ def main():
     import json
     import os
     
-    local = 'C:/Python34/America_By_Train/'
+    local = 'F:/Python34/America_By_Train/'
     rb = local+'route_builder/'
 
     geos = glob.glob(rb+'*.geojson')

@@ -4,7 +4,7 @@ def main():
     import numpy as np
     import os
     
-    rb = 'C:/Python34/America_By_Train/route_builder/'
+    rb = 'F:/Python34/America_By_Train/route_builder/'
     geos = glob.glob(rb+'*.geojson')
     size = [(f,os.path.getsize(f)) for f in geos]
     size.sort(key=lambda filename: filename[1],reverse=True)

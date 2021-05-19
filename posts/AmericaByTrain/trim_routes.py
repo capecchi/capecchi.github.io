@@ -26,7 +26,7 @@ def main():
     import glob
     import numpy as np
 
-    local = 'C:/Python34/America_By_Train/empire_builder_all/'
+    local = 'F:/Python34/America_By_Train/empire_builder_all/'
     trimmed = local + 'trimmed/'
     geos = glob.glob(local+'*.geojson')
     index = np.arange(len(geos))
