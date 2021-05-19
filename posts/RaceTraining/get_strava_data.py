@@ -103,7 +103,7 @@ def manual_tracking_plots(client):
             shoes_available = []
             for i in sho.index:
                 if math.isnan(sho['retired_date'][i]):
-                    if run.start_date_local > sho['start_date'][i]:
+                    if run.start_date_local >= sho['start_date'][i]:
                         shoes_available.append(sho['shoe_options'][i])
                 else:
                     if sho['start_date'][i] < run.start_date_local < sho['retired_date'][i]:
