@@ -14,7 +14,8 @@ class MyForm(Form):
     # max_effort = SubmitField('Max Effort Analysis')
 
 
-redirect_url = 'https://www.strava.com/oauth/authorize?client_id=34049&redirect_uri=http://localhost:8080&response_type=code&scope=activity:read_all'
+port = 8888
+redirect_url = f'https://www.strava.com/oauth/authorize?client_id=34049&redirect_uri=http://localhost:{port}&response_type=code&scope=activity:read_all'
 
 
 @route('/')
@@ -36,5 +37,5 @@ def home():
         return redirect(redirect_url)
 
 
-run(host='localhost', port=8080, debug=True, reloader=True)
+run(host='localhost', port=port, debug=True, reloader=True)
 hi='hello'

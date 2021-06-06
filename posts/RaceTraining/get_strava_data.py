@@ -116,7 +116,10 @@ def manual_tracking_plots(client):
             # attached Klimat app to put weather into description
             # however run.description == None for some reason so we need to pull it specifically as below
             desc = client.get_activity(run.id).description
-            temp_arr.append(float(desc.split('°')[0].split(' ')[-1]))  # comes in in °F so don't need to convert
+            if desc is None:
+                temp_arr.append(np.nan)
+            else:
+                temp_arr.append(float(desc.split('°')[0].split(' ')[-1]))  # comes in in °F so don't need to convert
             # initialize vars (need these next 4 lines)
             shoes_worn = 'catchall'
             liters_consumed = 0.
