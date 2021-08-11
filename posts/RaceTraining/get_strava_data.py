@@ -155,6 +155,10 @@ def manual_tracking_plots(client):
     # restrict to runs between 4-10miles
     nptemp = np.array([temp_arr[i] for i in np.arange(len(temp_arr)) if 10. >= dist_arr[i] >= 4.])
     npswt = np.array([swtrt_arr[i] for i in np.arange(len(temp_arr)) if 10. >= dist_arr[i] >= 4.])
+    # drop nan values
+    bool_notnan = ~np.isnan(nptemp) & ~np.isnan(npswt)
+    nptemp, npswt = nptemp[bool_notnan], npswt[bool_notnan]
+
     # nptemp, npswt = np.array(temp_arr), np.array(swtrt_arr)
     rb = plotly.colors.sequential.RdBu_r
     tmin, tmax = 20., 80.
@@ -203,7 +207,7 @@ def manual_tracking_plots(client):
 
 def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True, rcal=True, rswt=True):
     # debugging manual plot
-    rsvd, rcal, rcum, rswt = False, False, False, True
+    # rsvd, rcal, rcum, rswt = False, False, False, True
 
     races = get_past_races(trail=True, road=False)
     races.update({'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
