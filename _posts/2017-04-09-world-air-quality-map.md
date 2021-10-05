@@ -4,7 +4,6 @@ title: World Air Quality Map
 date: 2017-04-09
 excerpt: Mapping air quality data from around the world.
 image: /images/posts/monthly_data.png
-project: true
 tags: Mapbox web-scraper pollution geojson
 active: True
 ---

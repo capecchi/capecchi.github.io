@@ -94,6 +94,10 @@ def manual_tracking_plots(client):
     cal_cons_arr = list(df['Calories Consumed'].values)  # to help plan food
     cal_desc_arr = list(df['Calorie Description'].values)
 
+    # debugging
+    # wt = client.get_activities(after=datetime.datetime(2021,8,16,0,0),before=datetime.datetime(2021,8,16,13,40))
+    # list(wt)
+
     activ_since_strt_date = list(client.get_activities(after=analysis_startdate, before=datetime.datetime.utcnow()))
     runs_since_strt_date = [act for act in activ_since_strt_date if act.type == 'Run']
     runs_since_strt_date = runs_since_strt_date[::-1]  # put in chronological order
