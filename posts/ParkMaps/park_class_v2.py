@@ -7,7 +7,7 @@ Create a class object for a park.
 from typing import List
 import matplotlib.pyplot as plt
 import uuid
-from projects.ParkMaps.helpers import *
+from posts.ParkMaps.helpers import *
 
 
 class SomethingHappened(Exception):
@@ -27,18 +27,14 @@ class Junction:
 
 
 class Segment:
-	def __init__(self, coords, junction1: Junction = None, junction2: Junction = None, weight=1):
-		if junction1 is None:
-			junction1 = Junction(coords[0, :])
-		if junction2 is None:
-			junction2 = Junction(coords[-1, :])
+	def __init__(self, coords, junction1: Junction, junction2: Junction, weight=1):
 		self.coords = coords  # lon, lat, alt
 		self.weight = weight  # multiple runs of a segment will average together
 		self.end1 = junction1
 		self.end2 = junction2
 		self.id = uuid.uuid1().__str__()
 		self.length = None
-		# self.check()
+		self.check()
 		self.update_length()
 	
 	def check(self):
@@ -47,9 +43,8 @@ class Segment:
 		# raise SomethingHappened('Oops, unexpected large distance. Plot segment and endpoints and figure it out...')
 		if dist.distance(self.end2.coord[::-1][1:], self.coords[-1, ::-1][1:]).m > 10:
 			print('OOPS! UNEXPECTED LARGE DISTANCE, something is broken but carrying on...')
-	
-	# raise SomethingHappened('Oops, unexpected large distance. Plot segment and endpoints and figure it out...')
-	# print('Segment seems to be in good condition')
+		# raise SomethingHappened('Oops, unexpected large distance. Plot segment and endpoints and figure it out...')
+		# print('Segment seems to be in good condition')
 	
 	def update_length(self):
 		length = 0
@@ -58,13 +53,10 @@ class Segment:
 			length += dist.distance(self.coords[i, ::-1][1:], self.coords[i + 1, ::-1][1:]).m
 		length += dist.distance(self.end2.coord[::-1][1:], self.coords[-1, ::-1][1:]).m
 		self.length = length
-	
-	# print('segment length updated to {:.2f}m'.format(self.length))
+		# print('segment length updated to {:.2f}m'.format(self.length))
 	
 	def plot(self):
-		c = np.append(np.append([self.end1.coord], self.coords, axis=0), [self.end2.coord], axis=0)  # stick on ends
-		plt.plot(c[:, 0], c[:, 1], '-')
-		plt.plot([self.end1.coord[0], self.end2.coord[0]], [self.end1.coord[1], self.end2.coord[1]], 's')
+		plt.plot(self.coords[:, 0], self.coords[:, 1], '-')
 
 
 def plot_runs(runs: dict, ax):
@@ -145,7 +137,6 @@ class Park:
 		j2 = Junction(run_coords[-1], True)
 		seg = Segment(run_coords, j1, j2)
 		self.add_segment(seg)
-		self.look_for_junctions(seg)
 		self.scan_for_consistency()  # check for consistency between existing segments and junctions
 	
 	def scan_for_consistency(self):
@@ -180,9 +171,6 @@ class Park:
 			if j1.weight > 2:
 				a = 1
 			self.changeout_junction(j_from=j2, j_to=j1)
-			return True
-		else:
-			return False
 	
 	def changeout_junction(self, j_from=None, j_to=None):
 		seg: Segment
@@ -211,11 +199,10 @@ class Park:
 		if is_new:
 			if not junction.trailhead:
 				print('---> NEW JUNCTION ({})'.format(len(self.junctions)))
-			# self.plot()
-			# junction.plot(color='g')
-			# plt.show()
+				# self.plot()
+				# junction.plot(color='g')
 			self.junctions.append(junction)
-	
+		
 	def add_segment(self, seg: Segment):
 		# print('adding segment')
 		self.segments.append(seg)
@@ -225,88 +212,6 @@ class Park:
 		if seg.end2.id not in junc_ids:
 			self.add_junction(seg.end2)
 	
-	def analyze_close_approach(self, s1: Segment, s2: Segment):
-		# when analyzing close approaches, we chop off area around endpoints so that sequential segments don't look like they overlap
-		s1coords = chop_off_ends(s1.coords)
-		s2coords = chop_off_ends(s2.coords)
-		Npts = 50
-		speedup1 = int(np.ceil(len(s2coords) / Npts))  # want N points to analyze a run  # todo: justify this speedup
-		speedup2 = int(np.ceil(len(s2coords) / Npts))
-		
-		if speedup1 == 0:
-			a=1
-		# seg1 onto seg2
-		seg1on2_close_approach = []
-		for ii, pt in enumerate(s1coords[::speedup1]):  # start with every nth pt just for speed
-			# print('{}% done'.format(ii * 100. / len(seg1.coords[::speedup1])))
-			min_dist, _ = point_to_route_min_dist(pt, s2coords)
-			seg1on2_close_approach.append(min_dist)
-		# plt.plot(seg1on2_close_approach)  # let's see what this looks like
-		
-		# seg2 onto seg1
-		seg2on1_close_approach = []
-		for ii, pt in enumerate(s2coords[::speedup2]):  # start with every 50th pt just for speed
-			# print('{}% done'.format(ii * 100. / len(seg2.coords[::speedup2])))
-			min_dist, _ = point_to_route_min_dist(pt, s1coords)
-			seg2on1_close_approach.append(min_dist)
-		# plt.plot(seg2on1_close_approach)  # let's see what this looks like
-		
-		i1on2gt50 = [ca > 50 for ca in seg1on2_close_approach]
-		i2on1gt50 = [ca > 50 for ca in seg2on1_close_approach]
-		
-		return i1on2gt50, i2on1gt50, speedup1, speedup2
-	
-	def look_for_junctions(self, seg1: Segment, seg2: Segment = None):
-		# break up into ~1000m segments to compare
-		if seg2 is None:
-			seg2 = Segment(seg1.coords, seg1.end1, seg1.end2)
-		junctions = []
-		ni1 = int(len(seg1.coords[:, 0]) / np.floor(seg1.length / 1000.))  # num indices for sub-segment >= 1km
-		ni2 = int(len(seg2.coords[:, 0]) / np.floor(seg2.length / 1000.))
-		seg1_shorts, seg2_shorts = [], []
-		i1, i2 = 0, 0
-		while i1 < len(seg1.coords[:, 0]) - ni1:
-			seg1_shorts.append(Segment(seg1.coords[i1:i1 + ni1, :]))
-			i1 += int(ni1 / 2.)  # shift by half
-		while i2 < len(seg2.coords[:, 0]) - ni2:
-			seg2_shorts.append(Segment(seg2.coords[i2:i2 + ni2, :]))
-			i2 += int(ni2 / 2.)
-		
-		junction_found = False
-		for short1 in seg1_shorts:
-			for short2 in seg2_shorts:
-				if point_to_point_dist(short1.end1.coord,
-				                       short2.end1.coord) < 2000:  # if endpoints are > 2km apart they'll never intersect and we can skip for SPEED
-					i1on2gt50, i2on1gt50, speedup1, speedup2 = self.analyze_close_approach(short1, short2)
-					
-					if any(i1on2gt50) and not all(i1on2gt50) and any(i2on1gt50):
-						# suffices to find only a single junction since we'll then chop up existing segments and re-analyze
-						
-						for i, pt in enumerate(short1.coords):
-							min_dis, _ = point_to_route_min_dist(pt, short2.coords)
-							if i == 0:
-								together = (min_dis < 50)
-							together_now = (min_dis < 50)
-							if together_now != together:  # routes just diverged or converged
-								together = together_now
-								_, i2 = point_to_route_min_dist(short1.coords[i, :],
-								                                short2.coords)  # get closest point on short2
-								_, i1 = point_to_route_min_dist(short2.coords[i2, :],
-								                                short1.coords)  # get closest point on short1 from point on short2 close to original index
-								possible_coords = (short1.coords[i1, :] + short2.coords[i2, :]) / 2.
-								if point_to_point_dist(possible_coords, short1.end1.coord) > 50 and \
-										point_to_point_dist(possible_coords, short1.end2.coord) > 50 and \
-										point_to_point_dist(possible_coords, short2.end1.coord) > 50 and \
-										point_to_point_dist(possible_coords, short2.end2.coord) > 50:
-									junc = Junction(possible_coords)
-									self.add_junction(junc)
-									junction_found = True
-									break  # break out of enumerating short1.coords
-				if junction_found:
-					break  # break out of seg2_shorts loop
-			if junction_found:
-				break  # break out of seg1_shorts loop
-	
 	def compare_segments(self, seg1: Segment, seg2: Segment):
 		# print('comparing segments')
 		# this is the heart of things
@@ -315,7 +220,28 @@ class Park:
 		# If disjoint we do nothing
 		# If both close and far away we identify and add new junctions to self.junctions or average existing junctions together
 		
-		i1on2gt50, i2on1gt50, _, _ = self.analyze_close_approach(seg1, seg2)
+		Npts = 50
+		speedup1 = int(np.ceil(len(seg1.coords) / Npts))  # want N points to analyze a run  # todo: justify this speedup
+		speedup2 = int(np.ceil(len(seg2.coords) / Npts))
+		
+		# seg1 onto seg2
+		seg1on2_close_approach = []
+		for ii, pt in enumerate(seg1.coords[::speedup1]):  # start with every nth pt just for speed
+			# print('{}% done'.format(ii * 100. / len(seg1.coords[::speedup1])))
+			min_dist, _ = point_to_route_min_dist(pt, seg2.coords)
+			seg1on2_close_approach.append(min_dist)
+		# plt.plot(seg1on2_close_approach)  # let's see what this looks like
+		
+		# seg2 onto seg1
+		seg2on1_close_approach = []
+		for ii, pt in enumerate(seg2.coords[::speedup2]):  # start with every 50th pt just for speed
+			# print('{}% done'.format(ii * 100. / len(seg2.coords[::speedup2])))
+			min_dist, _ = point_to_route_min_dist(pt, seg1.coords)
+			seg2on1_close_approach.append(min_dist)
+		# plt.plot(seg2on1_close_approach)  # let's see what this looks like
+		
+		i1on2gt50 = [ca > 50 for ca in seg1on2_close_approach]
+		i2on1gt50 = [ca > 50 for ca in seg2on1_close_approach]
 		
 		if not any(i1on2gt50) and not any(i2on1gt50):  # seg1/2 never >50m from each other, consider same  and average
 			# todo: validate choice of 50m here
@@ -325,26 +251,44 @@ class Park:
 				raise SomethingHappened('segment id missing')
 			self.average_segments(seg1, seg2)
 		elif all(i1on2gt50):  # seg1 never within 50m of seg2, consider disjoint, no action needed (?)
-			a = 1
+			a=1
 			pass
 		elif (not any(i1on2gt50) and any(i2on1gt50)) or (not any(i2on1gt50) and any(i1on2gt50)):
 			# one segment is just a sub-segment of the other, do nothing for now, larger segment will be chopped later
-			a = 1
+			a=1
 			pass
-		else:
-			raise SomethingHappened("Here there be dragons")
-			a = 1  # THIS SHOULDN"T HAPPEN- we looked for junctions already
+		else:  # new junctions to be found! seg1/2 both within and further apart than 50m, so find out where
+			# *50 below is to return the true indices of the seg1/2 coord arrays since we're using ::50 above
+			# indices where dist > 50m but previous is not
+			# todo: I think there's an issue here with disjoint segments that share an endpoint- INVESTIGATE!
+			i1_junc_candidates = [(i * speedup1, (i - 1) * speedup1) for i in np.arange(len(i1on2gt50))[1:] if
+			                      i1on2gt50[i] is True and i1on2gt50[i - 1] is False]
+			i1_junc_candidates.extend(
+				[(i * speedup1, (i + 1) * speedup1) for i in np.arange(len(i1on2gt50))[:-1] if
+				 i1on2gt50[i] is True and i1on2gt50[i + 1] is False]
+			)
+			i2_junc_candidates = [(i * speedup2, (i - 1) * speedup2) for i in np.arange(len(i2on1gt50))[1:] if
+			                      i2on1gt50[i] is True and i2on1gt50[i - 1] is False]
+			i2_junc_candidates.extend(
+				[(i * speedup2, (i + 1) * speedup2) for i in np.arange(len(i2on1gt50))[:-1] if
+				 i2on1gt50[i] is True and i2on1gt50[i + 1] is False]
+			)
+			# todo: debug this whole thing, visualize when/where it thinks things are junctioning
+			new_j1 = identify_junction_indices(i1_junc_candidates, seg1, seg2)
+			new_j2 = identify_junction_indices(i2_junc_candidates, seg2, seg1)
+			for j in new_j1:
+				self.add_junction(Junction(seg1.coords[j]))
+			for j in new_j2:
+				self.add_junction(Junction(seg2.coords[j]))
 	
 	def average_segments(self, seg1: Segment, seg2: Segment):
 		print('averaging segments together')
 		# average seg2 onto seg1
-		end1s_same = self.compare_junctions(seg1.end1, seg2.end1)
-		_ = self.compare_junctions(seg1.end1, seg2.end2)
-		_ = self.compare_junctions(seg1.end2, seg2.end1)
-		_ = self.compare_junctions(seg1.end2, seg2.end2)
+		self.compare_junctions(seg1.end1, seg2.end1)
+		self.compare_junctions(seg1.end1, seg2.end2)
+		self.compare_junctions(seg1.end2, seg2.end1)
+		self.compare_junctions(seg1.end2, seg2.end2)
 		
-		if not end1s_same:  # reverse seg2 so directions match up
-			seg2.coords = seg2.coords[::-1]
 		d1 = [point_to_point_dist(seg1.coords[i], seg1.coords[i + 1]) for i in range(len(seg1.coords) - 1)]
 		d1.insert(0, 0)
 		d2 = [point_to_point_dist(seg2.coords[i], seg2.coords[i + 1]) for i in range(len(seg2.coords) - 1)]
@@ -371,44 +315,37 @@ class Park:
 		averaged_coords[:, 2] = alt_avg
 		if len(averaged_coords) < 1:
 			a = 1
-		averaged_seg = Segment(averaged_coords, seg1.end1, seg1.end2, weight=seg2.weight + seg1.weight)
+		averaged_seg = Segment(averaged_coords, seg2.end1, seg2.end2, weight=seg2.weight + seg1.weight)
 		if averaged_seg.weight > 2:
 			a = 1
 		self.segments[[seg.id for seg in self.segments].index(seg1.id)] = averaged_seg
-	
+		
 	def chop_segment(self, segs: List[Segment], junc: Junction):
 		segmentation = []
 		for seg in segs:
 			# this is the slow bit
-			# identify indices to chop, could be multiple in single segment (think running past the start)
-			dist = point_to_route_min_dist(junc.coord, seg.coords, return_dist=True)
-			# todo: verify min length of 100 in next line
-			inear = np.where(np.array(dist) < 100)[0]
-			inear_arrays = consecutive_arrays(inear)
-			ichop = []
-			for iarr in inear_arrays:
-				min_dist, iarr_index = point_to_route_min_dist(junc.coord, seg.coords[iarr, :])
-				close_approach_index = iarr[iarr_index]
-				# todo: verify min length of 100 in next line
-				if index_path_dist_to_ends(close_approach_index, seg.coords) > 100.:
-					ichop.append(close_approach_index)
-				
-			if len(ichop) > 0:  # found indices to chop
-				for n, ic in enumerate(ichop):
-					if n == 0:
-						chopped_coords = np.append(seg.coords[:ic], [junc.coord], axis=0)
-						chopped_seg = Segment(chopped_coords, seg.end1, junc, weight=seg.weight)  # pass on weight
-					else:
-						chopped_coords = np.append([junc.coord], seg.coords[ichop[n-1]:ic], axis=0)
-						chopped_coords = np.append(chopped_coords, [junc.coord], axis=0)
-						chopped_seg = Segment(chopped_coords, junc, junc, weight=seg.weight)
-					segmentation.append(chopped_seg)
-					if n == len(ichop)-1:
-						chopped_coords = np.append([junc.coord], seg.coords[ic:], axis=0)
-						chopped_seg = Segment(chopped_coords, junc, seg.end2, weight=seg.weight)
-						segmentation.append(chopped_seg)
+			# todo: verify min length of 50 in next line
+			if junc.id != seg.end1.id and junc.id != seg.end2.id and seg.length > 50:  # don't need to chop a segment using an end
+				min_dist, close_approach_index = point_to_route_min_dist(junc.coord, seg.coords)
+				near_point = seg.coords[close_approach_index]
+				# todo: validate choice of 10m on next line
+				junction_mid_segment = min_dist < 10 < point_to_point_dist(near_point, seg.end1.coord) and \
+				                       point_to_point_dist(near_point, seg.end2.coord) > 10
+				if junction_mid_segment:
+					chopped_coords1 = np.append(seg.coords[:close_approach_index], [junc.coord], axis=0)
+					chopped_coords2 = np.append([junc.coord], seg.coords[close_approach_index:], axis=0)
+					chopped_seg1 = Segment(chopped_coords1, seg.end1, junc, weight=seg.weight)  # pass on weight when
+					chopped_seg2 = Segment(chopped_coords2, junc, seg.end2, weight=seg.weight)  # we chop up segment
+					chopped_seg1.id, chopped_seg2.id = seg.id + '_chop1', seg.id + '_chop2'  # pass on id of parent todo: do we want unique id here?
+					if chopped_seg1.length < 50 or chopped_seg2.length < 50:
+						a = 1
+					segmentation.append(chopped_seg1)
+					segmentation.append(chopped_seg2)
+				else:
+					segmentation.append(seg)
 			else:
 				segmentation.append(seg)
+		
 		self.segments = segmentation
 
 

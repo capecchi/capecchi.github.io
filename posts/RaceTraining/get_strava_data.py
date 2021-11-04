@@ -79,9 +79,9 @@ def manual_tracking_plots(client):
     analysis_startdate = datetime.datetime(2020, 9, 12, 0, 0, 0, 0)  # hard coded start date
     fp = 'C:/Users/Owner/Dropbox/'
     fn = fp + 'training_data.xlsx'
-    sho = pd.read_excel(fn, sheet_name='shoes')
+    sho = pd.read_excel(fn, sheet_name='shoes', engine='openpyxl')
     shoe_options = sho['shoe_options'].values
-    df = pd.read_excel(fn, sheet_name='data')
+    df = pd.read_excel(fn, sheet_name='data', engine='openpyxl')
     runid_arr = list(df['runid'].values)
     date_arr = list(df['Date'].values)
     dist_arr = list(df['Dist (mi)'].values)
@@ -182,7 +182,8 @@ def manual_tracking_plots(client):
         if len(np.where((rangelist[i] <= nptemp[-1]) & (nptemp[-1] < rangelist[i + 1]))[0]) != 0:
             lastrunbin = (np.floor(npswt[-1] * 10.) / 10., np.ceil(npswt[-1] * 10.) / 10.)
             # count number where sweatrate is in bin, and temp is below current rangelist bin max so we overlay properly
-            numinlastbin = len(np.where((npswt < lastrunbin[1]) & (npswt >= lastrunbin[0]) & (nptemp < rangelist[i+1]))[0])
+            numinlastbin = len(
+                np.where((npswt < lastrunbin[1]) & (npswt >= lastrunbin[0]) & (nptemp < rangelist[i + 1]))[0])
     man_fig.add_shape(type='rect', x0=lastrunbin[0], y0=numinlastbin - 1, x1=lastrunbin[1], y1=numinlastbin,
                       line=dict(width=2, color='black'), row=1, col=1)
 
@@ -210,8 +211,8 @@ def manual_tracking_plots(client):
 
 
 def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True, rcal=True, rswt=True):
-    # debugging manual plot
-    # rsvd, rcal, rcum, rswt = False, False, False, True
+    # manual plot
+    rsvd, rcal, rcum, rswt = False, False, False, True
 
     races = get_past_races(trail=True, road=False)
     races.update({'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
