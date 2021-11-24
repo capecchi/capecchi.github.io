@@ -1,16 +1,25 @@
 import json
-import plotly
-from bottle import route, run, template, redirect, view, jinja2_view, request
-from wtforms import Form, SubmitField, HiddenField, StringField
-from posts.RaceTraining.get_strava_data import gather_training_seasons
 import logging
+
+import plotly
+from bottle import route, run, redirect, jinja2_view, request
+from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
+
+from posts.RaceTraining.get_strava_data import gather_training_seasons, get_past_races
+
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    code = HiddenField()
+    option_widget = widgets.CheckboxInput()
 
 
 class MyForm(Form):
-    hi = SubmitField('Update Strava Data')
-    # txt = StringField(default='mystring')
-    # code = HiddenField()
-    # training_analysis = SubmitField('Training Analysis')
+    string_of_files = ['one\r\ntwo\r\nthree\r\n']
+    list_of_files = string_of_files[0].split()
+    files = [(x, x) for x in list_of_files]
+    abc = SelectMultipleField(label='lbl', choices=files)
+    hi = SubmitField('Run Analysis')
     # max_effort = SubmitField('Max Effort Analysis')
 
 
@@ -21,7 +30,6 @@ redirect_url = f'https://www.strava.com/oauth/authorize?client_id=34049&redirect
 @route('/')
 @jinja2_view('home.html')
 def home():
-
     logger = logging.getLogger()
     logger.setLevel(logging.ERROR)
 
@@ -38,4 +46,4 @@ def home():
 
 
 run(host='localhost', port=port, debug=True, reloader=True)
-hi='hello'
+hi = 'hello'

@@ -27,35 +27,65 @@ def get_client(code):
     return client
 
 
-def get_training_data(client, after=datetime.date.today() - datetime.timedelta(days=7), before=datetime.date.today(),
-                      get_cals=True):
-    # race_day = before - datetime.timedelta(days=1)
-    race_day = before.replace(hour=0, minute=0, second=0, microsecond=0)
-
+def get_activities(client, after=datetime.date.today() - datetime.timedelta(days=7), before=datetime.date.today()):
     activities = client.get_activities(after=after, before=before)
     try:
         activities = list(activities)
         activities = activities[::-1]  # reverse order so they're chronological
-        if get_cals:
-            all_days_before = [(a.start_date_local.date() - race_day.date()).days for a in activities]
-            all_cals = [client.get_activity(id).calories for id in [a.id for a in activities]]
-            cum_cals = np.cumsum(all_cals)
-        else:
-            all_days_before, cum_cals = None, None
-        runs = [act for act in activities if act.type == 'Run']
-        runs = [r for r in runs if
-                unithelper.miles(r.distance).num > 2 and unithelper.miles_per_hour(r.average_speed).num > 4]
-        dates = [r.start_date_local.date() for r in runs]
-        days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
-        dist = [unithelper.miles(r.distance).num for r in runs]
-        cum = np.cumsum(dist)
-        pace = [60. / unithelper.miles_per_hour(r.average_speed).num for r in runs]  # min/mile
-        speed = [60 / p for p in pace]  # mph
-        # igood = [i for i in np.arange(len(dist)) if (speed[i] > 4 or dist[i] > 5)]
-        # days_before, dist, cum, pace, speed = days_before[igood], dist[igood], cum[igood], pace[igood], speed[igood]
-        return days_before, dist, cum, pace, speed, all_days_before, cum_cals, dates
+        return activities
     except stravalib.exc.Fault:
-        return None, None, None, None, None, None, None, None
+        return None
+
+
+def get_training_data(client, activities, get_cals=True, before=datetime.date.today()):
+    race_day = before.replace(hour=0, minute=0, second=0, microsecond=0)
+    if get_cals:
+        all_days_before = [(a.start_date_local.date() - race_day.date()).days for a in activities]
+        all_cals = [client.get_activity(id).calories for id in [a.id for a in activities]]
+        cum_cals = np.cumsum(all_cals)
+    else:
+        all_days_before, cum_cals = None, None
+    runs = [act for act in activities if act.type == 'Run']
+    runs = [r for r in runs if
+            unithelper.miles(r.distance).num > 2 and unithelper.miles_per_hour(r.average_speed).num > 4]
+    dates = [r.start_date_local.date() for r in runs]
+    days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
+    dist = [unithelper.miles(r.distance).num for r in runs]
+    cum = np.cumsum(dist)
+    pace = [60. / unithelper.miles_per_hour(r.average_speed).num for r in runs]  # min/mile
+    speed = [60 / p for p in pace]  # mph
+    # igood = [i for i in np.arange(len(dist)) if (speed[i] > 4 or dist[i] > 5)]
+    # days_before, dist, cum, pace, speed = days_before[igood], dist[igood], cum[igood], pace[igood], speed[igood]
+    return days_before, dist, cum, pace, speed, all_days_before, cum_cals, dates
+
+
+def create_calbytype_fig(client, activities, before, img_path):
+    race_day = before.replace(hour=0, minute=0, second=0, microsecond=0)
+    days_before = np.array([(a.start_date_local.date() - race_day.date()).days for a in activities])
+    cals = np.array([client.get_activity(id).calories for id in [a.id for a in activities]])
+    # cum_cals = np.cumsum(all_cals)
+    type = np.array([a.type for a in activities])
+    calbytype_traces = []
+    calbytype_traces2 = []
+
+    for typ in np.unique(type):
+        typecals = np.zeros_like(cals)
+        typecals[type == typ] = cals[type == typ]
+        calbytype_traces.append(
+            go.Scatter(x=days_before, y=np.cumsum(typecals), name=typ, mode='lines+markers', stackgroup='norah'))
+        calbytype_traces2.append(
+            go.Scatter(x=days_before, y=np.cumsum(typecals), name=typ, mode='lines+markers'))
+    dlayout = go.Layout(xaxis=dict(title='Past 18 weeks'),
+                        yaxis=dict(title='Calories (cumulative)', hoverformat='.2f'),
+                        legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
+    dlayout2 = go.Layout(xaxis=dict(title='Past 18 weeks'),
+                        yaxis=dict(title='Calories', hoverformat='.2f'),
+                        legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
+    calbytype_fig1 = go.Figure(data=calbytype_traces, layout=dlayout)
+    calbytype_fig2 = go.Figure(data=calbytype_traces2, layout=dlayout2)
+    calbytype_fig2.write_html(f'{img_path}calbytype.html')
+    print('saved calbytype image')
+    return [calbytype_fig2]
 
 
 def get_past_races(trail=True, road=True):
@@ -65,7 +95,8 @@ def get_past_races(trail=True, road=True):
                       'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
                       'Superior 50k 2019': datetime.datetime(2019, 5, 18),
                       'Batona (virtual) 33M 2020': datetime.datetime(2020, 10, 10),
-                      'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 31)})
+                      'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 31),
+                      'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14)})
     if road:
         races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
                       'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
@@ -210,13 +241,17 @@ def manual_tracking_plots(client):
     return man_fig
 
 
-def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True, rcal=True, rswt=True):
-    # manual plot
-    rsvd, rcal, rcum, rswt = False, False, False, True
+def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True, rcal=True, rswt=True,
+                            calbytype=True):
+    # work on manual plot
+    # rsvd, rcal, rcum, rswt, calbytype = False, False, False, True, False
 
     races = get_past_races(trail=True, road=False)
-    races.update({'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
-                  'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
+    races.update({'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
+
+    # working on cal by type plot
+    # races = OrderedDict({'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
+    # rsvd, rcal, rcum, rswt, calbytype = False, False, False, False, True
 
     wks_18 = datetime.timedelta(weeks=18)
     day_1 = datetime.timedelta(days=1)
@@ -234,24 +269,20 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
     wk_traces = []
     svd_traces = []  # speed vs dist
     colors = plotly.colors.DEFAULT_PLOTLY_COLORS
+    img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
     max_dist = 0
     if rswt:  # get activities for runs with sweat loss data
         man_fig = manual_tracking_plots(client)
     if rsvd:  # get large dataset
-        yrsago = [(datetime.datetime.utcnow() - rd).days / 365. for rd in [races[k] for k in races.keys()] if
-                  (rd - datetime.datetime.utcnow()).days < -10]
+        yrsago = [(datetime.datetime.utcnow() - rd).days / 365. for rd in [races[k] for k in races.keys()]]
         yrsago = [ya + 18 / 52. for ya in yrsago]  # add 18 weeks onto each race
         nyr = np.ceil(max(yrsago))
         nyr = max([nyr, 3])
         nyrs = datetime.timedelta(weeks=52 * nyr)
-        predays, dist, _, _, speed, _, _, dates = get_training_data(client,
-                                                                    datetime.datetime.now().replace(hour=0, minute=0,
-                                                                                                    second=0,
-                                                                                                    microsecond=0) - nyrs,
-                                                                    datetime.datetime.now().replace(hour=0, minute=0,
-                                                                                                    second=0,
-                                                                                                    microsecond=0) + day_1,
-                                                                    get_cals=False)
+        aft = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - nyrs
+        bef = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + day_1
+        activities = get_activities(client, aft, bef)
+        predays, dist, _, _, speed, _, _, dates = get_training_data(client, activities, get_cals=False, before=bef)
         bill_pace = 60. / np.array(speed)  # min/mile
         hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for i, s in
                      enumerate(bill_pace)]
@@ -280,7 +311,8 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
             textposition='middle right', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
         wktot_data.append(go.Bar(x=dates, y=dist, name='runs'))  # width=1,
 
-    if any([rdist, rcum, rwk, rpace, rsvd, rcal]):  # for debugging, if we're not doing any of these plots, skip this
+    if any([rdist, rcum, rwk, rpace, rsvd, rcal,
+            calbytype]):  # for debugging, if we're not doing any of these plots, skip this
         for i, (k, v) in enumerate(races.items()):
             print(k)
             if v > datetime.datetime.now().replace(hour=0, minute=0, second=0,
@@ -289,7 +321,11 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
             else:
                 width = 2
             op = (i + 1.) / len(races.items()) * .75 + .25
-            days_before, dist, cum, pace, speed, adb, cals, dates = get_training_data(client, v - wks_18, v + day_1)
+            activities = get_activities(client, v - wks_18, v + day_1)
+            if k == 'Past 18 weeks' and calbytype:
+                calbytype_figs = create_calbytype_fig(client, activities, v + day_1, img_path)
+            days_before, dist, cum, pace, speed, adb, cals, dates = get_training_data(client, activities,
+                                                                                      before=v + day_1)
             max_dist = max([max(dist), max_dist])
             if rsvd:
                 bill_pace = 60. / np.array(speed)  # min/mile
@@ -317,7 +353,8 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
                 cal_traces.append(
                     go.Scatter(x=adb, y=cals, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
             if rwk:
-                wdb, wd, wc, wp, ws, _, _, _ = get_training_data(client, v - days_to_race - wks_1, v - days_to_race)
+                activities = get_activities(client, v - days_to_race - wks_1, v - days_to_race)
+                wdb, wd, wc, wp, ws, _, _, _ = get_training_data(client, activities, before=v - days_to_race)
                 wk_traces.append(
                     go.Scatter(x=wdb, y=wd, yaxis='y2', opacity=op, name=k, mode='lines+markers',
                                marker=dict(color=colors[i]),
@@ -375,7 +412,9 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
                            textposition='middle left', showlegend=False, hoverinfo='none', ))
 
     figs = []
-    img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
+    if calbytype:
+        for cf in calbytype_figs:
+            figs.append(cf)
     if rsvd:
         svd_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
                                yaxis=dict(title='Speed (miles/hr)', hoverformat='.2f'),
@@ -400,7 +439,7 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
         print('saved dist image')
         figs.append(dist_fig)
     if rcum:
-        clayout = go.Layout(xaxis=dict(title='Days before race'), yaxis=dict(title='Cumulative (miles)'),
+        clayout = go.Layout(xaxis=dict(title='Days before race'), yaxis=dict(title='Distance (cumulative miles)'),
                             legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
         cum_fig = go.Figure(data=cum_traces, layout=clayout)
         cum_fig.write_html(f'{img_path}rta_cum.html')
