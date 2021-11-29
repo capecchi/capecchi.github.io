@@ -79,8 +79,8 @@ def create_calbytype_fig(client, activities, before, img_path):
                         yaxis=dict(title='Calories (cumulative)', hoverformat='.2f'),
                         legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
     dlayout2 = go.Layout(xaxis=dict(title='Past 18 weeks'),
-                        yaxis=dict(title='Calories', hoverformat='.2f'),
-                        legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
+                         yaxis=dict(title='Calories', hoverformat='.2f'),
+                         legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
     calbytype_fig1 = go.Figure(data=calbytype_traces, layout=dlayout)
     calbytype_fig2 = go.Figure(data=calbytype_traces2, layout=dlayout2)
     calbytype_fig2.write_html(f'{img_path}calbytype.html')
@@ -88,19 +88,22 @@ def create_calbytype_fig(client, activities, before, img_path):
     return [calbytype_fig2]
 
 
-def get_past_races(trail=True, road=True):
+def get_past_races(racekeys=None):
     races = OrderedDict({})
-    if trail:
-        races.update({'Superior 50k 2018': datetime.datetime(2018, 5, 19),
-                      'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
-                      'Superior 50k 2019': datetime.datetime(2019, 5, 18),
-                      'Batona (virtual) 33M 2020': datetime.datetime(2020, 10, 10),
-                      'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 31),
-                      'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14)})
-    if road:
-        races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
-                      'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
-                      'TC Marathon 2015': datetime.datetime(2015, 10, 4)})
+    # trail:
+    races.update({'Superior 50k 2018': datetime.datetime(2018, 5, 19),
+                  'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
+                  'Superior 50k 2019': datetime.datetime(2019, 5, 18),
+                  'Batona (virtual) 33M 2020': datetime.datetime(2020, 10, 10),
+                  'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 31),
+                  'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14)})
+    # road:
+    races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
+                  'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
+                  'TC Marathon 2015': datetime.datetime(2015, 10, 4)})
+    # remove races not in racekeys
+    if racekeys is not None:
+        [races.pop(k) for k in list(races.keys()) if k not in racekeys]
     # order chronologically
     races = {k: v for k, v in sorted(races.items(), key=lambda item: item[1])}
     return races
@@ -241,17 +244,13 @@ def manual_tracking_plots(client):
     return man_fig
 
 
-def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False, rsvd=True, rcal=True, rswt=True,
-                            calbytype=True):
-    # work on manual plot
-    # rsvd, rcal, rcum, rswt, calbytype = False, False, False, True, False
+def gather_training_seasons(code, races2analyze=None, plots=None):
+    if plots is None:
+        return []  # empty figs list
 
-    races = get_past_races(trail=True, road=False)
-    races.update({'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
-
-    # working on cal by type plot
-    # races = OrderedDict({'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
-    # rsvd, rcal, rcum, rswt, calbytype = False, False, False, False, True
+    races = get_past_races(racekeys=races2analyze)
+    if 'Past 18 weeks' in races2analyze:
+        races.update({'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
 
     wks_18 = datetime.timedelta(weeks=18)
     day_1 = datetime.timedelta(days=1)
@@ -271,9 +270,9 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
     colors = plotly.colors.DEFAULT_PLOTLY_COLORS
     img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
     max_dist = 0
-    if rswt:  # get activities for runs with sweat loss data
+    if 'rswt' in plots:  # get activities for runs with sweat loss data
         man_fig = manual_tracking_plots(client)
-    if rsvd:  # get large dataset
+    if 'rsvd' in plots:  # get large dataset
         yrsago = [(datetime.datetime.utcnow() - rd).days / 365. for rd in [races[k] for k in races.keys()]]
         yrsago = [ya + 18 / 52. for ya in yrsago]  # add 18 weeks onto each race
         nyr = np.ceil(max(yrsago))
@@ -311,23 +310,24 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
             textposition='middle right', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
         wktot_data.append(go.Bar(x=dates, y=dist, name='runs'))  # width=1,
 
-    if any([rdist, rcum, rwk, rpace, rsvd, rcal,
-            calbytype]):  # for debugging, if we're not doing any of these plots, skip this
+    # if we're not doing any of these plots, skip this
+    calbytype_figs = None
+    if any([p in plots] for p in ['rdist', 'rcum', 'rwk', 'rpace', 'rsvd', 'rcal', 'calbytype']):
         for i, (k, v) in enumerate(races.items()):
             print(k)
-            if v > datetime.datetime.now().replace(hour=0, minute=0, second=0,
-                                                   microsecond=0):  # read: if race day is after today, ie in the future, then solid line plot
+            # read: if race day is after today, ie in the future, then solid line plot
+            if v > datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
                 width = 3
             else:
                 width = 2
             op = (i + 1.) / len(races.items()) * .75 + .25
             activities = get_activities(client, v - wks_18, v + day_1)
-            if k == 'Past 18 weeks' and calbytype:
+            if k == 'Past 18 weeks' and 'calbytype' in plots:
                 calbytype_figs = create_calbytype_fig(client, activities, v + day_1, img_path)
             days_before, dist, cum, pace, speed, adb, cals, dates = get_training_data(client, activities,
                                                                                       before=v + day_1)
             max_dist = max([max(dist), max_dist])
-            if rsvd:
+            if 'rsvd' in plots:
                 bill_pace = 60. / np.array(speed)  # min/mile
                 hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for
                              i, s in enumerate(bill_pace)]
@@ -339,20 +339,20 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
                                                  marker=dict(line=dict(width=3), color='rgba(0,0,0,0)',
                                                              symbol='star-diamond-dot', size=10),
                                                  text=[hovertext[-1]], hovertemplate=hovertemp))
-            if rdist:
+            if 'rdist' in plots:
                 dist_traces.append(
                     go.Scatter(x=days_before, y=dist, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
-            if rcum:
+            if 'rcum' in plots:
                 cum_traces.append(
                     go.Scatter(x=days_before, y=cum, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
-            if rpace:
+            if 'rpace' in plots:
                 pace_traces.append(
                     go.Scatter(x=days_before, y=pace, opacity=op, name=k, mode='lines+markers', line=dict(width=width),
                                hovertemplate='pace: %{y:.2f}<br>dist:%{text}', text=['{:.2f}'.format(d) for d in dist]))
-            if rcal:
+            if 'rcal' in plots:
                 cal_traces.append(
                     go.Scatter(x=adb, y=cals, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
-            if rwk:
+            if 'rwk' in plots:
                 activities = get_activities(client, v - days_to_race - wks_1, v - days_to_race)
                 wdb, wd, wc, wp, ws, _, _, _ = get_training_data(client, activities, before=v - days_to_race)
                 wk_traces.append(
@@ -368,29 +368,29 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
                                line=dict(width=width), showlegend=False, hovertemplate='pace: %{y:.2f}<br>dist:%{text}',
                                text=['{:.2f}'.format(d) for d in wd]))
 
-        if rsvd:
+        if 'rsvd' in plots:
             svd_traces = add_max_effort_curve(svd_traces, max_dist=max_dist)
 
         # append annotation traces
-        if rdist:
+        if 'rdist' in plots:
             dist_arr = [t.y[-1] for t in dist_traces if len(t.y) > 0]
             dist_traces.append(go.Scatter(x=[t.x[-1] for t in dist_traces if len(t.x) > 0], y=dist_arr,
                                           text=[f'{round(t.y[-1], 1)}' for t in dist_traces if len(t.y) > 0],
                                           mode='text',
                                           textposition='middle left', showlegend=False, hoverinfo='none'))
-        if rcum:
+        if 'rcum' in plots:
             cum_traces.append(
                 go.Scatter(x=[t.x[-1] for t in cum_traces if len(t.x) > 0],
                            y=[t.y[-1] for t in cum_traces if len(t.y) > 0],
                            text=[f'{round(t.y[-1], 1)}' for t in cum_traces if len(t.y) > 0], mode='text',
                            textposition='middle left', showlegend=False, hoverinfo='none'))
-        if rpace:
+        if 'rpace' in plots:
             pace_traces.append(
                 go.Scatter(x=[t.x[-1] for t in pace_traces if len(t.x) > 0],
                            y=[t.y[-1] for t in pace_traces if len(t.y) > 0],
                            text=[f'{round(t.y[-1], 1)}' for t in pace_traces if len(t.y) > 0], mode='text',
                            textposition='middle left', showlegend=False, hoverinfo='none'))
-        if rwk:
+        if 'rwk' in plots:
             wk_annotations = {'dx': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
                               'dy': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
                               'dt': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
@@ -412,10 +412,10 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
                            textposition='middle left', showlegend=False, hoverinfo='none', ))
 
     figs = []
-    if calbytype:
+    if 'calbytype' in plots:
         for cf in calbytype_figs:
             figs.append(cf)
-    if rsvd:
+    if 'rsvd' in plots:
         svd_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
                                yaxis=dict(title='Speed (miles/hr)', hoverformat='.2f'),
                                legend=dict(x=1, y=1.02, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
@@ -430,7 +430,7 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
         wktot_fig.write_html(f'{img_path}rta_wktot.html')
         print('saved weekly total image')
         figs.append(wktot_fig)
-    if rdist:
+    if 'rdist' in plots:
         dlayout = go.Layout(xaxis=dict(title='Days before race'),
                             yaxis=dict(title='Distance (miles)', hoverformat='.2f'),
                             legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
@@ -438,28 +438,28 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
         dist_fig.write_html(f'{img_path}rta_dist.html')
         print('saved dist image')
         figs.append(dist_fig)
-    if rcum:
+    if 'rcum' in plots:
         clayout = go.Layout(xaxis=dict(title='Days before race'), yaxis=dict(title='Distance (cumulative miles)'),
                             legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
         cum_fig = go.Figure(data=cum_traces, layout=clayout)
         cum_fig.write_html(f'{img_path}rta_cum.html')
         print('saved cum image')
         figs.append(cum_fig)
-    if rpace:
+    if 'rpace' in plots:
         playout = go.Layout(xaxis=dict(title='Days before race'), yaxis=dict(title='Pace (min/mile)'),
                             legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
         pace_fig = go.Figure(data=pace_traces, layout=playout)
         pace_fig.write_html(f'{img_path}rta_pace.html')
         print('saved pace image')
         figs.append(pace_fig)
-    if rcal:
+    if 'rcal' in plots:
         calayout = go.Layout(xaxis=dict(title='Days before race'), yaxis=dict(title='Calories'),
                              legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
         cal_fig = go.Figure(data=cal_traces, layout=calayout)
         cal_fig.write_html(f'{img_path}rta_cal.html')
         print('saved cal image')
         figs.append(cal_fig)
-    if rwk:
+    if 'rwk' in plots:
         wlayout = go.Layout(legend=dict(orientation='h', y=1.1), xaxis=dict(title='Prior week training', ),
                             yaxis=dict(title='Distance', domain=[0., .3], ),
                             yaxis2=dict(title='Cumulative', domain=[0.35, 0.65]),
@@ -468,19 +468,10 @@ def gather_training_seasons(code, rdist=False, rcum=True, rwk=False, rpace=False
         wk_fig.write_html(f'{img_path}rta_week.html')
         print('saved week image')
         figs.append(wk_fig)
-    if rswt:
+    if 'rswt' in plots:
         man_fig.write_html(f'{img_path}rta_man.html')
         print('saved manual analysis image')
         figs.append(man_fig)
-        # swt_fig.write_html(f'{img_path}rta_swt.html')
-        # print('saved sweatloss image')
-        # figs.append(swt_fig)
-        # h20_fig.write_html(f'{img_path}rta_h20.html')
-        # print('saved h20 consumption image')
-        # figs.append(h20_fig)
-        # sho_fig.write_html(f'{img_path}rta_sho.html')
-        # print('saved shoe mileage image')
-        # figs.append(sho_fig)
 
     return figs
 

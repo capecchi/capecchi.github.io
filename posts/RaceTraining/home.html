@@ -11,6 +11,15 @@
             padding: 20px;
             padding: 20px;
          }
+         div.a {
+            display:inline-block;
+            padding: 20px;
+            vertical-align: top;
+         }
+         ul {
+            list-style-type: none;
+            padding: 5px;
+         }
     </style>
 </head>
 <body>
@@ -18,11 +27,20 @@
 <div>
     <div>
         <form method="post">
-            {% for field in form %}
-            <div>
-                {{ field() }}
+            <div class="a">
+                <h2>Race Options</h2>
+                {{ form.runs }}
             </div>
-            {% endfor %}
+            <div class="a">
+                <h2>Plot Options</h2>
+                {{ form.plots }}
+            </div>
+            <div>
+                {{ form.code }}
+            </div>
+            <div>
+                {{ form.docode }}
+            </div>
         </form>
     </div>
     {% if ids|length > 0 %}
