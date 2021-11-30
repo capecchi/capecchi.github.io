@@ -3,7 +3,7 @@ import logging
 import datetime
 import plotly
 from bottle import run, redirect, jinja2_view, request, get, post
-from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField, PasswordField
+from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField, TextField
 
 from posts.RaceTraining.get_strava_data import gather_training_seasons, get_past_races
 
@@ -26,6 +26,7 @@ class MyForm(Form):
                     ('rswt', 'Sweat Rate Histogram'),
                     ('calbytype', 'Calories (cumulative) by Activity Type over past 18 weeks')]
     code = HiddenField()
+    message = TextField('butt')
     plots = MultiCheckboxField(choices=plot_options)
 
 
@@ -43,7 +44,8 @@ redirect_url = f'https://www.strava.com/oauth/authorize?client_id=34049&redirect
 @jinja2_view('home.html')
 def submit():
     form = MyForm(request.forms)
-    graphs = gather_training_seasons(form.code.data, races2analyze=form.runs.data, plots=form.plots.data)
+    graphs, message = gather_training_seasons(form.code.data, races2analyze=form.runs.data, plots=form.plots.data)
+    form.message = message
     ids = [f'graph-{i}' for i, _ in enumerate(graphs)]
     graphJSON = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
     return {'form': form, 'ids': ids, 'graphs': graphJSON}

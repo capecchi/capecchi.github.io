@@ -245,8 +245,9 @@ def manual_tracking_plots(client):
 
 
 def gather_training_seasons(code, races2analyze=None, plots=None):
-    if plots is None:
-        return []  # empty figs list
+    if len(plots)*len(races2analyze) == 0:  # nothing selected for either races or plots
+        message = 'Nothing to analyze- make selections of both races and plot options'
+        return [], message  # empty figs list
 
     races = get_past_races(racekeys=races2analyze)
     if 'Past 18 weeks' in races2analyze:
@@ -472,8 +473,9 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
         man_fig.write_html(f'{img_path}rta_man.html')
         print('saved manual analysis image')
         figs.append(man_fig)
+    message = 'Analysis Complete'
 
-    return figs
+    return figs, message
 
 
 def add_max_effort_curve(svd_traces, max_dist=100):
