@@ -1,5 +1,6 @@
 import datetime
 import math
+import os
 from collections import OrderedDict
 
 import numpy as np
@@ -111,8 +112,12 @@ def get_past_races(racekeys=None):
 
 def manual_tracking_plots(client):
     analysis_startdate = datetime.datetime(2020, 9, 12, 0, 0, 0, 0)  # hard coded start date
-    fp = 'C:/Users/Owner/Dropbox/'
-    fn = fp + 'training_data.xlsx'
+    if os.path.isdir('C:/Users/Owner/Dropbox/'):
+        fn = 'C:/Users/Owner/Dropbox/training_data.xlsx'
+    elif os.path.isdir('C:/Users/wcapecch/Dropbox/'):
+        fn = 'C:/Users/wcapecch/Dropbox/training_data.xlsx'
+    else:
+        print('cannot locate training data file')
     sho = pd.read_excel(fn, sheet_name='shoes', engine='openpyxl')
     shoe_options = sho['shoe_options'].values
     df = pd.read_excel(fn, sheet_name='data', engine='openpyxl')
@@ -269,7 +274,12 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
     wk_traces = []
     svd_traces = []  # speed vs dist
     colors = plotly.colors.DEFAULT_PLOTLY_COLORS
-    img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
+    if os.path.isdir('C:/Users/Owner/Dropbox/'):
+        img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
+    elif os.path.isdir('C:/Users/wcapecch/Dropbox/'):
+        img_path = 'C:/Users/wcapecch/PycharmProjects/capecchi.github.io/images/posts/'
+    else:
+        print('cannot connect to image directory')
     max_dist = 0
     if 'rswt' in plots:  # get activities for runs with sweat loss data
         man_fig = manual_tracking_plots(client)
