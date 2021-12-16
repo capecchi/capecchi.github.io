@@ -1,41 +1,15 @@
-import datetime
 import math
 import os
 from collections import OrderedDict
 
-import numpy as np
 import pandas as pd
 import plotly
 import plotly.graph_objs as go
-import stravalib.exc
 from plotly.subplots import make_subplots
 from scipy.optimize import minimize
 from stravalib import unithelper
-from stravalib.client import Client
 
-from playground import data_input_popup
-
-
-def get_client(code):
-    client_id = 34049
-    client_secret = '2265a983040000b3b865a0fc333f41cd701dcb5f'
-
-    client = Client()
-    client.authorization_url(34049, 'http://localhost:8080', scope='activity:read_all')
-    token_response = client.exchange_code_for_token(client_id, client_secret, code)
-    client.access_token = token_response['access_token']
-    client.refresh_token = token_response['refresh_token']
-    return client
-
-
-def get_activities(client, after=datetime.date.today() - datetime.timedelta(days=7), before=datetime.date.today()):
-    activities = client.get_activities(after=after, before=before)
-    try:
-        activities = list(activities)
-        activities = activities[::-1]  # reverse order so they're chronological
-        return activities
-    except stravalib.exc.Fault:
-        return None
+from app_tools import *
 
 
 def get_training_data(client, activities, get_cals=True, before=datetime.date.today()):
@@ -64,26 +38,28 @@ def create_calbytype_fig(client, activities, before, img_path):
     race_day = before.replace(hour=0, minute=0, second=0, microsecond=0)
     days_before = np.array([(a.start_date_local.date() - race_day.date()).days for a in activities])
     cals = np.array([client.get_activity(id).calories for id in [a.id for a in activities]])
-    # cum_cals = np.cumsum(all_cals)
     type = np.array([a.type for a in activities])
-    # calbytype_traces = []
-    calbytype_fig = make_subplots(rows=2, cols=1, vertical_spacing=.12)
+    calbytype_fig = make_subplots(rows=2, cols=1, vertical_spacing=.05, shared_xaxes=True)
     current_day_of_week = race_day.weekday()  # 0=Monday=Start of training week
-    wkcount_bins = range(-7 * 18 - current_day_of_week, 7, 7)
 
     cols = plotly.colors.DEFAULT_PLOTLY_COLORS
     for i, typ in enumerate(np.unique(type)):
         typecals = np.zeros_like(cals)
         typecals[type == typ] = cals[type == typ]
         calbytype_fig.add_trace(
-            go.Scatter(x=days_before, y=np.cumsum(typecals), mode='lines+markers', line=dict(color=cols[i]),
-                       marker=dict(color=cols[i]), showlegend=False, ), row=1, col=1)
+            go.Scatter(x=days_before, y=np.cumsum(typecals), mode='lines', line=dict(color=cols[i]),
+                       showlegend=False, ), row=1, col=1)
+        calbytype_fig.add_trace(
+            go.Scatter(x=days_before[type == typ], y=np.cumsum(typecals)[type == typ], mode='markers',
+                       marker=dict(color=cols[i]), showlegend=False), row=1, col=1)
         calbytype_fig.add_trace(
             go.Histogram(x=days_before[type == typ], name=typ,
                          xbins=dict(start=-7 * 18 - current_day_of_week, end=7 - current_day_of_week, size=7),
                          marker_color=cols[i]), row=2, col=1)
-    calbytype_fig.layout.update(height=750, barmode='stack', bargap=.2,
-                                xaxis2=dict(title='Past 18 weeks'),
+    calbytype_fig.layout.update(height=750, barmode='stack',  # 0.5 in tickvals to place grid between bins
+                                xaxis1=dict(tickmode='array', tickvals=-7 * np.arange(19) - current_day_of_week - .5),
+                                xaxis2=dict(title='Weeks Ago', tickmode='array', tickvals=-7 * np.arange(19),
+                                            ticktext=[str(int(i)) for i in abs(-7 * np.arange(19) / 7)]),
                                 yaxis1=dict(title='Calories\n(cumulative)'),
                                 yaxis2=dict(title='Activity Type Count'))
     calbytype_fig.update_yaxes(automargin=True)

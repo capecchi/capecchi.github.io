@@ -19,6 +19,7 @@ class MyForm(Form):
     races.update({'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
     race_options = [(r, r) for r in races.keys()]
     runs = MultiCheckboxField(label='Race Options', choices=race_options)
+    #todo: can only hit button once, validation code expires or something
     docode = SubmitField('Run Analysis')
     plot_options = [('rdist', 'Distance vs. Days Before'), ('rcum', 'Cumulative Distance vs. Days Before'),
                     ('rwk', 'Current Week'), ('rpace', 'Pace vs. Days Before'),
