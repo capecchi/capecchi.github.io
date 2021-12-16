@@ -24,9 +24,9 @@ class MyForm(Form):
     race_options = [(r, r) for r in races.keys()]
     runs = MultiCheckboxField(label='Race Options', choices=race_options)
     docode = SubmitField('Run Analysis')
-    plot_options = [('rdist', 'Distance vs. Days Before'), ('rcum', 'Cumulative Distance vs. Days Before'),
-                    ('rwk', 'Current Week'), ('rpace', 'Pace vs. Days Before'),
-                    ('rcal', 'Calories (cumulative) vs. Days Before'), ('rsvd', 'Speed vs. Distance'),
+    plot_options = [('rdist', 'Distance vs. Weeks Before'), ('rcum', 'Cumulative Distance vs. Weeks Before'),
+                    ('rwk', 'Current Week'), ('rpace', 'Pace vs. Weeks Before'),
+                    ('rcal', 'Calories (cumulative) vs. Weeks Before'), ('rsvd', 'Speed vs. Distance'),
                     ('rswt', 'Manual Data Analysis (sweatrate, shoe mileage, fluid/calorie intake vs mileage)'),
                     ('calbytype', 'Calories (cumulative) by Activity Type over past 18 weeks')]
     code = HiddenField()
