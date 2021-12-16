@@ -1,11 +1,13 @@
-import matplotlib.pyplot as plt
 import numpy as np
+import datetime
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
-from stravalib.client import Client
+
+import numpy as np
 import stravalib.exc
-import datetime
+from stravalib.client import Client
+
 
 def get_client(code):
     client_id = 34049
@@ -27,6 +29,7 @@ def get_activities(client, after=datetime.date.today() - datetime.timedelta(days
         return activities
     except stravalib.exc.Fault:
         return None
+
 
 def data_input_popup(date, shoes, mileage):
     # Creating tkinter window

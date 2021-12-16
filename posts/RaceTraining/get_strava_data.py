@@ -198,7 +198,7 @@ def manual_tracking_plots(client):
             go.Histogram(x=npswt[np.where((rangelist[i] <= nptemp) & (nptemp < rangelist[i + 1]))],
                          xbins=dict(start=0, end=3.0, size=0.1), marker=dict(color=rb[i], line=dict(width=0.5)),
                          name=lbl), row=1, col=1)
-        if len(np.where((rangelist[i] <= nptemp[-1]) & (nptemp[-1] < rangelist[i + 1]))[0]) != 0:
+        if rangelist[i] <= nptemp[-1] < rangelist[i + 1]:
             lastrunbin = (np.floor(npswt[-1] * 10.) / 10., np.ceil(npswt[-1] * 10.) / 10.)
             # count number where sweatrate is in bin, and temp is below current rangelist bin max so we overlay properly
             numinlastbin = len(
@@ -230,29 +230,21 @@ def manual_tracking_plots(client):
 
 
 def gather_training_seasons(code, races2analyze=None, plots=None):
-    if len(plots) * len(races2analyze) == 0:  # nothing selected for either races or plots
-        message = 'Nothing to analyze- make selections of both races and plot options'
-        return [], message  # empty figs list
+    nope = ''
+    if len(plots) == 0:  # need to select a plot to show
+        nope = f'{nope} <Please select some plots to show> '
+    if len(races2analyze) == 0 and 'rswt' not in plots:
+        nope = f'{nope} <Select races to analyze> '
+    if len(nope) > 0:
+        return [], nope  # empty figs list
 
     races = get_past_races(racekeys=races2analyze)
     if 'Past 18 weeks' in races2analyze:
         races.update({'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
 
-    wks_18 = datetime.timedelta(weeks=18)
     day_1 = datetime.timedelta(days=1)
-    wks_1 = datetime.timedelta(weeks=1)
-
-    ref_day = min(datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0),
-                  races[list(races.keys())[-1]])
-    days_to_race = datetime.timedelta(days=(races[list(races.keys())[-1]] - ref_day).days)
     client = get_client(code)
 
-    dist_traces = []
-    cum_traces = []
-    pace_traces = []
-    cal_traces = []
-    wk_traces = []
-    svd_traces = []  # speed vs dist
     colors = plotly.colors.DEFAULT_PLOTLY_COLORS
     if os.path.isdir('C:/Users/Owner/Dropbox/'):
         img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
@@ -264,6 +256,7 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
     if 'rswt' in plots:  # get activities for runs with sweat loss data
         man_fig = manual_tracking_plots(client)
     if 'rsvd' in plots:  # get large dataset
+        svd_traces = []  # speed vs dist
         yrsago = [(datetime.datetime.utcnow() - rd).days / 365. for rd in [races[k] for k in races.keys()]]
         yrsago = [ya + 18 / 52. for ya in yrsago]  # add 18 weeks onto each race
         nyr = np.ceil(max(yrsago))
@@ -303,7 +296,18 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
 
     # if we're not doing any of these plots, skip this
     calbytype_figs = None
-    if any([p in plots] for p in ['rdist', 'rcum', 'rwk', 'rpace', 'rsvd', 'rcal', 'calbytype']):
+    if any([p in plots for p in ['rdist', 'rcum', 'rwk', 'rpace', 'rsvd', 'rcal', 'calbytype']]):
+        dist_traces = []
+        cum_traces = []
+        pace_traces = []
+        cal_traces = []
+        wk_traces = []
+        wks_18 = datetime.timedelta(weeks=18)
+        wks_1 = datetime.timedelta(weeks=1)
+        ref_day = min(datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0),
+                      races[list(races.keys())[-1]])
+        days_to_race = datetime.timedelta(days=(races[list(races.keys())[-1]] - ref_day).days)
+
         for i, (k, v) in enumerate(races.items()):
             print(k)
             # read: if race day is after today, ie in the future, then solid line plot
@@ -403,7 +407,9 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
                            textposition='middle left', showlegend=False, hoverinfo='none', ))
 
     figs = []
-    if 'calbytype' in plots:
+    ttext = [str(int(i)) for i in abs(-7 * np.arange(19) / 7)]
+    tvals = -7 * np.arange(19)
+    if calbytype_figs is not None:
         for cf in calbytype_figs:
             figs.append(cf)
     if 'rsvd' in plots:
@@ -422,7 +428,7 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
         print('saved weekly total image')
         figs.append(wktot_fig)
     if 'rdist' in plots:
-        dlayout = go.Layout(xaxis=dict(title='Days before race'),
+        dlayout = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
                             yaxis=dict(title='Distance (miles)', hoverformat='.2f'),
                             legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
         dist_fig = go.Figure(data=dist_traces, layout=dlayout)
@@ -430,22 +436,23 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
         print('saved dist image')
         figs.append(dist_fig)
     if 'rcum' in plots:
-        clayout = go.Layout(xaxis=dict(title='Days before race'), yaxis=dict(title='Distance (cumulative miles)'),
+        clayout = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
+                            yaxis=dict(title='Distance (cumulative miles)'),
                             legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
         cum_fig = go.Figure(data=cum_traces, layout=clayout)
         cum_fig.write_html(f'{img_path}rta_cum.html')
         print('saved cum image')
         figs.append(cum_fig)
     if 'rpace' in plots:
-        playout = go.Layout(xaxis=dict(title='Days before race'), yaxis=dict(title='Pace (min/mile)'),
-                            legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
+        playout = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
+                            yaxis=dict(title='Pace (min/mile)'), legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
         pace_fig = go.Figure(data=pace_traces, layout=playout)
         pace_fig.write_html(f'{img_path}rta_pace.html')
         print('saved pace image')
         figs.append(pace_fig)
     if 'rcal' in plots:
-        calayout = go.Layout(xaxis=dict(title='Days before race'), yaxis=dict(title='Calories'),
-                             legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
+        calayout = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
+                             yaxis=dict(title='Calories'), legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
         cal_fig = go.Figure(data=cal_traces, layout=calayout)
         cal_fig.write_html(f'{img_path}rta_cal.html')
         print('saved cal image')
