@@ -66,27 +66,31 @@ def create_calbytype_fig(client, activities, before, img_path):
     cals = np.array([client.get_activity(id).calories for id in [a.id for a in activities]])
     # cum_cals = np.cumsum(all_cals)
     type = np.array([a.type for a in activities])
-    calbytype_traces = []
-    calbytype_traces2 = []
+    # calbytype_traces = []
+    calbytype_fig = make_subplots(rows=2, cols=1, vertical_spacing=.12)
+    current_day_of_week = race_day.weekday()  # 0=Monday=Start of training week
+    wkcount_bins = range(-7 * 18 - current_day_of_week, 7, 7)
 
-    for typ in np.unique(type):
+    cols = plotly.colors.DEFAULT_PLOTLY_COLORS
+    for i, typ in enumerate(np.unique(type)):
         typecals = np.zeros_like(cals)
         typecals[type == typ] = cals[type == typ]
-        calbytype_traces.append(
-            go.Scatter(x=days_before, y=np.cumsum(typecals), name=typ, mode='lines+markers', stackgroup='norah'))
-        calbytype_traces2.append(
-            go.Scatter(x=days_before, y=np.cumsum(typecals), name=typ, mode='lines+markers'))
-    dlayout = go.Layout(xaxis=dict(title='Past 18 weeks'),
-                        yaxis=dict(title='Calories (cumulative)', hoverformat='.2f'),
-                        legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
-    dlayout2 = go.Layout(xaxis=dict(title='Past 18 weeks'),
-                         yaxis=dict(title='Calories', hoverformat='.2f'),
-                         legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
-    calbytype_fig1 = go.Figure(data=calbytype_traces, layout=dlayout)
-    calbytype_fig2 = go.Figure(data=calbytype_traces2, layout=dlayout2)
-    calbytype_fig2.write_html(f'{img_path}calbytype.html')
+        calbytype_fig.add_trace(
+            go.Scatter(x=days_before, y=np.cumsum(typecals), mode='lines+markers', line=dict(color=cols[i]),
+                       marker=dict(color=cols[i]), showlegend=False, ), row=1, col=1)
+        calbytype_fig.add_trace(
+            go.Histogram(x=days_before[type == typ], name=typ,
+                         xbins=dict(start=-7 * 18 - current_day_of_week, end=7 - current_day_of_week, size=7),
+                         marker_color=cols[i]), row=2, col=1)
+    calbytype_fig.layout.update(height=750, barmode='stack', bargap=.2,
+                                xaxis2=dict(title='Past 18 weeks'),
+                                yaxis1=dict(title='Calories\n(cumulative)'),
+                                yaxis2=dict(title='Activity Type Count'))
+    calbytype_fig.update_yaxes(automargin=True)
+
+    calbytype_fig.write_html(f'{img_path}calbytype.html')
     print('saved calbytype image')
-    return [calbytype_fig2]
+    return [calbytype_fig]
 
 
 def get_past_races(racekeys=None):
@@ -250,7 +254,7 @@ def manual_tracking_plots(client):
 
 
 def gather_training_seasons(code, races2analyze=None, plots=None):
-    if len(plots)*len(races2analyze) == 0:  # nothing selected for either races or plots
+    if len(plots) * len(races2analyze) == 0:  # nothing selected for either races or plots
         message = 'Nothing to analyze- make selections of both races and plot options'
         return [], message  # empty figs list
 
