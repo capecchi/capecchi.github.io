@@ -18,7 +18,7 @@ So with a list of races and their corresponding race date, I the data 18 weeks p
 
 I keep playing with this code, and started thinking about how pace varies with distance. I know if I train for a 5k I'll increase my pace as I get fitter. I also know I can run a 5k faster than a 10k. I've focused a lot on the former point, trying to improve my pace for a given distance, but never really considered the second point. At any given point of time (read: fixed level of fitness) there's a limit to how fast I can run a 5k, 10k, or any other distance. What does this curve of max-effort vs distance look like?
 
-I found some literature on this: See this paper ([Formenti 2005](https://www.researchgate.net/publication/7696487_Human_locomotion_on_snow_Determinants_of_economy_and_speed_of_skiing_across_the_ages)) for the corrected and extended equations put forth in this paper ([Minetti 2004]((https://jeb.biologists.org/content/207/12/2185))).
+I found some literature on this: See this paper ([Formenti 2005](https://www.researchgate.net/publication/7696487_Human_locomotion_on_snow_Determinants_of_economy_and_speed_of_skiing_across_the_ages)) for the corrected and extended equations put forth in this paper ([Minetti 2004]((https://journals.biologists.com/jeb/article/207/8/1265/15058?casa_token=fbwAai80r5cAAAAA:h-YYnutqdIby2GJrDtoiHGnYR4XeZHv-gHkj12aXIRnIRFhI4B5vfX_vVJ2k4VunMZ6WdQ))).
 
 They give the maximum sustainable speed as
 

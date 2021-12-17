@@ -233,7 +233,7 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
     nope = ''
     if len(plots) == 0:  # need to select a plot to show
         nope = f'{nope} <Please select some plots to show> '
-    if len(races2analyze) == 0 and 'rswt' not in plots:
+    if len(races2analyze) == 0 and 'rswt' not in plots and 'rsvd' not in plots:
         nope = f'{nope} <Select races to analyze> '
     if len(nope) > 0:
         return [], nope  # empty figs list
@@ -257,21 +257,29 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
         man_fig = manual_tracking_plots(client)
     if 'rsvd' in plots:  # get large dataset
         svd_traces = []  # speed vs dist
-        yrsago = [(datetime.datetime.utcnow() - rd).days / 365. for rd in [races[k] for k in races.keys()]]
-        yrsago = [ya + 18 / 52. for ya in yrsago]  # add 18 weeks onto each race
-        nyr = np.ceil(max(yrsago))
-        nyr = max([nyr, 3])
+        if len(races.keys()) > 0:
+            yrsago = [(datetime.datetime.utcnow() - rd).days / 365. for rd in [races[k] for k in races.keys()]]
+            yrsago = [ya + 18 / 52. for ya in yrsago]  # add 18 weeks onto each race
+            nyr = np.ceil(max(yrsago))
+            nyr = max([nyr, 3])
+        else:
+            nyr = 3
         nyrs = datetime.timedelta(weeks=52 * nyr)
         aft = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - nyrs
         bef = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + day_1
         activities = get_activities(client, aft, bef)
         predays, dist, _, _, speed, _, _, dates = get_training_data(client, activities, get_cals=False, before=bef)
+        max_dist = max([max(dist), max_dist])
         bill_pace = 60. / np.array(speed)  # min/mile
         hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for i, s in
                      enumerate(bill_pace)]
         hovertemp = 'mileage: %{x:.2f}<br>%{text}'
         svd_traces.append(go.Scatter(x=dist, y=speed, mode='markers', name='past {} years'.format(nyr), text=hovertext,
                                      hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
+        svd_traces.append(go.Scatter(x=[dist[-1]], y=[speed[-1]], mode='markers', name='most recent',
+                                     marker=dict(line=dict(width=3), color='rgba(0,0,0,0)', symbol='star-diamond-dot',
+                                                 size=10), text=[hovertext[-1]], hovertemplate=hovertemp))
+
         # make weekly average plot
         i, wktot, wktot_db, npdist, nppredays, wktot_dates = 0, [], [], np.array(dist), np.array(predays), []
         nday_av = 14
@@ -304,10 +312,12 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
         wk_traces = []
         wks_18 = datetime.timedelta(weeks=18)
         wks_1 = datetime.timedelta(weeks=1)
-        ref_day = min(datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0),
-                      races[list(races.keys())[-1]])
-        days_to_race = datetime.timedelta(days=(races[list(races.keys())[-1]] - ref_day).days)
-
+        if len(races.keys()) > 0:
+            ref_day = min(datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0),
+                          races[list(races.keys())[-1]])
+            days_to_race = datetime.timedelta(days=(races[list(races.keys())[-1]] - ref_day).days)
+        else:
+            days_to_race = 0
         for i, (k, v) in enumerate(races.items()):
             print(k)
             # read: if race day is after today, ie in the future, then solid line plot
@@ -329,11 +339,9 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
                 hovertemp = 'mileage: %{x:.2f}<br>%{text}'
                 svd_traces.append(
                     go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
-                if i == len(races.items()) - 1:
-                    svd_traces.append(go.Scatter(x=[dist[-1]], y=[speed[-1]], mode='markers', name='most recent',
-                                                 marker=dict(line=dict(width=3), color='rgba(0,0,0,0)',
-                                                             symbol='star-diamond-dot', size=10),
-                                                 text=[hovertext[-1]], hovertemplate=hovertemp))
+                # svd_traces.append(
+                #     go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp,
+                #                yaxis='y2'))#, visible=False))
             if 'rdist' in plots:
                 dist_traces.append(
                     go.Scatter(x=days_before, y=dist, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
@@ -414,7 +422,8 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
             figs.append(cf)
     if 'rsvd' in plots:
         svd_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
-                               yaxis=dict(title='Speed (miles/hr)', hoverformat='.2f'),
+                               yaxis=dict(title='Speed (miles/hr)', hoverformat='.2f'),#, mirror='allticks', side='both'),
+                               # yaxis2=dict(title='Pace (min/mile)', overlaying='y', side='right', anchor='x'),
                                legend=dict(x=1, y=1.02, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
         pc_v_dist_fig = go.Figure(data=svd_traces, layout=svd_layout)
         pc_v_dist_fig.write_html(f'{img_path}rta_svd.html')
@@ -486,21 +495,21 @@ def add_max_effort_curve(svd_traces, max_dist=100):
 
     # c = 3.6 * 84.  # [J/kg/m] * 84kg you fat bastard
 
-    def speed(time):
+    def speed(time):  # [s]
         a2 = a * (.085 * (time / 3600) ** 2 - 3.908 / 3600 * time + 91.82) / 100.  # [Formenti/Davies]
         # a2 = a * (940 - time / 60) / 1000.  # [Wilke/Saltin]
         return 3.6 / c * ((a2 + b / time - a2 * tau / time * (1 - np.exp(-time / tau))) / ef - wbas)
 
-    def dist(time):
+    def dist(time):  # [s]
         a2 = a * (.085 * (time / 3600) ** 2 - 3.908 / 3600 * time + 91.82) / 100.  # [Formenti/Davies]
         # a2 = a * (940 - time / 60) / 1000.  # [Wilke/Saltin]
         spd = 3.6 / c * ((a2 + b / time - a2 * tau / time * (1 - np.exp(-time / tau))) / ef - wbas)
         return spd * time / 60. / 60. - max_dist
 
-    tmax = 5. * 60 * 60  # initial guess
-    h = dist(tmax) / (dist(tmax + .5) - dist(tmax - .5))  # s
+    tmax = 5. * 60 * 60  # initial guess [s]
+    h = dist(tmax) / (dist(tmax + .5) - dist(tmax - .5))
     while abs(h) > 1:
-        h = dist(tmax) / (dist(tmax + .5) - dist(tmax - .5))  # s
+        h = dist(tmax) / (dist(tmax + .5) - dist(tmax - .5))
         tmax -= h
 
     t = np.linspace(40, tmax, endpoint=True, num=1000)  # [s]
@@ -509,7 +518,7 @@ def add_max_effort_curve(svd_traces, max_dist=100):
 
     minetti_spd = s / 1.60934  # [mph]
     minetti_dst = minetti_spd * th  # miles
-    minetti_spd[np.where(minetti_spd > 15.)] = np.nan
+    minetti_spd[np.where((15. < minetti_spd) | (minetti_spd < 0.))] = np.nan
 
     # do fit to my data
     bdist, bspeed = [], []  # miles, mph
