@@ -10,7 +10,7 @@ from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
 from posts.RaceTraining.get_strava_data import gather_training_seasons, get_past_races
 
 
-# todo: add pace axis to speed vs dist plot (?)
+# todo: replace speed axis with pace axis
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
