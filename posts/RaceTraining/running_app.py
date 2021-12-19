@@ -11,6 +11,9 @@ from posts.RaceTraining.get_strava_data import gather_training_seasons, get_past
 
 
 # todo: replace speed axis with pace axis
+# todo: fix fitting routine on svd plot
+# todo: decide on plotting speed or pace- probably pace?
+# todo: svd plot- can we plot "most recent" last?
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)

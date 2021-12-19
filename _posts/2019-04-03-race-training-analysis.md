@@ -39,27 +39,27 @@ Where $$A$$ is the maximum long-term mechanical work, $$B$$ is the mechanical eq
 
 The curve is surprisingly linear over the distances I cover in my training. It turns out that for the equations above, the exponential quickly goes to zero as $$t$$ gets large (even by an hour), as does the $$B/t$$ term, and the $$t^2$$ term only starts to matter for large $$t$$ (many hours).
 
-Plotting my (average) Speed vs Distance for my race training analysis I can include the equation above, using the same values for the parameters as were used in the 2004 paper. Note these values are the estimated human maximum so it shouldn't be surprising that my data falls comfortably below this line. **Way** below this line.
+Plotting my (average) Speed vs Distance for my race training analysis I can include the equation above, using the same values for the parameters as were used in the 2004 paper. Note these values are the estimated human maximum so it shouldn't be surprising that my data falls comfortably below this line. **Way** below this line. I chose to plot Pace vs. Distance as it's the more relatable metric, in which case my data falls above the max-effort curve.
 
 The really interesting thing to me though, is to use this data to help guide my next long run. I start strong on a long run then fall to pieces near the end. It would be great to use this data to help set my goal pace. I've spent a while thinking about how best to do this and have landed on the following treatment.
-I'll simplify the equations above and simply fit to a quadratic, but I'll allow for the parabola to be tilted. So instead of an offset in $$x$$, $$y$$, I'll give it an offset in $$r$$ and $$\theta$$. The function below is fed into scipy.minimize, the result of which is a rotated parabola that sits nicely atop my data.
+I'll simplify the equations above and simply fit to a quadratic, but I'll allow for the parabola to be tilted and offset in the rotated $$x$$ direction. The function below is fed into scipy.minimize, the result of which is a rotated-shifted parabola that sits nicely atop my data. Note the heavy $$dist^4$$ weighting given to the points. This is necessary as the majority of my runs are short and slow. Fitting this curve I really only care about the fastest runs at each distance. A filter to discard points far from the max-effort might improve the fit, but for now weighting heavily towards longer runs gives a good fit.
 
 ```py
-def minfunc(fit):  # rotated parabola
+def minfunc(fit):  # rotated-shifted parabola
     r = np.sqrt(bdist ** 2 + bspeed ** 2)
     th = np.arctan2(bspeed, bdist)
-    x2, y2 = r * np.cos(th - fit[1]), r * np.sin(th - fit[1])  # rotate pts by -theta
+    x2, y2 = r * np.cos(th - fit[1]) - fit[2], r * np.sin(th - fit[1])  # rotate pts by -theta, shift x2 by fit[2]
     ydiff_0offset = y2 - fit[0] * x2 ** 2
     offset = max(ydiff_0offset)  # offset necessary so that curve is always >= data
     ydiff = y2 - (fit[0] * x2 ** 2 + offset)
-    return np.sum(ydiff ** 2)
+    return np.sum(ydiff ** 2 * bdist ** 4)  # weight pts strongly by bdist
 ```
 
 I struggled for a while to think of the best way to fit a curve to data with the constraint that it necessarily sit above the data (max effort has to be greater than or equal to existing efforts). The minimization above simply removes a degree of freedom (the $$r$$ offset value) and instead dynamically fixes this value during the minimization such that the difference $$curve-data$$ is everywhere positive.
 
 <iframe src="/images/posts/rta_svd.html" height="500" width="100%"></iframe>
 
-A few things to note. Obviously the human-achievable curve is high above my performance, no surprise. But I do note that the slope of the human-achievable curve is shallower than mine, meaning my max pace suffers more for higher mileage. However, there are numerous complicating factors. My runs (especially the longer ones) are often done on trails, over very uneven and technical terrain, hardly ideal for setting a max pace. Many of my shorter runs also include two furry companions who, while being quite capable of matching my moving pace, are likely to stop for potty breaks. Hydration, nutrition, and rest impact my performance, as does the fact that I'm rarely *trying* for a max-paced run. With that in mind though, this is a very cool way to set goal paces for distances I haven't run in a long time, and (I think) a pretty insightful look into my training data.
+A few things to note. Obviously the human-achievable curve is well beyond my performance, no surprise. But I do note that the slope of the human-achievable curve is shallower than mine, meaning my max pace suffers more for higher mileage. However, there are numerous complicating factors. My runs (especially the longer ones) are often done on trails, over very uneven and technical terrain, hardly ideal for setting a max pace. Many of my shorter runs also include two furry companions who, while being quite capable of matching my moving pace, are likely to stop for potty breaks. Hydration, nutrition, and rest impact my performance, as does the fact that I'm rarely *trying* for a max-paced run. With that in mind though, this is a very cool way to set goal paces for distances I haven't run in a long time, and (I think) a pretty insightful look into my training data.
 
 Another common metric to monitor is your weekly total. So with a little processing I can see this trend in my data as well. Below is my weekly running total for the past number of years, a running 7 day average of my weekly totals (to reduce the variability and show me more of an average effort), and the individual runs that contribute to the totals.
 

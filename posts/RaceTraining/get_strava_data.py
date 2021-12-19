@@ -268,17 +268,17 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
         aft = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - nyrs
         bef = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + day_1
         activities = get_activities(client, aft, bef)
-        predays, dist, _, _, speed, _, _, dates = get_training_data(client, activities, get_cals=False, before=bef)
+        predays, dist, _, pace, speed, _, _, dates = get_training_data(client, activities, get_cals=False, before=bef)
         max_dist = max([max(dist), max_dist])
         bill_pace = 60. / np.array(speed)  # min/mile
         hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for i, s in
                      enumerate(bill_pace)]
         hovertemp = 'mileage: %{x:.2f}<br>%{text}'
-        svd_traces.append(go.Scatter(x=dist, y=speed, mode='markers', name='past {} years'.format(nyr), text=hovertext,
+        svd_traces.append(go.Scatter(x=dist, y=pace, mode='markers', name='past {} years'.format(nyr), text=hovertext,
                                      hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
-        svd_traces.append(go.Scatter(x=[dist[-1]], y=[speed[-1]], mode='markers', name='most recent',
-                                     marker=dict(line=dict(width=3), color='rgba(0,0,0,0)', symbol='star-diamond-dot',
-                                                 size=10), text=[hovertext[-1]], hovertemplate=hovertemp))
+        svd_traces = add_max_effort_curve(svd_traces, max_dist=max_dist)  # add here so data only counted once
+        recent, htxt, htemp = (dist[-1], pace[
+            -1]), f'pace: {int(bill_pace[-1])}:{str(int((bill_pace[-1] - int(bill_pace[-1])) * 60)).zfill(2)} (min/mile)<br>date: {dates[-1]}',hovertemp
 
         # make weekly average plot
         i, wktot, wktot_db, npdist, nppredays, wktot_dates = 0, [], [], np.array(dist), np.array(predays), []
@@ -337,11 +337,10 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
                 hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for
                              i, s in enumerate(bill_pace)]
                 hovertemp = 'mileage: %{x:.2f}<br>%{text}'
-                svd_traces.append(
-                    go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
                 # svd_traces.append(
-                #     go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp,
-                #                yaxis='y2'))#, visible=False))
+                #     go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
+                svd_traces.append(
+                    go.Scatter(x=dist, y=pace, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
             if 'rdist' in plots:
                 dist_traces.append(
                     go.Scatter(x=days_before, y=dist, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
@@ -372,7 +371,10 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
                                text=['{:.2f}'.format(d) for d in wd]))
 
         if 'rsvd' in plots:
-            svd_traces = add_max_effort_curve(svd_traces, max_dist=max_dist)
+            svd_traces.append(go.Scatter(x=[recent[0]], y=[recent[1]], mode='markers', name='most recent',
+                                         marker=dict(line=dict(width=3), color='rgba(0,0,0,0)',
+                                                     symbol='star-diamond-dot',
+                                                     size=10), text=[htxt], hovertemplate=htemp))
 
         # append annotation traces
         if 'rdist' in plots:
@@ -422,9 +424,10 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
             figs.append(cf)
     if 'rsvd' in plots:
         svd_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
-                               yaxis=dict(title='Speed (miles/hr)', hoverformat='.2f'),#, mirror='allticks', side='both'),
-                               # yaxis2=dict(title='Pace (min/mile)', overlaying='y', side='right', anchor='x'),
-                               legend=dict(x=1, y=1.02, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
+                               # yaxis=dict(title='Speed (miles/hr)', hoverformat='.2f'),
+                               yaxis=dict(title='Pace (min/mile)', hoverformat='.2f'),
+                               legend=dict(bgcolor='rgba(0,0,0,0)'))
+                               # legend=dict(x=1, y=1.02, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
         pc_v_dist_fig = go.Figure(data=svd_traces, layout=svd_layout)
         pc_v_dist_fig.write_html(f'{img_path}rta_svd.html')
         print('saved speed-vs-dist image')
@@ -526,49 +529,47 @@ def add_max_effort_curve(svd_traces, max_dist=100):
     not_important = [bspeed.extend(s.y) for s in svd_traces]
     bdist, bspeed = np.array(bdist), np.array(bspeed)
 
-    # def minfunc(fit):  # 2-degree polyfit
-    #     ydiff_0offset = bspeed - (fit[0] * bdist ** 2 + fit[1] * bdist + 0.)
-    #     offset = max(ydiff_0offset)  # offset necessary so that curve is always >= data
-    #     ydiff = bspeed - (fit[0] * bdist ** 2 + fit[1] * bdist + offset)
-    #     return np.sum(ydiff ** 2)
+    bspeed = 60. / bspeed  # if inputting pace, convert to speed for fitting
 
-    def minfunc2(fit):  # rotated parabola
+    # ROTATED PARABOLA FIT METHOD
+    if 1:
+        def minfunc(fit):  # rotated parabola
+            r = np.sqrt(bdist ** 2 + bspeed ** 2)
+            th = np.arctan2(bspeed, bdist)
+            x2, y2 = r * np.cos(th - fit[1]) - fit[2], r * np.sin(
+                th - fit[1])  # rotate pts by -theta, shift x2 by fit[2]
+            ydiff_0offset = y2 - fit[0] * x2 ** 2
+            offset = max(ydiff_0offset)  # offset necessary so that curve is always >= data
+            ydiff = y2 - (fit[0] * x2 ** 2 + offset)
+            return np.sum(ydiff ** 2 * bdist ** 4)  # weight pts strongly by bdist
+
+        fit0 = np.array(
+            [0., np.arctan2(-4, 30.), 0.])  # [2nd order, theta, x' offset] initial guesses for rotated-parabola
+        res = minimize(minfunc, fit0, method='Nelder-Mead')
+        fit = res.x
+        print(res.message)
+
         r = np.sqrt(bdist ** 2 + bspeed ** 2)
         th = np.arctan2(bspeed, bdist)
-        x2, y2 = r * np.cos(th - fit[1]), r * np.sin(th - fit[1])  # rotate pts by -theta
-        ydiff_0offset = y2 - fit[0] * x2 ** 2
+        dx2, dy2 = r * np.cos(th - fit[1]) - fit[2], r * np.sin(th - fit[1])  # rotate pts by -theta and shift by fit[2]
+        ydiff_0offset = dy2 - fit[0] * dx2 ** 2
         offset = max(ydiff_0offset)  # offset necessary so that curve is always >= data
-        ydiff = y2 - (fit[0] * x2 ** 2 + offset)
-        return np.sum(ydiff ** 2)
-
-    fit0 = np.array([0, -4 / 30.])  # 2nd order, 1st order initial guesses for 2-degree polyfit
-    fit0 = np.array([0., np.arctan2(-4, 30.)])  # 2nd order, theta initial guesses for rotated-parabola
-    res = minimize(minfunc2, fit0, method='Nelder-Mead')
-    fit = res.x
-    print(res.message)
-    # bill_dist = np.arange(int(min(bdist)), int(max(bdist)) + 1)
-    # bill_spd = fit[0] * bill_dist ** 2 + fit[1] * bill_dist + max(bspeed - (fit[0] * bdist ** 2 + fit[1] * bdist + 0.))
-
-    r = np.sqrt(bdist ** 2 + bspeed ** 2)
-    th = np.arctan2(bspeed, bdist)
-    dx2, dy2 = r * np.cos(th - fit[1]), r * np.sin(th - fit[1])  # rotate pts by -theta
-    ydiff_0offset = dy2 - fit[0] * dx2 ** 2
-    offset = max(ydiff_0offset)  # offset necessary so that curve is always >= data
-    bill_dist_rot = np.linspace(0., max(bdist))
-    bill_spd_rot = fit[0] * bill_dist_rot ** 2 + offset
-    bill_r = np.sqrt(bill_dist_rot ** 2 + bill_spd_rot ** 2)
-    bill_th = np.arctan2(bill_spd_rot, bill_dist_rot)
-    bill_dist0, bill_spd0 = bill_r * np.cos(bill_th + fit[1]), bill_r * np.sin(bill_th + fit[1])  # rotate by +theta
-    bill_dist = np.arange(int(min(bdist)), int(max(bdist)) + 1)
-    bill_spd = np.interp(bill_dist, bill_dist0, bill_spd0)
+        bill_dist_rot = np.linspace(0., max(bdist))
+        bill_spd_rot = fit[0] * bill_dist_rot ** 2 + offset
+        bill_r = np.sqrt(bill_dist_rot ** 2 + bill_spd_rot ** 2)
+        bill_th = np.arctan2(bill_spd_rot, bill_dist_rot)
+        bill_dist0, bill_spd0 = bill_r * np.cos(bill_th + fit[1]), bill_r * np.sin(bill_th + fit[1])  # rotate by +theta
+        bill_dist = np.arange(int(min(bdist)), int(max(bdist)) + 2)
+        bill_spd = np.interp(bill_dist, bill_dist0, bill_spd0)
 
     bill_pace = 60. / bill_spd  # min/mile
     hovertext = [f'{int(bp)}:{str(int((bp - int(bp)) * 60)).zfill(2)}' for bp in bill_pace]
 
-    svd_traces.append(go.Scatter(x=bill_dist, y=bill_spd, mode='lines', line=dict(width=2), name='Max Effort (Bill)',
+    svd_traces.append(go.Scatter(x=bill_dist, y=bill_pace, mode='lines', line=dict(width=2), name='Max Effort (Bill)',
                                  hovertemplate='mileage: %{x}<br>pace: %{text} (min/mile)',
                                  text=hovertext))
+    minetti_pace = 60. / minetti_spd  # min/mile
     svd_traces.append(
-        go.Scatter(x=minetti_dst, y=minetti_spd, mode='lines', line=dict(width=2),
+        go.Scatter(x=minetti_dst, y=minetti_pace, mode='lines', line=dict(width=2),
                    name='Max Effort (Human) [Minetti]', visible='legendonly'))
     return svd_traces
