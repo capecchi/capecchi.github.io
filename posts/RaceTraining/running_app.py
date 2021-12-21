@@ -10,10 +10,7 @@ from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
 from posts.RaceTraining.get_strava_data import gather_training_seasons, get_past_races
 
 
-# todo: replace speed axis with pace axis
-# todo: fix fitting routine on svd plot
-# todo: decide on plotting speed or pace- probably pace?
-# todo: svd plot- can we plot "most recent" last?
+# todo: add splits analysis- average pace for first vs second half of run vs run distance
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
