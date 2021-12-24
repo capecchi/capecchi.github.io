@@ -9,7 +9,7 @@ from plotly.subplots import make_subplots
 from scipy.optimize import minimize
 from stravalib import unithelper
 
-from app_tools import *
+from posts.RaceTraining.app_tools import *
 
 
 def get_training_data(client, activities, get_cals=True, before=datetime.date.today()):
