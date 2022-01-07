@@ -201,3 +201,5 @@ if __name__ == "__main__":
     # plt.show()
     juncs = identify_junctions(rd)
     # srd = smooth_park_runs_coords(rd)
+
+    plt.show()

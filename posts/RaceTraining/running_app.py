@@ -11,6 +11,7 @@ from posts.RaceTraining.get_strava_data import gather_training_seasons, get_past
 
 
 # todo: add splits analysis- average pace for first vs second half of run vs run distance
+# todo: make only one call to get strava activities
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
