@@ -18,6 +18,19 @@ def color_test():
     fig.show()
 
 
+def rect_on_histogram_test():
+    import plotly.graph_objs as go
+    x = [5, 7, 10, 3, 4]
+    y = ['a', 'b', 'c', 'd', 'e']
+    traces = [go.Bar(x=x, y=y, orientation='h', showlegend=False)]
+    fig = go.Figure(data=traces)
+    barwidth = 0.8
+    fig.add_shape(type='rect', x0=6, y0=1 - barwidth / 2., x1=7, y1=1 + barwidth / 2.,
+                  line=dict(width=2, color='black'))
+    fig.show()
+
+
 if __name__ == '__main__':
-    color_test()
+    rect_on_histogram_test()
+    # color_test()
     a = 1

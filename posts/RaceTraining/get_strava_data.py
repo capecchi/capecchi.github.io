@@ -64,7 +64,7 @@ def create_calbytype_fig(client, activities, before, img_path):
                                 yaxis2=dict(title='Activity Type Count'))
     calbytype_fig.update_yaxes(automargin=True)
 
-    calbytype_fig.write_html(f'{img_path}calbytype.html')
+    calbytype_fig.write_html(f'{img_path}rta_calbytype.html')
     print('saved calbytype image')
     return [calbytype_fig]
 
@@ -134,8 +134,7 @@ def manual_tracking_plots(client):
             runid_arr.append(run.id)
             date_arr.append(run.start_date_local)
             dist_arr.append(unithelper.miles(run.distance).num)
-            # TEMP DATA BAD: THIS IS TEMP OF ALTITUDE SENSOR
-            # temp_arr.append(run.average_temp * 9. / 5 + 32.)
+            # run.average_temp IS TEMP OF ALTITUDE SENSOR
             # attached Klimat app to put weather into description
             # however run.description == None for some reason so we need to pull it specifically as below
             desc = client.get_activity(run.id).description
@@ -208,6 +207,12 @@ def manual_tracking_plots(client):
 
     man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', marker_color=colors[4], showlegend=False),
                       row=2, col=1)  # shoe mileage
+    # add rect for most recent activity
+    x1rect = sho_dist[shoe_options == sho_worn_arr[-1]][0]
+    x0rect = x1rect - dist_arr[-1]
+    yrect = np.where(shoe_options == sho_worn_arr[-1])[0][0]
+    man_fig.add_shape(type='rect', x0=x0rect, y0=yrect - .5, x1=x1rect, y1=yrect + .5,
+                      line=dict(width=2, color='black'), row=2, col=1)
 
     man_fig.add_trace(go.Scatter(x=dist_arr, y=lit_cons_arr, mode='markers', marker_color=colors[2], showlegend=False),
                       row=3, col=1)  # fluid consumption
@@ -278,7 +283,7 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
                                      hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
         svd_traces = add_max_effort_curve(svd_traces, max_dist=max_dist)  # add here so data only counted once
         recent, htxt, htemp = (dist[-1], pace[
-            -1]), f'pace: {int(bill_pace[-1])}:{str(int((bill_pace[-1] - int(bill_pace[-1])) * 60)).zfill(2)} (min/mile)<br>date: {dates[-1]}',hovertemp
+            -1]), f'pace: {int(bill_pace[-1])}:{str(int((bill_pace[-1] - int(bill_pace[-1])) * 60)).zfill(2)} (min/mile)<br>date: {dates[-1]}', hovertemp
 
         # make weekly average plot
         i, wktot, wktot_db, npdist, nppredays, wktot_dates = 0, [], [], np.array(dist), np.array(predays), []
@@ -427,7 +432,7 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
                                # yaxis=dict(title='Speed (miles/hr)', hoverformat='.2f'),
                                yaxis=dict(title='Pace (min/mile)', hoverformat='.2f'),
                                legend=dict(bgcolor='rgba(0,0,0,0)'))
-                               # legend=dict(x=1, y=1.02, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
+        # legend=dict(x=1, y=1.02, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
         pc_v_dist_fig = go.Figure(data=svd_traces, layout=svd_layout)
         pc_v_dist_fig.write_html(f'{img_path}rta_svd.html')
         print('saved speed-vs-dist image')
