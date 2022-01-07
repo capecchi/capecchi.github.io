@@ -10,7 +10,7 @@ from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
 from posts.RaceTraining.get_strava_data import gather_training_seasons, get_past_races
 
 
-# todo: add splits analysis- average pace for first vs second half of run vs run distance
+# todo: tidy plot of splits, shift negative is bad when comparing min/mile pace, maybe do 2nd half-1st half?
 # todo: make only one call to get strava activities
 
 class MultiCheckboxField(SelectMultipleField):
