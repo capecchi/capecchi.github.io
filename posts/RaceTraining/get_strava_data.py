@@ -285,8 +285,9 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
 		aft = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - nyrs
 		bef = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + day_1
 		activities = get_activities(client, aft, bef)
-		predays, dist, _, pace, speed, _, _, dates, split_shift = get_training_data(client, activities, get_cals=False,
-		                                                                            before=bef, get_splits=True)
+		# predays, dist, _, pace, speed, _, _, dates, split_shift = get_training_data(client, activities, get_cals=False,
+		#                                                                             before=bef, get_splits=True)
+		predays, dist, _, pace, speed, _, _, dates = get_training_data(client, activities, get_cals=False, before=bef)
 		max_dist = max([max(dist), max_dist])
 		bill_pace = 60. / np.array(speed)  # min/mile
 		hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for i, s in
@@ -295,7 +296,7 @@ def gather_training_seasons(code, races2analyze=None, plots=None):
 		svd_traces.append(go.Scatter(x=dist, y=pace, mode='markers', name='past {} years'.format(nyr), text=hovertext,
 		                             hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
 		svd_traces = add_max_effort_curve(svd_traces, max_dist=max_dist)  # add here so data only counted once
-		split_traces.append(go.Scatter(x=dist, y=split_shift, mode='markers', text=hovertext, hovertemplate=hovertemp))
+		# split_traces.append(go.Scatter(x=dist, y=split_shift, mode='markers', text=hovertext, hovertemplate=hovertemp))
 		recent, htxt, htemp = (dist[-1], pace[
 			-1]), f'pace: {int(bill_pace[-1])}:{str(int((bill_pace[-1] - int(bill_pace[-1])) * 60)).zfill(2)} (min/mile)<br>date: {dates[-1]}', hovertemp
 		
