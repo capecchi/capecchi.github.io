@@ -7,12 +7,13 @@ import stravalib
 from bottle import run, redirect, jinja2_view, request, get, post
 from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField, StringField
 
-from posts.RaceTraining.get_strava_data import gather_training_seasons, get_past_races
+from posts.RaceTraining.get_strava_data_old import gather_training_seasons, get_past_races
 
 
 # todo: tidy plot of splits, shift negative is bad when comparing min/mile pace, maybe do 2nd half-1st half?
 # todo: make only one call to get strava activities
 # todo: have to add new spreadsheet (new sheet not new doc?) to keep track of calls for temp/splits to avoid RateLimitExceeded()
+# todo: implement new shoe tracking system- colors? labels?
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)

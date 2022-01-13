@@ -2,7 +2,7 @@ import datetime
 
 from bottle import run, jinja2_view, get, post, request
 from wtforms import Form, SubmitField, SelectMultipleField, widgets
-from posts.RaceTraining.get_strava_data import get_past_races
+from posts.RaceTraining.get_strava_data_old import get_past_races
 
 
 class MultiCheckboxField(SelectMultipleField):
