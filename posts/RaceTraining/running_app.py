@@ -56,8 +56,8 @@ def submit():
 	try:
 		global form
 		form = MyForm(request.forms)
-		activs = update_data_file(form.code.data, races2analyze=form.runs.data)
-		graphs, message = fig_architect(activs, races2analyze=form.runs.data, plots=form.plots.data)
+		df, sho = update_data_file(form.code.data, races2analyze=form.runs.data)
+		graphs, message = fig_architect(df, sho, races2analyze=form.runs.data, plots=form.plots.data)
 		# graphs, message = gather_training_seasons(form.code.data, races2analyze=form.runs.data, plots=form.plots.data)
 		form.message = message
 		ids = [f'graph-{i}' for i, _ in enumerate(graphs)]

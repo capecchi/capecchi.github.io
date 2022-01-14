@@ -11,7 +11,7 @@ ttext = [str(int(i)) for i in abs(-7 * np.arange(19) / 7)]
 tvals = -7 * np.arange(19)
 
 
-def fig_architect(activs, races2analyze=None, plots=None):
+def fig_architect(df, sho, races2analyze=None, plots=None):
 	# ('rdist', 'Distance vs. Weeks Before'), ('rcum', 'Cumulative Distance vs. Weeks Before'),
 	# ('rwk', 'Current Week'), ('rpace', 'Pace vs. Weeks Before'),
 	# ('rcal', 'Calories (cumulative) vs. Weeks Before'), ('rpvd', 'Speed vs. Distance'),
@@ -20,9 +20,9 @@ def fig_architect(activs, races2analyze=None, plots=None):
 	races = get_past_races(races2analyze)
 	graphs = []
 	if 'rdist' in plots:
-		graphs.append(create_rdist_fig(activs, races))
+		graphs.append(create_rdist_fig(df, races))
 	if 'rcum' in plots:
-		graphs.append(create_rcum_fig(activs, races))
+		graphs.append(create_rcum_fig(df, races))
 	if 'rwk' in plots:
 		a = 1
 	if 'rpace' in plots:
@@ -40,8 +40,6 @@ def fig_architect(activs, races2analyze=None, plots=None):
 
 
 """
-		dist_traces = []
-		cum_traces = []
 		pace_traces = []
 		cal_traces = []
 		wk_traces = []
@@ -76,10 +74,6 @@ def fig_architect(activs, races2analyze=None, plots=None):
 				#     go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
 				svd_traces.append(
 					go.Scatter(x=dist, y=pace, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
-			if 'rpace' in plots:
-				pace_traces.append(
-					go.Scatter(x=days_before, y=pace, opacity=op, name=k, mode='lines+markers', line=dict(width=width),
-					           hovertemplate='pace: %{y:.2f}<br>dist:%{text}', text=['{:.2f}'.format(d) for d in dist]))
 			if 'rcal' in plots:
 				cal_traces.append(
 					go.Scatter(x=adb, y=cals, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
@@ -106,12 +100,6 @@ def fig_architect(activs, races2analyze=None, plots=None):
 			                                         size=10), text=[htxt], hovertemplate=htemp))
 		
 		# append annotation traces
-		if 'rpace' in plots:
-			pace_traces.append(
-				go.Scatter(x=[t.x[-1] for t in pace_traces if len(t.x) > 0],
-				           y=[t.y[-1] for t in pace_traces if len(t.y) > 0],
-				           text=[f'{round(t.y[-1], 1)}' for t in pace_traces if len(t.y) > 0], mode='text',
-				           textposition='middle left', showlegend=False, hoverinfo='none'))
 		if 'rwk' in plots:
 			wk_annotations = {'dx': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
 			                  'dy': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
@@ -162,13 +150,6 @@ def fig_architect(activs, races2analyze=None, plots=None):
 		wktot_fig.write_html(f'{img_path}rta_wktot.html')
 		print('saved weekly total image')
 		figs.append(wktot_fig)
-	if 'rpace' in plots:
-		playout = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
-		                    yaxis=dict(title='Pace (min/mile)'), legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
-		pace_fig = go.Figure(data=pace_traces, layout=playout)
-		pace_fig.write_html(f'{img_path}rta_pace.html')
-		print('saved pace image')
-		figs.append(pace_fig)
 	if 'rcal' in plots:
 		calayout = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
 		                     yaxis=dict(title='Calories'), legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
@@ -202,7 +183,7 @@ else:
 	raise BillExcept('cannot connect to image directory')
 
 
-def create_rdist_fig(activs, races):
+def create_rdist_fig(df, races):
 	traces, max_dist = [], 0
 	for i, (k, v) in enumerate(races.items()):
 		print(k)
@@ -265,6 +246,34 @@ def create_rcum_fig(activs, races):
 	print('saved cum image')
 	return cum_fig
 
+# def create_rpace_fig(activs, races):
+# 	pace_traces = []
+# 	for i, (k, v) in enumerate(races.items()):
+# 		print(k)
+# 		# read: if race day is after today, ie in the future, then thicker line plot
+# 		if v > datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
+# 			width = 3
+# 		else:
+# 			width = 2
+# 		op = (i + 1.) / len(races.items()) * .75 + .25
+# 		runs = [act for act in activs if act.type == 'Run' and v - wks_18 < act.start_date_local < v + day_1]
+# 		runs = [r for r in runs if
+# 		        unithelper.miles(r.distance).num > 2 and unithelper.miles_per_hour(r.average_speed).num > 4]
+# 		race_day = (v + day_1).replace(hour=0, minute=0, second=0, microsecond=0)
+# 		days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
+# 		pace_traces.append(
+# 			go.Scatter(x=days_before, y=pace, opacity=op, name=k, mode='lines+markers', line=dict(width=width),
+# 			           hovertemplate='pace: %{y:.2f}<br>dist:%{text}', text=['{:.2f}'.format(d) for d in dist]))
+# 	pace_traces.append(
+# 		go.Scatter(x=[t.x[-1] for t in pace_traces if len(t.x) > 0],
+# 		           y=[t.y[-1] for t in pace_traces if len(t.y) > 0],
+# 		           text=[f'{round(t.y[-1], 1)}' for t in pace_traces if len(t.y) > 0], mode='text',
+# 		           textposition='middle left', showlegend=False, hoverinfo='none'))
+# 	playout = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
+# 	                    yaxis=dict(title='Pace (min/mile)'), legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
+# 	pace_fig = go.Figure(data=pace_traces, layout=playout)
+# 	pace_fig.write_html(f'{img_path}rta_pace.html')
+# 	print('saved pace image')
 
 """
 get_training_data(client, activities, get_cals=False, before=bef)
