@@ -17,6 +17,8 @@ def fig_architect(df, sho, races2analyze=None, plots=None):
 	# ('rcal', 'Calories (cumulative) vs. Weeks Before'), ('rpvd', 'Speed vs. Distance'),
 	# ('rswt', 'Manual Data Analysis (sweatrate, shoe mileage, fluid/calorie intake vs mileage)'),
 	# ('calbytype', 'Calories (cumulative) by Activity Type over past 18 weeks')]
+	
+	df = df.sort_values(by=['Date'])  # put in chronological order
 	races = get_past_races(races2analyze)
 	graphs = []
 	if 'rdist' in plots:
@@ -184,7 +186,7 @@ else:
 
 
 def create_rdist_fig(df, races):
-	traces, max_dist = [], 0
+	traces = []
 	for i, (k, v) in enumerate(races.items()):
 		print(k)
 		# read: if race day is after today, ie in the future, then thicker line plot
@@ -193,13 +195,11 @@ def create_rdist_fig(df, races):
 		else:
 			width = 2
 		op = (i + 1.) / len(races.items()) * .75 + .25
-		runs = [act for act in activs if act.type == 'Run' and v - wks_18 < act.start_date_local < v + day_1]
-		runs = [r for r in runs if
-		        unithelper.miles(r.distance).num > 2 and unithelper.miles_per_hour(r.average_speed).num > 4]
+		runs = df[(df['Type'] == 'Run') & (v-wks_18 < df['Date']) & (df['Date'] < v+day_1)]
+		runs = runs[(runs['Dist (mi)'] > 2) & (runs['Pace (min/mi)'] < 15)]
 		race_day = (v + day_1).replace(hour=0, minute=0, second=0, microsecond=0)
-		days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
-		dist = [unithelper.miles(r.distance).num for r in runs]
-		max_dist = max([max(dist), max_dist])
+		days_before = [(pd.Timestamp(val)-race_day).days for val in runs['Date'].values]
+		dist = runs['Dist (mi)'].values
 		traces.append(
 			go.Scatter(x=days_before, y=dist, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
 	dist_arr = [t.y[-1] for t in traces if len(t.y) > 0]
@@ -215,7 +215,7 @@ def create_rdist_fig(df, races):
 	return dist_fig
 
 
-def create_rcum_fig(activs, races):
+def create_rcum_fig(df, races):
 	traces = []
 	for i, (k, v) in enumerate(races.items()):
 		print(k)
@@ -225,12 +225,11 @@ def create_rcum_fig(activs, races):
 		else:
 			width = 2
 		op = (i + 1.) / len(races.items()) * .75 + .25
-		runs = [act for act in activs if act.type == 'Run' and v - wks_18 < act.start_date_local < v + day_1]
-		runs = [r for r in runs if
-		        unithelper.miles(r.distance).num > 2 and unithelper.miles_per_hour(r.average_speed).num > 4]
+		runs = df[(df['Type'] == 'Run') & (v-wks_18 < df['Date']) & (df['Date'] < v+day_1)]
+		runs = runs[(runs['Dist (mi)'] > 2) & (runs['Pace (min/mi)'] < 15)]
 		race_day = (v + day_1).replace(hour=0, minute=0, second=0, microsecond=0)
-		days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
-		cum = np.cumsum([unithelper.miles(r.distance).num for r in runs])
+		days_before = [(pd.Timestamp(val)-race_day).days for val in runs['Date'].values]
+		cum = np.cumsum(runs['Dist (mi)'].values)
 		traces.append(
 			go.Scatter(x=days_before, y=cum, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
 	traces.append(
