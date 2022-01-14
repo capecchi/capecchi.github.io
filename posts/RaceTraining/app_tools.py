@@ -133,6 +133,9 @@ def get_past_races(racekeys=None):
     races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
                   'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
                   'TC Marathon 2015': datetime.datetime(2015, 10, 4)})
+    # past 18 weeks
+    races.update({'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
+
     # remove races not in racekeys
     if racekeys is not None:
         [races.pop(k) for k in list(races.keys()) if k not in racekeys]
@@ -249,3 +252,5 @@ def update_data_file(code, races2analyze=None):
         sho.to_excel(writer, sheet_name='shoes', index=False)
 
     logging.info('--> DATA FILE UPDATED <--')
+
+    return activities
