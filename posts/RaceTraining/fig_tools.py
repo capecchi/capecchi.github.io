@@ -1,4 +1,6 @@
+import plotly
 import plotly.graph_objs as go
+from plotly.subplots import make_subplots
 from scipy.optimize import minimize
 
 from posts.RaceTraining.app_tools import *
@@ -26,7 +28,7 @@ def fig_architect(df, sho, races, plots=None):
     if 'rpvd' in plots:
         [graphs.append(g) for g in create_rpvd_fig(df, races)]
     if 'rswt' in plots:
-        a = 1
+        graphs.append(create_rman_fig(df, sho))
     if 'rcalbytype' in plots:
         a = 1
     message = 'you smell'
@@ -34,104 +36,12 @@ def fig_architect(df, sho, races, plots=None):
 
 
 """
-		wk_traces = []
-		for i, (k, v) in enumerate(races.items()):
-			if k == 'Past 18 weeks' and 'calbytype' in plots:
-				calbytype_figs = create_calbytype_fig(client, activities, v + day_1, img_path)
-			days_before, dist, cum, pace, speed, adb, cals, dates = get_training_data(client, activities,
-			                                                                          before=v + day_1)
-			max_dist = max([max(dist), max_dist])
-			if 'rsvd' in plots:
-				bill_pace = 60. / np.array(speed)  # min/mile
-				hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for
-				             i, s in enumerate(bill_pace)]
-				hovertemp = 'mileage: %{x:.2f}<br>%{text}'
-				# svd_traces.append(
-				#     go.Scatter(x=dist, y=speed, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
-				svd_traces.append(
-					go.Scatter(x=dist, y=pace, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
-			if 'rwk' in plots:
-				activities = get_activities(client, v - days_to_race - wks_1, v - days_to_race)
-				wdb, wd, wc, wp, ws, _, _, _ = get_training_data(client, activities, before=v - days_to_race)
-				wk_traces.append(
-					go.Scatter(x=wdb, y=wd, yaxis='y2', opacity=op, name=k, mode='lines+markers',
-					           marker=dict(color=colors[i]),
-					           line=dict(width=width)))
-				wk_traces.append(
-					go.Scatter(x=wdb, y=wc, opacity=op, name=k, mode='lines+markers', marker=dict(color=colors[i]),
-					           line=dict(width=width), showlegend=False))
-				wk_traces.append(
-					go.Scatter(x=wdb, y=wp, yaxis='y3', opacity=op, name=k, mode='lines+markers',
-					           marker=dict(color=colors[i]),
-					           line=dict(width=width), showlegend=False, hovertemplate='pace: %{y:.2f}<br>dist:%{text}',
-					           text=['{:.2f}'.format(d) for d in wd]))
-		
-		if 'rsvd' in plots:
-			svd_traces.append(go.Scatter(x=[recent[0]], y=[recent[1]], mode='markers', name='most recent',
-			                             marker=dict(line=dict(width=3), color='rgba(0,0,0,0)',
-			                                         symbol='star-diamond-dot',
-			                                         size=10), text=[htxt], hovertemplate=htemp))
-		
-		# append annotation traces
-		if 'rwk' in plots:
-			wk_annotations = {'dx': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
-			                  'dy': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
-			                  'dt': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y2')],
-			                  'cx': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)],
-			                  'cy': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)],
-			                  'ct': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis is None)],
-			                  'px': [t.x[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y3')],
-			                  'py': [t.y[-1] for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y3')],
-			                  'pt': [f'{round(t.y[-1], 1)}' for t in wk_traces if (len(t.x) > 0 and t.yaxis == 'y3')]
-			                  }
-			wk_traces.append(
-				go.Scatter(x=wk_annotations['dx'], y=wk_annotations['dy'], text=wk_annotations['dt'], mode='text',
-				           textposition='middle left', showlegend=False, hoverinfo='none', ))
-			wk_traces.append(
-				go.Scatter(x=wk_annotations['px'], y=wk_annotations['py'], text=wk_annotations['pt'], yaxis='y3',
-				           mode='text', textposition='middle left', showlegend=False, ))
-			wk_traces.append(
-				go.Scatter(x=wk_annotations['cx'], y=wk_annotations['cy'], text=wk_annotations['ct'], mode='text',
-				           textposition='middle left', showlegend=False, hoverinfo='none', ))
-	
 	figs = []
 	ttext = [str(int(i)) for i in abs(-7 * np.arange(19) / 7)]
 	tvals = -7 * np.arange(19)
 	if calbytype_figs is not None:
 		for cf in calbytype_figs:
 			figs.append(cf)
-	if 'rsvd' in plots:
-		svd_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
-		                       # yaxis=dict(title='Speed (miles/hr)', hoverformat='.2f'),
-		                       yaxis=dict(title='Pace (min/mile)', hoverformat='.2f'),
-		                       legend=dict(bgcolor='rgba(0,0,0,0)'))
-		# legend=dict(x=1, y=1.02, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
-		pc_v_dist_fig = go.Figure(data=svd_traces, layout=svd_layout)
-		pc_v_dist_fig.write_html(f'{img_path}rta_svd.html')
-		print('saved speed-vs-dist image')
-		figs.append(pc_v_dist_fig)
-		split_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
-		                         yaxis=dict(title='change to av. splits (2nd-1st half) (min/mile)'))
-		splits_fig = go.Figure(data=split_traces, layout=split_layout)
-		splits_fig.write_html(f'{img_path}rta_splitsvsdist.html')
-		print('saved splits-vs-dist image')
-		figs.append(splits_fig)
-		
-		wktot_layout = go.Layout(yaxis=dict(title='Mileage', hoverformat='.2f'),
-		                         legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
-		wktot_fig = go.Figure(data=wktot_data, layout=wktot_layout)
-		wktot_fig.write_html(f'{img_path}rta_wktot.html')
-		print('saved weekly total image')
-		figs.append(wktot_fig)
-	if 'rwk' in plots:
-		wlayout = go.Layout(legend=dict(orientation='h', y=1.1), xaxis=dict(title='Prior week training', ),
-		                    yaxis=dict(title='Distance', domain=[0., .3], ),
-		                    yaxis2=dict(title='Cumulative', domain=[0.35, 0.65]),
-		                    yaxis3=dict(title='Pace', domain=[0.7, 1.], ), )
-		wk_fig = go.Figure(data=wk_traces, layout=wlayout)
-		wk_fig.write_html(f'{img_path}rta_week.html')
-		print('saved week image')
-		figs.append(wk_fig)
 	if 'rswt' in plots:
 		man_fig.write_html(f'{img_path}rta_man.html')
 		print('saved manual analysis image')
@@ -300,7 +210,6 @@ def create_rpvd_fig(df, races):
         wktot_dates.append(datetime.date.today() - datetime.timedelta(days=i))  # no min, sec, usec
         i += 1
     runav = [np.mean(wktot[i:i + nday_av]) for i in np.arange(len(wktot) - nday_av + 1)]
-    # runav_db = wktot_db[:len(runav)]
     runav_dates = wktot_dates[:len(runav)]
     wklyav_data = [go.Scatter(x=wktot_dates, y=wktot, mode='lines', name='weekly total'),
                    go.Scatter(x=runav_dates, y=runav, mode='lines', name=f'{nday_av} day avg of tot',
@@ -311,7 +220,6 @@ def create_rpvd_fig(df, races):
     wklyav_data.append(go.Scatter(
         x=xann, y=yann, text=[k for k in races.keys() if (races[k] - now).days < 0], mode='text+markers',
         textposition='middle right', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
-    # wklyav_data.append(go.Bar(x=dates, y=dist, name='runs', marker=dict(color='black', line=dict(width=100))))
     wklyav_data.append(go.Scatter(x=dates, y=dist, name='runs', mode='markers'))
 
     for i, (k, v) in enumerate(races.items()):
@@ -433,6 +341,85 @@ def add_max_effort_curve(svd_traces, max_dist=100):
         go.Scatter(x=minetti_dst, y=minetti_pace, mode='lines', line=dict(width=2),
                    name='Max Effort (Human) [Minetti]', visible='legendonly'))
     return svd_traces
+
+
+def create_rman_fig(df, sho):
+    # todo: manual plot all messed up
+    analysis_startdate = datetime.datetime(2020, 9, 12, 0, 0, 0, 0)  # hard coded start date
+    colors = plotly.colors.DEFAULT_PLOTLY_COLORS
+    man_fig = make_subplots(rows=3, cols=1, vertical_spacing=.12)
+
+    # SWEAT RATE PLOT
+    # restrict to runs between 4-10miles
+    runs = df[
+        (df['Type'] == 'Run') & (df['Dist (mi)'] >= 4) & (df['Dist (mi)'] <= 10) & (df['Date'] > analysis_startdate)]
+    nptemp, npswt = runs['Temp (F)'].values, runs['Sweat Loss Rate (L/h)'].values
+    # drop nan values
+    bool_notnan = ~np.isnan(nptemp) & ~np.isnan(npswt)
+    nptemp, npswt = nptemp[bool_notnan], npswt[bool_notnan]
+    rb = plotly.colors.sequential.RdBu_r
+    tmin, tmax = 20., 80.
+    rangelist = np.append(np.append([-np.inf], np.linspace(tmin, tmax, endpoint=True, num=len(rb) - 1)), np.inf)
+    lastrunbin, numinlastbin = (np.nan, np.nan), np.nan
+    for i, col in enumerate(rb):
+        if rangelist[i] == -np.inf:
+            lbl = f'<{rangelist[i + 1]:.0f}'
+        elif rangelist[i + 1] == np.inf:
+            lbl = f'>{rangelist[i]:.0f}'
+        else:
+            lbl = f'{rangelist[i]:.0f}-{rangelist[i + 1]:.0f}'
+        man_fig.add_trace(
+            go.Histogram(x=npswt[np.where((rangelist[i] <= nptemp) & (nptemp < rangelist[i + 1]))],
+                         xbins=dict(start=0, end=3.0, size=0.1), marker=dict(color=rb[i], line=dict(width=0.5)),
+                         name=lbl), row=1, col=1)
+        if rangelist[i] <= nptemp[-1] < rangelist[i + 1]:
+            lastrunbin = (np.floor(npswt[-1] * 10.) / 10., np.ceil(npswt[-1] * 10.) / 10.)
+            # count number where sweatrate is in bin, and temp is below current rangelist bin max so we overlay properly
+            numinlastbin = len(
+                np.where((npswt < lastrunbin[1]) & (npswt >= lastrunbin[0]) & (nptemp < rangelist[i + 1]))[0])
+    man_fig.add_shape(type='rect', x0=lastrunbin[0], y0=numinlastbin - 1, x1=lastrunbin[1], y1=numinlastbin,
+                      line=dict(width=2, color='black'), row=1, col=1)
+
+    # SHOE MILEAGE
+    sho_dist, shoe_options = sho['cum_dist (mi)'].values, sho['shoe_options'].values
+    man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', marker_color=colors[4], showlegend=False),
+                      row=2, col=1)  # shoe mileage
+    # add rect for most recent activity
+    last_shoes, last_dist = df['Shoes Worn'].values[-1], df['Dist (mi)'].values[-1]
+    x1rect = sho_dist[shoe_options == last_shoes][0]
+    x0rect = x1rect - last_dist
+    yrect = np.where(shoe_options == last_shoes)[0][0]
+    man_fig.add_shape(type='rect', x0=x0rect, y0=yrect - .5, x1=x1rect, y1=yrect + .5,
+                      line=dict(width=2, color='black'), row=2, col=1)
+
+    # LITERS/CALORIES CONSUMED
+    runs = df.dropna(axis=0, how='any', subset=['Liters Consumed', 'Calories Consumed'])
+    runs = runs[(runs['Date'] > analysis_startdate) & (runs['Type'] == 'Run')]
+    lit_cons, cal_cons = runs['Liters Consumed'].values, runs['Calories Consumed'].values
+    runids, dates, dist = runs['runid'].values, runs['Date'].values, runs['Dist (mi)'].values
+    hovertext = [f'runid: {r}<br>date: {d}' for (r, d) in zip(runids, dates)]
+    hovertemp = '%{text}'
+    man_fig.add_trace(
+        go.Scatter(x=dist, y=lit_cons, mode='markers', marker_color=colors[2],
+                   showlegend=False, text=hovertext, hovertemplate=hovertemp), row=3, col=1)  # fluid consumption
+    man_fig.add_trace(
+        go.Scatter(x=dist, y=cal_cons, mode='markers', yaxis='y4', xaxis='x3',
+                   marker_color=colors[3], showlegend=False, text=hovertext,
+                   hovertemplate=hovertemp))  # calorie consumption
+    yr = np.ceil(np.nanmax([np.nanmax(lit_cons), np.nanmax(cal_cons) / 500.]))
+
+    man_fig.layout.update(height=750, barmode='stack',
+                          xaxis1=dict(title='Sweat Loss Rate (L/h)', range=[0, 3]),
+                          xaxis2=dict(title='Miles on Shoes'),
+                          xaxis3=dict(title='Distance (miles)'),
+                          yaxis1=dict(title='Count'),
+                          yaxis3=dict(title='Liters Consumed', color=colors[2], range=[-.5, yr]),
+                          yaxis4=dict(title='Calories Consumed', color=colors[3], side='right',
+                                      overlaying='y3', range=[-250, yr * 500]),
+                          showlegend=True, legend_title_text='Temp (F)')
+    man_fig.update_yaxes(automargin=True)
+
+    return man_fig
 
 
 """

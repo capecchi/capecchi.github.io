@@ -153,127 +153,131 @@ def get_training_data_file():
 	return fn
 
 
-def update_data_file(code, races2analyze=None):
-	client = get_client(code)
-
-	races = get_past_races(racekeys=races2analyze)
-	aft = min(races.values()) - datetime.timedelta(weeks=18)  # 18 weeks before earliest race date
-	bef = max(races.values()) + datetime.timedelta(days=1)
-	activities = get_activities(client, aft, bef)
-
+def update_data_file(code, races2analyze=[]):
 	fn = get_training_data_file()
+	races = get_past_races(racekeys=races2analyze)
 
-	sho = pd.read_excel(fn, sheet_name='shoes', engine='openpyxl')
-	shoe_options = sho['shoe_options'].values
-	df = pd.read_excel(fn, sheet_name='data', engine='openpyxl')
-	runid_arr = list(df['runid'].values)
-	date_arr = list(df['Date'].values)
-	type_arr = list(df['Type'].values)
-	cals_arr = list(df['Calories'].values)
-	dist_arr = list(df['Dist (mi)'].values)
-	pace_arr = list(df['Pace (min/mi)'].values)
-	split_shift_arr = list(df['Split Shift (min/mile)'].values)  # 2nd half avg - 1st half avg splits
-	strw_arr = list(df['Start Weight (lb)'].values)
-	endw_arr = list(df['End Weight (lb)'].values)
-	temp_arr = list(df['Temp (F)'].values)  # to see if sweatloss varies with temp
-	swtrt_arr = list(df['Sweat Loss Rate (L/h)'].values)  # to determine my sweat loss rate
-	sho_worn_arr = list(df['Shoes Worn'].values)  # to amass mileage on each pair of shoes
-	lit_cons_arr = list(df['Liters Consumed'].values)  # to help me plan how much water to bring
-	cal_cons_arr = list(df['Calories Consumed'].values)  # to help plan food
-	cal_desc_arr = list(df['Calorie Description'].values)
+	if len(races2analyze) < 1:
+		sho = pd.read_excel(fn, sheet_name='shoes', engine='openpyxl')
+		df = pd.read_excel(fn, sheet_name='data', engine='openpyxl')
+		return df, sho, races
+	else:
+		client = get_client(code)
 
-	activities = activities[::-1]  # put in chronological order
+		aft = min(races.values()) - datetime.timedelta(weeks=18)  # 18 weeks before earliest race date
+		bef = max(races.values()) + datetime.timedelta(days=1)
+		activities = get_activities(client, aft, bef)
 
-	for act in activities:
-		# if act is missing, add it in
-		if act.id not in df['runid'].values:
-			print(f'--> adding runid: {act.id}')
-			runid_arr.append(act.id)
-			date_arr.append(act.start_date_local)
-			type_arr.append(act.type)
-			cals_arr.append(act.calories)
-			dist_arr.append(unithelper.miles(act.distance).num)
-			try:
-				pace_arr.append(60. / unithelper.miles_per_hour(act.average_speed).num)
-			except ZeroDivisionError:
-				pace_arr.append(np.nan)
-			# add temp (note act.average_temp is temp of ALTITUDE SENSOR)
-			# attached Klimat app to put weather into description
-			# however act.description == None for some reason so we need to pull it specifically as below
-			# THIS OFTEN GIVES "unable to set attribute..." ERRORS FOR SOME REASON!
-			desc = client.get_activity(act.id).description
-			if desc is None:
-				temp_arr.append(np.nan)
-			else:
+		sho = pd.read_excel(fn, sheet_name='shoes', engine='openpyxl')
+		shoe_options = sho['shoe_options'].values
+		df = pd.read_excel(fn, sheet_name='data', engine='openpyxl')
+		runid_arr = list(df['runid'].values)
+		date_arr = list(df['Date'].values)
+		type_arr = list(df['Type'].values)
+		cals_arr = list(df['Calories'].values)
+		dist_arr = list(df['Dist (mi)'].values)
+		pace_arr = list(df['Pace (min/mi)'].values)
+		split_shift_arr = list(df['Split Shift (min/mile)'].values)  # 2nd half avg - 1st half avg splits
+		strw_arr = list(df['Start Weight (lb)'].values)
+		endw_arr = list(df['End Weight (lb)'].values)
+		temp_arr = list(df['Temp (F)'].values)  # to see if sweatloss varies with temp
+		swtrt_arr = list(df['Sweat Loss Rate (L/h)'].values)  # to determine my sweat loss rate
+		sho_worn_arr = list(df['Shoes Worn'].values)  # to amass mileage on each pair of shoes
+		lit_cons_arr = list(df['Liters Consumed'].values)  # to help me plan how much water to bring
+		cal_cons_arr = list(df['Calories Consumed'].values)  # to help plan food
+		cal_desc_arr = list(df['Calorie Description'].values)
+
+		activities = activities[::-1]  # put in chronological order
+
+		for act in activities:
+			# if act is missing, add it in
+			if act.id not in df['runid'].values:
+				print(f'--> adding runid: {act.id}')
+				runid_arr.append(act.id)
+				date_arr.append(act.start_date_local)
+				type_arr.append(act.type)
+				cals_arr.append(client.get_activity(act.id).calories)
+				dist_arr.append(unithelper.miles(act.distance).num)
 				try:
-					temp_arr.append(float(desc.split('°')[0].split(' ')[-1]))  # comes in in °F so don't need to convert
-				except ValueError:
+					pace_arr.append(60. / unithelper.miles_per_hour(act.average_speed).num)
+				except ZeroDivisionError:
+					pace_arr.append(np.nan)
+				# add temp (note act.average_temp is temp of ALTITUDE SENSOR)
+				# attached Klimat app to put weather into description
+				# however act.description == None for some reason so we need to pull it specifically as below
+				# THIS OFTEN GIVES "unable to set attribute..." ERRORS FOR SOME REASON!
+				desc = client.get_activity(act.id).description
+				if desc is None:
 					temp_arr.append(np.nan)
-					logging.info(
-						f'problem converting {desc.split("°")[0].split(" ")[-1]} to float for runid: {act.id}- set to nan')
+				else:
+					try:
+						temp_arr.append(float(desc.split('°')[0].split(' ')[-1]))  # comes in in °F so don't need to convert
+					except ValueError:
+						temp_arr.append(np.nan)
+						logging.info(
+							f'problem converting {desc.split("°")[0].split(" ")[-1]} to float for runid: {act.id}- set to nan')
 
-			# add splits
-			splits = client.get_activity(act.id).splits_standard
-			if splits is not None:
-				minpmil = [60. / unithelper.miles_per_hour(s.average_speed).num if unithelper.miles_per_hour(
-					s.average_speed).num > 0 else np.nan for s in splits]  # min per mile pace
-				firsthalf_av, secondhalf_av = np.nanmean(minpmil[0:int(len(minpmil) / 2)]), np.nanmean(
-					minpmil[int(len(minpmil) / 2):])  # get av pace for first/second half of act
-				split_shift_arr.append(secondhalf_av - firsthalf_av)
-			else:
-				split_shift_arr.append(np.nan)
+				# add splits
+				splits = client.get_activity(act.id).splits_standard
+				if splits is not None:
+					minpmil = [60. / unithelper.miles_per_hour(s.average_speed).num if unithelper.miles_per_hour(
+						s.average_speed).num > 0 else np.nan for s in splits]  # min per mile pace
+					firsthalf_av, secondhalf_av = np.nanmean(minpmil[0:int(len(minpmil) / 2)]), np.nanmean(
+						minpmil[int(len(minpmil) / 2):])  # get av pace for first/second half of act
+					split_shift_arr.append(secondhalf_av - firsthalf_av)
+				else:
+					split_shift_arr.append(np.nan)
 
-			if act.type == 'Run' and act.moving_time.seconds > 0:
-				# bypass for now to fill in old data
-				# shoes_available = []
-				# for i in sho.index:
-				# 	if math.isnan(sho['retired_date'][i]):
-				# 		if act.start_date_local >= sho['start_date'][i]:
-				# 			shoes_available.append(sho['shoe_options'][i])
-				# 	else:
-				# 		if sho['start_date'][i] < act.start_date_local < sho['retired_date'][i]:
-				# 			shoes_available.append(sho['shoe_options'][i])
-				# # initialize vars (need next line)
-				# shoes_worn, liters_consumed, start_weight_lb, end_weight_lb = 'catchall', 0., np.nan, np.nan
-				# sh, lc, sw, ew, cc, cd = data_input_popup(act.start_date_local, shoes_available,
-				#                                           unithelper.miles(act.distance).num)
-				sh, lc, sw, ew, cc, cd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
-				strw_arr.append(sw)
-				endw_arr.append(ew)
-				swtrt_arr.append(((sw - ew) / 2.20462 + lc) / (act.moving_time.seconds / 60. / 60.))
-				sho_worn_arr.append(sh)
-				lit_cons_arr.append(lc)
-				cal_cons_arr.append(cc)
-				cal_desc_arr.append(cd)
-			else:
-				strw_arr.append(np.nan)
-				endw_arr.append(np.nan)
-				swtrt_arr.append(np.nan)
-				sho_worn_arr.append(np.nan)
-				lit_cons_arr.append(np.nan)
-				cal_cons_arr.append(np.nan)
-				cal_desc_arr.append(np.nan)
-		else:  # act exists, can do other checks here
-			pass
+				if act.type == 'Run' and act.moving_time.seconds > 0:
+					shoes_available = []
+					for i in sho.index:
+						if np.isnan(sho['retired_date'][i]):
+							if act.start_date_local >= sho['start_date'][i]:
+								shoes_available.append(sho['shoe_options'][i])
+						else:
+							if sho['start_date'][i] < act.start_date_local < sho['retired_date'][i]:
+								shoes_available.append(sho['shoe_options'][i])
+					# initialize vars (need next line)
+					shoes_worn, liters_consumed, start_weight_lb, end_weight_lb = 'catchall', 0., np.nan, np.nan
+					sh, lc, sw, ew, cc, cd = data_input_popup(act.start_date_local, shoes_available,
+					                                          unithelper.miles(act.distance).num)
+					strw_arr.append(sw)
+					endw_arr.append(ew)
+					swtrt_arr.append(((sw - ew) / 2.20462 + lc) / (act.moving_time.seconds / 60. / 60.))
+					sho_worn_arr.append(sh)
+					lit_cons_arr.append(lc)
+					cal_cons_arr.append(cc)
+					cal_desc_arr.append(cd)
+				else:
+					strw_arr.append(np.nan)
+					endw_arr.append(np.nan)
+					swtrt_arr.append(np.nan)
+					sho_worn_arr.append(np.nan)
+					lit_cons_arr.append(np.nan)
+					cal_cons_arr.append(np.nan)
+					cal_desc_arr.append(np.nan)
+			else:  # act exists, can do other checks here
+				pass
 
-	df_updated = pd.DataFrame(
-		{'runid': runid_arr, 'Date': date_arr, 'Type': type_arr, 'Calories': cals_arr, 'Dist (mi)': dist_arr,
-		 'Pace (min/mi)': pace_arr, 'Split Shift (min/mile)': split_shift_arr,
-		 'Start Weight (lb)': strw_arr, 'End Weight (lb)': endw_arr, 'Temp (F)': temp_arr,
-		 'Sweat Loss Rate (L/h)': swtrt_arr, 'Shoes Worn': sho_worn_arr, 'Liters Consumed': lit_cons_arr,
-		 'Calories Consumed': cal_cons_arr, 'Calorie Description': cal_desc_arr})
-	df_updated = df_updated.sort_values(by=['Date'], ascending=False)  # put recent runs at the top
+		df_updated = pd.DataFrame(
+			{'runid': runid_arr, 'Date': date_arr, 'Type': type_arr, 'Calories': cals_arr, 'Dist (mi)': dist_arr,
+			 'Pace (min/mi)': pace_arr, 'Split Shift (min/mile)': split_shift_arr,
+			 'Start Weight (lb)': strw_arr, 'End Weight (lb)': endw_arr, 'Temp (F)': temp_arr,
+			 'Sweat Loss Rate (L/h)': swtrt_arr, 'Shoes Worn': sho_worn_arr, 'Liters Consumed': lit_cons_arr,
+			 'Calories Consumed': cal_cons_arr, 'Calorie Description': cal_desc_arr})
+		df_updated = df_updated.sort_values(by=['Date'], ascending=False)  # put recent runs at the top
 
-	sho_dist = np.zeros_like(shoe_options)
-	for i in sho.index:
-		sho_dist[i] = np.sum([dist_arr[j] for j in range(len(sho_worn_arr)) if sho_worn_arr[j] == shoe_options[i]])
-		sho['cum_dist (mi)'] = sho_dist
+		sho_dist = np.zeros_like(shoe_options)
+		for i in sho.index:
+			sho_dist[i] = np.sum([dist_arr[j] for j in range(len(sho_worn_arr)) if sho_worn_arr[j] == shoe_options[i]])
+			sho['cum_dist (mi)'] = sho_dist
 
-	with pd.ExcelWriter(fn) as writer:
-		df_updated.to_excel(writer, sheet_name='data', index=False)
-		sho.to_excel(writer, sheet_name='shoes', index=False)
+		with pd.ExcelWriter(fn) as writer:
+			df_updated.to_excel(writer, sheet_name='data', index=False)
+			sho.to_excel(writer, sheet_name='shoes', index=False)
 
-	logging.info('--> DATA FILE UPDATED <--')
+		logging.info('--> DATA FILE UPDATED <--')
 
-	# return activities
-	return df_updated[(aft < df_updated['Date']) & (df_updated['Date'] < bef)], sho, races
+		# return activities
+		return df_updated, sho, races
+		# return df_updated[(aft < df_updated['Date']) & (df_updated['Date'] < bef)], sho, races
