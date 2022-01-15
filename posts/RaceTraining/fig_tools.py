@@ -311,7 +311,8 @@ def create_rpvd_fig(df, races):
     wklyav_data.append(go.Scatter(
         x=xann, y=yann, text=[k for k in races.keys() if (races[k] - now).days < 0], mode='text+markers',
         textposition='middle right', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
-    wklyav_data.append(go.Bar(x=dates, y=dist, name='runs'))
+    # wklyav_data.append(go.Bar(x=dates, y=dist, name='runs', marker=dict(color='black', line=dict(width=100))))
+    wklyav_data.append(go.Scatter(x=dates, y=dist, name='runs', mode='markers'))
 
     for i, (k, v) in enumerate(races.items()):
         runs = df[(df['Type'] == 'Run') & (v - wks_18 < df['Date']) & (df['Date'] < v + day_1)]
