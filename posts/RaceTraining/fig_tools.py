@@ -24,7 +24,7 @@ def fig_architect(df, sho, races, plots=None):
     if 'rcumcal' in plots:
         graphs.append(create_rcumcal_fig(df, races))
     if 'rpvd' in plots:
-        graphs.append(create_rpvd_fig(df, races))
+        [graphs.append(g) for g in create_rpvd_fig(df, races)]
     if 'rswt' in plots:
         a = 1
     if 'rcalbytype' in plots:
