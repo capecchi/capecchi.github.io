@@ -27,9 +27,9 @@ class MyForm(Form):
 	race_options = [(r, r) for r in races.keys()]
 	runs = MultiCheckboxField(label='Race Options', choices=race_options)
 	docode = SubmitField('Run Analysis')
-	plot_options = [('rdist', 'Distance vs. Weeks Before'), ('rcum', 'Cumulative Distance vs. Weeks Before'),
+	plot_options = [('rdist', 'Distance vs. Weeks Before'), ('rcumdist', 'Cumulative Distance vs. Weeks Before'),
 	                ('rwk', 'Current Week'), ('rpace', 'Pace vs. Weeks Before'),
-	                ('rcal', 'Calories (cumulative) vs. Weeks Before'), ('rpvd', 'Pace vs. Distance'),
+	                ('rcumcal', 'Calories (cumulative) vs. Weeks Before'), ('rpvd', 'Pace vs. Distance'),
 	                ('rswt', 'Manual Data Analysis (sweatrate, shoe mileage, fluid/calorie intake vs mileage)'),
 	                ('rcalbytype', 'Calories (cumulative) by Activity Type over past 18 weeks')]
 	code = HiddenField()
@@ -56,8 +56,8 @@ def submit():
 	try:
 		global form
 		form = MyForm(request.forms)
-		df, sho = update_data_file(form.code.data, races2analyze=form.runs.data)
-		graphs, message = fig_architect(df, sho, races2analyze=form.runs.data, plots=form.plots.data)
+		df, sho, races = update_data_file(form.code.data, races2analyze=form.runs.data)
+		graphs, message = fig_architect(df, sho, races, plots=form.plots.data)
 		# graphs, message = gather_training_seasons(form.code.data, races2analyze=form.runs.data, plots=form.plots.data)
 		form.message = message
 		ids = [f'graph-{i}' for i, _ in enumerate(graphs)]

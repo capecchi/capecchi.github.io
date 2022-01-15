@@ -1,6 +1,5 @@
 import datetime
 import logging
-import math
 import os
 import tkinter as tk
 from collections import OrderedDict
@@ -22,7 +21,7 @@ class BillExcept(Exception):
 def get_client(code):
 	client_id = 34049
 	client_secret = '2265a983040000b3b865a0fc333f41cd701dcb5f'
-	
+
 	client = Client()
 	client.authorization_url(34049, 'http://localhost:8080', scope='activity:read_all')
 	token_response = client.exchange_code_for_token(client_id, client_secret, code)
@@ -45,42 +44,42 @@ def data_input_popup(date, shoes, mileage):
 	# Creating tkinter window
 	window = tk.Tk()
 	window.geometry('350x350')
-	
+
 	ttk.Label(window,
-	          text=f'Enter data for {mileage:.2f} mile run on\n{date.strftime("%A, %b %d %Y")}',
-	          font=("Times New Roman", 10)).grid(
+			  text=f'Enter data for {mileage:.2f} mile run on\n{date.strftime("%A, %b %d %Y")}',
+			  font=("Times New Roman", 10)).grid(
 		column=0, row=10, padx=10, pady=25)
 	sho = tk.StringVar(window, 'catchall')
 	ttk.Label(window, text="Shoes Worn :", font=("Times New Roman", 10)).grid(column=0, row=15, padx=10, pady=5)
 	shoe_menu = ttk.OptionMenu(window, sho, '', *shoes)
 	shoe_menu.grid(column=1, row=15)
-	
+
 	ttk.Label(window, text='Liters Consumed :', font=("Times New Roman", 10)).grid(column=0, row=16, padx=10, pady=5)
 	liter_num = tk.DoubleVar(value=0.)
 	liter_entry = ttk.Entry(window, textvariable=liter_num)
 	liter_entry.grid(column=1, row=16)
-	
+
 	ttk.Label(window, text='Calories Consumed :', font=("Times New Roman", 10)).grid(column=0, row=17, padx=10, pady=5)
 	cal_num = tk.DoubleVar(value=0.)
 	calnum_entry = ttk.Entry(window, textvariable=cal_num)
 	calnum_entry.grid(column=1, row=17)
-	
+
 	ttk.Label(window, text='Calorie Description :', font=("Times New Roman", 10)).grid(column=0, row=18, padx=10,
-	                                                                                   pady=5)
+																					   pady=5)
 	cal_desc = tk.StringVar()
 	caldesc_entry = ttk.Entry(window, textvariable=cal_desc)
 	caldesc_entry.grid(column=1, row=18)
-	
+
 	ttk.Label(window, text='Start Weight (lb) :', font=("Times New Roman", 10)).grid(column=0, row=19, padx=10, pady=5)
 	# strtw_num = tk.DoubleVar(value=math.nan)
 	strtw_entry = ttk.Entry(window)
 	strtw_entry.grid(column=1, row=19)
-	
+
 	ttk.Label(window, text='End Weight (lb) :', font=("Times New Roman", 10)).grid(column=0, row=20, padx=10, pady=5)
 	# endw_num = tk.DoubleVar(value=math.nan)
 	endw_entry = ttk.Entry(window)
 	endw_entry.grid(column=1, row=20)
-	
+
 	def close_window():
 		global shoes_worn
 		global liters_consumed
@@ -109,14 +108,14 @@ def data_input_popup(date, shoes, mileage):
 			end_weight_lb = np.nan
 		else:
 			end_weight_lb = float(endw_entry.get())
-		
+
 		window.destroy()
-	
+
 	button = Button(window, text='Ok', command=close_window)
 	button.grid(row=25, column=1)
-	
+
 	window.mainloop()
-	
+
 	return shoes_worn, liters_consumed, start_weight_lb, end_weight_lb, calories_consumed, calorie_description
 
 
@@ -124,18 +123,18 @@ def get_past_races(racekeys=None):
 	races = OrderedDict({})
 	# trail:
 	races.update({'Superior 50k 2018': datetime.datetime(2018, 5, 19),
-	              'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
-	              'Superior 50k 2019': datetime.datetime(2019, 5, 18),
-	              'Batona (virtual) 33M 2020': datetime.datetime(2020, 10, 10),
-	              'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 31),
-	              'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14)})
+				  'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
+				  'Superior 50k 2019': datetime.datetime(2019, 5, 18),
+				  'Batona (virtual) 33M 2020': datetime.datetime(2020, 10, 10),
+				  'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 31),
+				  'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14)})
 	# road:
 	races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
-	              'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
-	              'TC Marathon 2015': datetime.datetime(2015, 10, 4)})
+				  'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
+				  'TC Marathon 2015': datetime.datetime(2015, 10, 4)})
 	# past 18 weeks
 	races.update({'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
-	
+
 	# remove races not in racekeys
 	if racekeys is not None:
 		[races.pop(k) for k in list(races.keys()) if k not in racekeys]
@@ -144,23 +143,26 @@ def get_past_races(racekeys=None):
 	return races
 
 
-def update_data_file(code, races2analyze=None):
-	client = get_client(code)
-	
-	races = get_past_races(racekeys=races2analyze)
-	if 'Past 18 weeks' in races2analyze:
-		races.update({'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
-	aft = min(races.values()) - datetime.timedelta(weeks=18)  # 18 weeks before earliest race date
-	bef = max(races.values()) + datetime.timedelta(days=1)
-	activities = get_activities(client, aft, bef)
-	
+def get_training_data_file():
 	if os.path.isdir('C:/Users/Owner/'):
 		fn = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/posts/RaceTraining/training_data.xlsx'
 	elif os.path.isdir('C:/Users/wcapecch/'):
 		fn = 'C:/Users/wcapecch/PycharmProjects/capecchi.github.io/posts/RaceTraining/training_data.xlsx'
 	else:
 		raise BillExcept('cannot locate training data file')
-	
+	return fn
+
+
+def update_data_file(code, races2analyze=None):
+	client = get_client(code)
+
+	races = get_past_races(racekeys=races2analyze)
+	aft = min(races.values()) - datetime.timedelta(weeks=18)  # 18 weeks before earliest race date
+	bef = max(races.values()) + datetime.timedelta(days=1)
+	activities = get_activities(client, aft, bef)
+
+	fn = get_training_data_file()
+
 	sho = pd.read_excel(fn, sheet_name='shoes', engine='openpyxl')
 	shoe_options = sho['shoe_options'].values
 	df = pd.read_excel(fn, sheet_name='data', engine='openpyxl')
@@ -179,12 +181,13 @@ def update_data_file(code, races2analyze=None):
 	lit_cons_arr = list(df['Liters Consumed'].values)  # to help me plan how much water to bring
 	cal_cons_arr = list(df['Calories Consumed'].values)  # to help plan food
 	cal_desc_arr = list(df['Calorie Description'].values)
-	
+
 	activities = activities[::-1]  # put in chronological order
-	
+
 	for act in activities:
 		# if act is missing, add it in
 		if act.id not in df['runid'].values:
+			print(f'--> adding runid: {act.id}')
 			runid_arr.append(act.id)
 			date_arr.append(act.start_date_local)
 			type_arr.append(act.type)
@@ -208,42 +211,51 @@ def update_data_file(code, races2analyze=None):
 					temp_arr.append(np.nan)
 					logging.info(
 						f'problem converting {desc.split("°")[0].split(" ")[-1]} to float for runid: {act.id}- set to nan')
-			
+
 			# add splits
 			splits = client.get_activity(act.id).splits_standard
 			if splits is not None:
-				minpmil = [60. / unithelper.miles_per_hour(s.average_speed).num for s in splits]  # min per mile pace
+				minpmil = [60. / unithelper.miles_per_hour(s.average_speed).num if unithelper.miles_per_hour(
+					s.average_speed).num > 0 else np.nan for s in splits]  # min per mile pace
 				firsthalf_av, secondhalf_av = np.nanmean(minpmil[0:int(len(minpmil) / 2)]), np.nanmean(
 					minpmil[int(len(minpmil) / 2):])  # get av pace for first/second half of act
 				split_shift_arr.append(secondhalf_av - firsthalf_av)
 			else:
 				split_shift_arr.append(np.nan)
-			
-			if act.type == 'Run':
-				shoes_available = []
-				for i in sho.index:
-					if math.isnan(sho['retired_date'][i]):
-						if act.start_date_local >= sho['start_date'][i]:
-							shoes_available.append(sho['shoe_options'][i])
-					else:
-						if sho['start_date'][i] < act.start_date_local < sho['retired_date'][i]:
-							shoes_available.append(sho['shoe_options'][i])
-				# initialize vars (need next line)
-				shoes_worn, liters_consumed, start_weight_lb, end_weight_lb = 'catchall', 0., np.nan, np.nan
-				sh, lc, sw, ew, cc, cd = data_input_popup(act.start_date_local, shoes_available,
-				                                          unithelper.miles(act.distance).num)
-			else:
+
+			if act.type == 'Run' and act.moving_time.seconds > 0:
+				# bypass for now to fill in old data
+				# shoes_available = []
+				# for i in sho.index:
+				# 	if math.isnan(sho['retired_date'][i]):
+				# 		if act.start_date_local >= sho['start_date'][i]:
+				# 			shoes_available.append(sho['shoe_options'][i])
+				# 	else:
+				# 		if sho['start_date'][i] < act.start_date_local < sho['retired_date'][i]:
+				# 			shoes_available.append(sho['shoe_options'][i])
+				# # initialize vars (need next line)
+				# shoes_worn, liters_consumed, start_weight_lb, end_weight_lb = 'catchall', 0., np.nan, np.nan
+				# sh, lc, sw, ew, cc, cd = data_input_popup(act.start_date_local, shoes_available,
+				#                                           unithelper.miles(act.distance).num)
 				sh, lc, sw, ew, cc, cd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
-			strw_arr.append(sw)
-			endw_arr.append(ew)
-			swtrt_arr.append(((sw - ew) / 2.20462 + lc) / (act.moving_time.seconds / 60. / 60.))
-			sho_worn_arr.append(sh)
-			lit_cons_arr.append(lc)
-			cal_cons_arr.append(cc)
-			cal_desc_arr.append(cd)
+				strw_arr.append(sw)
+				endw_arr.append(ew)
+				swtrt_arr.append(((sw - ew) / 2.20462 + lc) / (act.moving_time.seconds / 60. / 60.))
+				sho_worn_arr.append(sh)
+				lit_cons_arr.append(lc)
+				cal_cons_arr.append(cc)
+				cal_desc_arr.append(cd)
+			else:
+				strw_arr.append(np.nan)
+				endw_arr.append(np.nan)
+				swtrt_arr.append(np.nan)
+				sho_worn_arr.append(np.nan)
+				lit_cons_arr.append(np.nan)
+				cal_cons_arr.append(np.nan)
+				cal_desc_arr.append(np.nan)
 		else:  # act exists, can do other checks here
 			pass
-	
+
 	df_updated = pd.DataFrame(
 		{'runid': runid_arr, 'Date': date_arr, 'Type': type_arr, 'Calories': cals_arr, 'Dist (mi)': dist_arr,
 		 'Pace (min/mi)': pace_arr, 'Split Shift (min/mile)': split_shift_arr,
@@ -251,17 +263,17 @@ def update_data_file(code, races2analyze=None):
 		 'Sweat Loss Rate (L/h)': swtrt_arr, 'Shoes Worn': sho_worn_arr, 'Liters Consumed': lit_cons_arr,
 		 'Calories Consumed': cal_cons_arr, 'Calorie Description': cal_desc_arr})
 	df_updated = df_updated.sort_values(by=['Date'], ascending=False)  # put recent runs at the top
-	
+
 	sho_dist = np.zeros_like(shoe_options)
 	for i in sho.index:
 		sho_dist[i] = np.sum([dist_arr[j] for j in range(len(sho_worn_arr)) if sho_worn_arr[j] == shoe_options[i]])
 		sho['cum_dist (mi)'] = sho_dist
-	
+
 	with pd.ExcelWriter(fn) as writer:
 		df_updated.to_excel(writer, sheet_name='data', index=False)
 		sho.to_excel(writer, sheet_name='shoes', index=False)
-	
+
 	logging.info('--> DATA FILE UPDATED <--')
-	
+
 	# return activities
-	return df_updated[(aft < df_updated['Date']) & (df_updated['Date'] < bef)], sho
+	return df_updated[(aft < df_updated['Date']) & (df_updated['Date'] < bef)], sho, races
