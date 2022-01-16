@@ -371,11 +371,14 @@ def create_rman_fig(df, sho):
                       row=2, col=1)  # shoe mileage
     # add rect for most recent activity
     last_shoes, last_dist = df['Shoes Worn'].values[-1], df['Dist (mi)'].values[-1]
-    x1rect = sho_dist[shoe_options == last_shoes][0]
-    x0rect = x1rect - last_dist
-    yrect = np.where(shoe_options == last_shoes)[0][0]
-    man_fig.add_shape(type='rect', x0=x0rect, y0=yrect - .5, x1=x1rect, y1=yrect + .5,
-                      line=dict(width=2, color='black'), row=2, col=1)
+    try:
+        x1rect = sho_dist[shoe_options == last_shoes][0]
+        x0rect = x1rect - last_dist
+        yrect = np.where(shoe_options == last_shoes)[0][0]
+        man_fig.add_shape(type='rect', x0=x0rect, y0=yrect - .5, x1=x1rect, y1=yrect + .5,
+                          line=dict(width=2, color='black'), row=2, col=1)
+    except IndexError:  # most likely last activity wasn't a run
+        pass
 
     # LITERS/CALORIES CONSUMED
     runs = df.dropna(axis=0, how='any', subset=['Liters Consumed', 'Calories Consumed'])
@@ -409,7 +412,7 @@ def create_rman_fig(df, sho):
 
 def create_calbytype_fig(df):
     race_day = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-    runs = df[(df['Type'] == 'Run') & (race_day - wks_18 < df['Date']) & (df['Date'] < race_day + day_1)]
+    runs = df[(race_day - wks_18 < df['Date']) & (df['Date'] < race_day + day_1)]
     days_before = np.array([(pd.Timestamp(val) - race_day).days for val in runs['Date'].values])
     cals, types = runs['Calories'].values, runs['Type'].values
 
@@ -435,7 +438,7 @@ def create_calbytype_fig(df):
                                 xaxis2=dict(title='Weeks Ago', tickmode='array', tickvals=-7 * np.arange(19),
                                             ticktext=[str(int(i)) for i in abs(-7 * np.arange(19) / 7)]),
                                 yaxis1=dict(title='Calories\n(cumulative)'),
-                                yaxis2=dict(title='Activity Type Count'))
+                                yaxis2=dict(title='Activities per Week'))
     calbytype_fig.update_yaxes(automargin=True)
 
     calbytype_fig.write_html(f'{img_path}rta_calbytype.html')
