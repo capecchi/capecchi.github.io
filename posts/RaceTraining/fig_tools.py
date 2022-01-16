@@ -32,7 +32,7 @@ def fig_architect(df, sho, races, plots=None):
         graphs.append(create_rman_fig(df, sho))
     if 'rcalbytype' in plots:
         graphs.append(create_calbytype_fig(df))
-    message = 'you smell'
+    message = 'Analysis Complete'
     return graphs, message
 
 
