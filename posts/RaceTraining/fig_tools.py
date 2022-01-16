@@ -30,26 +30,10 @@ def fig_architect(df, sho, races, plots=None):
     if 'rswt' in plots:
         graphs.append(create_rman_fig(df, sho))
     if 'rcalbytype' in plots:
-        a = 1
+        graphs.append(create_calbytype_fig(df))
     message = 'you smell'
     return graphs, message
 
-
-"""
-	figs = []
-	ttext = [str(int(i)) for i in abs(-7 * np.arange(19) / 7)]
-	tvals = -7 * np.arange(19)
-	if calbytype_figs is not None:
-		for cf in calbytype_figs:
-			figs.append(cf)
-	if 'rswt' in plots:
-		man_fig.write_html(f'{img_path}rta_man.html')
-		print('saved manual analysis image')
-		figs.append(man_fig)
-	message = 'Analysis Complete'
-	
-	return figs, message
-"""
 
 if os.path.isdir('C:/Users/Owner/'):
     img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
@@ -422,36 +406,37 @@ def create_rman_fig(df, sho):
     return man_fig
 
 
-"""
-get_training_data(client, activities, get_cals=False, before=bef)
-	race_day = before.replace(hour=0, minute=0, second=0, microsecond=0)
-	if get_cals:
-		all_days_before = [(a.start_date_local.date() - race_day.date()).days for a in activities]
-		all_cals = [client.get_activity(id).calories for id in [a.id for a in activities]]
-		cum_cals = np.cumsum(all_cals)
-	else:
-		all_days_before, cum_cals = None, None
-	runs = [act for act in activities if act.type == 'Run']
-	runs = [r for r in runs if
-	        unithelper.miles(r.distance).num > 2 and unithelper.miles_per_hour(r.average_speed).num > 4]
-	dates = [r.start_date_local.date() for r in runs]
-	days_before = [(r.start_date_local.date() - race_day.date()).days for r in runs]
-	dist = [unithelper.miles(r.distance).num for r in runs]
-	cum = np.cumsum(dist)
-	pace = [60. / unithelper.miles_per_hour(r.average_speed).num for r in runs]  # min/mile
-	speed = [60 / p for p in pace]  # mph
-	if get_splits:
-		split_shift = []
-		for run in runs:
-			splits = client.get_activity(run.id).splits_standard
-			if splits is not None:
-				minpmil = [60. / unithelper.miles_per_hour(s.average_speed).num for s in splits]  # min per mile pace
-				firsthalf_av, secondhalf_av = np.nanmean(minpmil[0:int(len(minpmil) / 2)]), np.nanmean(
-					minpmil[int(len(minpmil) / 2):])  # get av pace for first/second half of run
-				split_shift.append(secondhalf_av - firsthalf_av)
-			else:
-				split_shift.append(np.nan)
-		return days_before, dist, cum, pace, speed, all_days_before, cum_cals, dates, split_shift
-	else:
-		return days_before, dist, cum, pace, speed, all_days_before, cum_cals, dates
-"""
+def create_calbytype_fig(df):
+    race_day = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    runs = df[(df['Type'] == 'Run') & (race_day - wks_18 < df['Date']) & (df['Date'] < race_day + day_1)]
+    days_before = np.array([(pd.Timestamp(val) - race_day).days for val in runs['Date'].values])
+    cals, types = runs['Calories'].values, runs['Type'].values
+
+    calbytype_fig = make_subplots(rows=2, cols=1, vertical_spacing=.05, shared_xaxes=True)
+    current_day_of_week = race_day.weekday()  # 0=Monday=Start of training week
+
+    cols = plotly.colors.DEFAULT_PLOTLY_COLORS
+    for i, typ in enumerate(np.unique(types)):
+        typecals = np.zeros_like(cals)
+        typecals[types == typ] = cals[types == typ]
+        calbytype_fig.add_trace(
+            go.Scatter(x=days_before, y=np.cumsum(typecals), mode='lines', line=dict(color=cols[i]),
+                       showlegend=False, ), row=1, col=1)
+        calbytype_fig.add_trace(
+            go.Scatter(x=days_before[types == typ], y=np.cumsum(typecals)[types == typ], mode='markers',
+                       marker=dict(color=cols[i]), showlegend=False), row=1, col=1)
+        calbytype_fig.add_trace(
+            go.Histogram(x=days_before[types == typ], name=typ,
+                         xbins=dict(start=-7 * 18 - current_day_of_week, end=7 - current_day_of_week, size=7),
+                         marker_color=cols[i]), row=2, col=1)
+    calbytype_fig.layout.update(height=750, barmode='stack',  # 0.5 in tickvals to place grid between bins
+                                xaxis1=dict(tickmode='array', tickvals=-7 * np.arange(19) - current_day_of_week - .5),
+                                xaxis2=dict(title='Weeks Ago', tickmode='array', tickvals=-7 * np.arange(19),
+                                            ticktext=[str(int(i)) for i in abs(-7 * np.arange(19) / 7)]),
+                                yaxis1=dict(title='Calories\n(cumulative)'),
+                                yaxis2=dict(title='Activity Type Count'))
+    calbytype_fig.update_yaxes(automargin=True)
+
+    calbytype_fig.write_html(f'{img_path}rta_calbytype.html')
+    print('saved calbytype image')
+    return calbytype_fig
