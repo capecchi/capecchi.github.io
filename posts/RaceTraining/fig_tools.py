@@ -20,7 +20,8 @@ def fig_architect(df, sho, races, plots=None):
     if 'rcumdist' in plots:
         graphs.append(create_rcumdist_fig(df, races))
     if 'rwk' in plots:
-        a = 1
+        # deprecated
+        pass
     if 'rpace' in plots:
         graphs.append(create_rpace_fig(df, races))
     if 'rcumcal' in plots:
