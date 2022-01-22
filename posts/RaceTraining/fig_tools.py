@@ -164,7 +164,7 @@ def create_rcumcal_fig(df, races):
 
 def create_rpvd_fig(df, races):
     print('Creating PACE V DIST figure')
-    svd_traces, split_traces = [], []
+    pvd_traces, split_traces, pvt_traces = [], [], []
     yrsago = [(datetime.datetime.utcnow() - rd).days / 365. for rd in [races[k] for k in races.keys()]]
     yrsago = [ya + 18 / 52. for ya in yrsago]  # add 18 weeks onto each race
     nyr = np.ceil(max(yrsago))
@@ -176,14 +176,17 @@ def create_rpvd_fig(df, races):
     race_day = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + day_1
     days_before = [(pd.Timestamp(val) - race_day).days for val in runs['Date'].values]
     dist, pace, dates = runs['Dist (mi)'].values, runs['Pace (min/mi)'].values, runs['Date'].values
+    timevals = pace * dist  # min
     hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for i, s in
                  enumerate(pace)]
     hovertemp = 'mileage: %{x:.2f}<br>%{text}'
-    svd_traces.append(go.Scatter(x=dist, y=pace, mode='markers', name=f'past {nyr} years', text=hovertext,
+    pvd_traces.append(go.Scatter(x=dist, y=pace, mode='markers', name=f'past {nyr} years', text=hovertext,
+                                 hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
+    pvt_traces.append(go.Scatter(x=timevals, y=pace, mode='markers', name=f'past {nyr} years', text=hovertext,
                                  hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
     split_traces.append(go.Scatter(x=dist, y=runs['Split Shift (min/mile)'].values, mode='markers', text=hovertext,
                                    hovertemplate=hovertemp))
-    svd_traces = add_max_effort_curve(svd_traces, max_dist=max(dist))  # add here so data only counted once
+    pvd_traces = add_max_effort_curve(pvd_traces, max_dist=max(dist))  # add here so data only counted once
     recent, htemp = (dist[-1], pace[-1]), hovertemp
     htxt = f'pace: {int(pace[-1])}:{str(int((pace[-1] - int(pace[-1])) * 60)).zfill(2)} (min/mile)<br>date: {dates[-1]}'
 
@@ -211,19 +214,29 @@ def create_rpvd_fig(df, races):
         runs = df[(df['Type'] == 'Run') & (v - wks_18 < df['Date']) & (df['Date'] < v + day_1)]
         runs = runs[(runs['Dist (mi)'] > 2) & (runs['Pace (min/mi)'] < 15)]
         dist, pace, dates = runs['Dist (mi)'].values, runs['Pace (min/mi)'].values, runs['Date'].values
+        timevals = pace * dist  # min
         hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {dates[i]}' for i, s in
                      enumerate(pace)]
-        svd_traces.append(
+        pvd_traces.append(
             go.Scatter(x=dist, y=pace, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
-    svd_traces.append(go.Scatter(x=[recent[0]], y=[recent[1]], mode='markers', name='most recent',
+        pvt_traces.append(
+            go.Scatter(x=timevals, y=pace, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
+    pvd_traces.append(go.Scatter(x=[recent[0]], y=[recent[1]], mode='markers', name='most recent',
                                  marker=dict(line=dict(width=3), color='rgba(0,0,0,0)', symbol='star-diamond-dot',
                                              size=10), text=[htxt], hovertemplate=htemp))
-    svd_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
+    pvd_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
                            yaxis=dict(title='Pace (min/mile)', hoverformat='.2f'),
                            legend=dict(bgcolor='rgba(0,0,0,0)'))
-    pc_v_dist_fig = go.Figure(data=svd_traces, layout=svd_layout)
+    pc_v_dist_fig = go.Figure(data=pvd_traces, layout=pvd_layout)
     pc_v_dist_fig.write_html(f'{img_path}rta_pvd.html')
     print('saved pace-vs-dist image')
+
+    pvt_layout = go.Layout(xaxis=dict(title='Duration (min)'),
+                           yaxis=dict(title='Pace (min/mile)', hoverformat='.2f'),
+                           legend=dict(bgcolor='rgba(0,0,0,0)'))
+    pc_v_time_fig = go.Figure(data=pvt_traces, layout=pvt_layout)
+    pc_v_time_fig.write_html(f'{img_path}rta_pvt.html')
+    print('saved pace-vs-time image')
 
     split_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
                              yaxis=dict(title='change to av. splits (2nd-1st half) (min/mile)'))
@@ -237,7 +250,7 @@ def create_rpvd_fig(df, races):
     wklyav_fig.write_html(f'{img_path}rta_wklyav.html')
     print('saved weekly average image')
 
-    return pc_v_dist_fig, splits_fig, wklyav_fig
+    return pc_v_dist_fig, pc_v_time_fig, splits_fig, wklyav_fig
 
 
 def add_max_effort_curve(svd_traces, max_dist=100):
@@ -329,7 +342,6 @@ def add_max_effort_curve(svd_traces, max_dist=100):
 
 
 def create_rman_fig(df, sho):
-    # todo: manual plot all messed up
     analysis_startdate = datetime.datetime(2020, 9, 12, 0, 0, 0, 0)  # hard coded start date
     colors = plotly.colors.DEFAULT_PLOTLY_COLORS
     man_fig = make_subplots(rows=3, cols=1, vertical_spacing=.12)
@@ -406,6 +418,8 @@ def create_rman_fig(df, sho):
                                       overlaying='y3', range=[-250, yr * 500]),
                           showlegend=True, legend_title_text='Temp (F)')
     man_fig.update_yaxes(automargin=True)
+    man_fig.write_html(f'{img_path}rta_man.html')
+    print('saved manual analysis image')
 
     return man_fig
 
