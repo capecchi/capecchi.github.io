@@ -127,19 +127,22 @@ def get_past_races(racekeys=None):
                   'Superior 50k 2019': datetime.datetime(2019, 5, 18),
                   'Batona (virtual) 33M 2020': datetime.datetime(2020, 10, 10),
                   'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 31),
-                  'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14)})
+                  'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
+                  'Black Forest 100k 2022': datetime.datetime(2022, 10, 2)})
     # road:
     races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
                   'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
-                  'TC Marathon 2015': datetime.datetime(2015, 10, 4)})
+                  'TC Marathon 2015': datetime.datetime(2015, 10, 4),
+                  'Queens Half 2022': datetime.datetime(2022, 4, 10)})
+    # order chronologically
+    races = {k: v for k, v in sorted(races.items(), key=lambda item: item[1])}
+
     # past 18 weeks
     races.update({'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})
 
     # remove races not in racekeys
     if racekeys is not None:
         [races.pop(k) for k in list(races.keys()) if k not in racekeys]
-    # order chronologically
-    races = {k: v for k, v in sorted(races.items(), key=lambda item: item[1])}
     return races
 
 
