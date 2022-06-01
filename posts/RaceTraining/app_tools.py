@@ -233,7 +233,7 @@ def update_data_file(code, races2analyze=[]):
             if act.type == 'Run' and act.moving_time.seconds > 0:
                 shoes_available = []
                 for i in sho.index:
-                    if np.isnan(sho['retired_date'][i]):
+                    if not type(sho['retired_date'][i]) is pd.Timestamp:  # if shoe hasn't been retired yet
                         if act.start_date_local >= sho['start_date'][i]:
                             shoes_available.append(sho['shoe_options'][i])
                     else:
