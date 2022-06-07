@@ -91,8 +91,12 @@ def create_rcumdist_fig(df, races):
 		race_day = (v + day_1).replace(hour=0, minute=0, second=0, microsecond=0)
 		days_before = [(pd.Timestamp(val) - race_day).days for val in runs['Date'].values]
 		cumdist = np.nancumsum(runs['Dist (mi)'].values)
+		hovertext = [f'days to race: {abs(x)}<br>total miles: {y:.2f}' for (x, y) in
+		             zip(days_before, cumdist)]
+		hovertemp = '%{text}'
 		traces.append(
-			go.Scatter(x=days_before, y=cumdist, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
+			go.Scatter(x=days_before, y=cumdist, opacity=op, name=k, hovertemplate=hovertemp, text=hovertext,
+			           mode='lines+markers', line=dict(width=width)))
 	traces.append(
 		go.Scatter(x=[t.x[-1] for t in traces if len(t.x) > 0], y=[t.y[-1] for t in traces if len(t.y) > 0],
 		           text=[f'{round(t.y[-1], 1)}' for t in traces if len(t.y) > 0], mode='text',
@@ -150,8 +154,11 @@ def create_rcumcal_fig(df, races):
 		race_day = (v + day_1).replace(hour=0, minute=0, second=0, microsecond=0)
 		days_before = [(pd.Timestamp(val) - race_day).days for val in runs['Date'].values]
 		cumcals = np.nancumsum(runs['Calories'].values)
-		traces.append(
-			go.Scatter(x=days_before, y=cumcals, opacity=op, name=k, mode='lines+markers', line=dict(width=width)))
+		hovertext = [f'days to race: {abs(x)}<br>total cals: {y}' for (x, y) in
+		             zip(days_before, cumcals)]
+		hovertemp = '%{text}'
+		traces.append(go.Scatter(x=days_before, y=cumcals, opacity=op, name=k, hovertemplate=hovertemp, text=hovertext,
+		                         mode='lines+markers', line=dict(width=width)))
 	traces.append(
 		go.Scatter(x=[t.x[-1] for t in traces if len(t.x) > 0], y=[t.y[-1] for t in traces if len(t.y) > 0],
 		           text=[f'{round(t.y[-1], 1)}' for t in traces if len(t.y) > 0], mode='text',
@@ -381,8 +388,9 @@ def create_rman_fig(df, sho):
 	
 	# SHOE MILEAGE
 	sho_dist, shoe_options = sho['cum_dist (mi)'].values, sho['shoe_options'].values
-	man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', marker_color=colors[4], showlegend=False),
-	                  row=2, col=1)  # shoe mileage
+	hovertemp = '%{x:.0f} miles on %{y}<extra></extra>'  # <extra></extra> removes trace name from hover
+	man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', marker_color=colors[4], showlegend=False,
+	                         hovertemplate=hovertemp), row=2, col=1)  # shoe mileage
 	# add rect for most recent activity
 	last_shoes, last_dist = df['Shoes Worn'].values[-1], df['Dist (mi)'].values[-1]
 	try:
@@ -400,14 +408,15 @@ def create_rman_fig(df, sho):
 	lit_cons, cal_cons = runs['Liters Consumed'].values, runs['Calories Consumed'].values
 	runids, dates, dist = runs['runid'].values, runs['Date'].values, runs['Dist (mi)'].values
 	hovertext = [f'runid: {r}<br>date: {d}' for (r, d) in zip(runids, dates)]
-	hovertemp = '%{text}'
+	hovertemp1 = '%{text}<br>dist: %{x:.2f}<br>liters: %{y}<extra></extra>'
+	hovertemp2 = '%{text}<br>dist: %{x:.2f}<br>cals: %{y}<extra></extra>'
 	man_fig.add_trace(
 		go.Scatter(x=dist, y=lit_cons, mode='markers', marker_color=colors[2],
-		           showlegend=False, text=hovertext, hovertemplate=hovertemp), row=3, col=1)  # fluid consumption
+		           showlegend=False, text=hovertext, hovertemplate=hovertemp1), row=3, col=1)  # fluid consumption
 	man_fig.add_trace(
 		go.Scatter(x=dist, y=cal_cons, mode='markers', yaxis='y4', xaxis='x3',
 		           marker_color=colors[3], showlegend=False, text=hovertext,
-		           hovertemplate=hovertemp))  # calorie consumption
+		           hovertemplate=hovertemp2))  # calorie consumption
 	yr = np.ceil(np.nanmax([np.nanmax(lit_cons), np.nanmax(cal_cons) / 500.]))
 	
 	man_fig.layout.update(height=750, barmode='stack',

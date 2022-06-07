@@ -27,10 +27,10 @@ class MyForm(Form):
 	runs = MultiCheckboxField(label='Race Options', choices=race_options)
 	docode = SubmitField('Run Analysis')
 	# noplot = [('rdist', 'Distance vs. Weeks Before'), ('rpace', 'Pace vs. Weeks Before')]
-	plot_options = [('rcumdist', 'Cumulative Distance vs. Weeks Before'),
-	                ('rcumcal', 'Calories (cumulative) vs. Weeks Before'), ('rpvd', 'Pace vs. Distance'),
+	plot_options = [('rcumdist', 'Distance vs. Weeks Before (cumulative)'),
+	                ('rcumcal', 'Calories vs. Weeks Before (cumulative)'), ('rpvd', 'Pace vs. Distance'),
 	                ('rswt', 'Manual Data Analysis (sweatrate, shoe mileage, fluid/calorie intake vs mileage)'),
-	                ('rcalbytype', 'Calories (cumulative) by Activity Type over past 18 weeks'),
+	                ('rcalbytype', 'Calories by Activity Type over past 18 weeks (cumulative)'),
 	                ('weighthistory', 'Weight history')]
 	# deprecated options: ('rwk', 'Current Week'),
 	code = HiddenField()
