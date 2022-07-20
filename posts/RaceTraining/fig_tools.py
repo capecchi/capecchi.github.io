@@ -402,7 +402,7 @@ def create_rman_fig(df, sho):
 	except IndexError:  # most likely last activity wasn't a run
 		pass
 	
-	# LITERS/CALORIES CONSUMED
+	# LITERS/CALORIES CONSUMED  # TODO: plot vs duration, not mileage
 	runs = df.dropna(axis=0, how='any', subset=['Liters Consumed', 'Calories Consumed'])
 	runs = runs[(runs['Date'] > analysis_startdate) & (runs['Type'] == 'Run')]
 	lit_cons, cal_cons = runs['Liters Consumed'].values, runs['Calories Consumed'].values
