@@ -138,7 +138,6 @@ def get_past_races(racekeys=None):
 				  'Batona (virtual) 33M 2020': datetime.datetime(2020, 10, 10),
 				  'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 31),
 				  'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
-				  "Alexa's Thunder Half 2022": datetime.datetime(2022, 8, 6),
 				  'Shawangunk Ridge 30M 2022': datetime.datetime(2022, 9, 10),
 				  'Black Forest 100k 2022': datetime.datetime(2022, 10, 2)})
 	# road:

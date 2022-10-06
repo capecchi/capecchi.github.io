@@ -8,11 +8,8 @@ from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
 from posts.RaceTraining.app_tools import *
 from posts.RaceTraining.fig_tools import fig_architect
 
-
-# todo: fix date format in hover (pvd and others probably)
 # todo: tidy plot of splits
 # todo: implement new shoe tracking system- colors? labels?
-# todo: in addition to max-effort curve, is it possible to add "zones" of difficulty, maybe based on avg heartrate?
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
