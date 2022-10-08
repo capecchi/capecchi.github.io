@@ -1,4 +1,12 @@
+import datetime
+from meteostat import Hourly
 import numpy as np
+
+
+def temp_history_test():
+    strt = datetime.datetime(2022, 10, 2, 0, 0, 0, 0)  # midnight
+    end = datetime.datetime(2022, 10, 2, 17, 45, 0, 0)  # 5:45p
+    dat = Hourly()
 
 
 def color_test():
