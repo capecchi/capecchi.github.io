@@ -1,12 +1,19 @@
 import datetime
-from meteostat import Hourly
+
 import numpy as np
+from meteostat import Hourly, Point
+import matplotlib.pyplot as plt
 
 
 def temp_history_test():
+    lon, lat, alt = -77.56772441661252, 41.462899053757894, 476.94935091933206  # bft center (alt in [m])
     strt = datetime.datetime(2022, 10, 2, 0, 0, 0, 0)  # midnight
     end = datetime.datetime(2022, 10, 2, 17, 45, 0, 0)  # 5:45p
-    dat = Hourly()
+    bft = Point(lat, lon, alt)
+    dat = Hourly(bft, strt, end)
+    dat = dat.fetch()
+    plt.plot(dat['temp'])
+    plt.show()
 
 
 def color_test():
@@ -39,6 +46,7 @@ def rect_on_histogram_test():
 
 
 if __name__ == '__main__':
-    rect_on_histogram_test()
+    temp_history_test()
+    # rect_on_histogram_test()
     # color_test()
     a = 1
