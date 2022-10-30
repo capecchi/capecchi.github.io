@@ -539,6 +539,7 @@ def create_calbytype_fig(df):
 
 
 def create_weighthist_fig(df):
+    # todo: add weighted running average (14-day? 7-day?)
     weightdf = df.dropna(axis=0, how='any', subset=['Date', 'End Weight (lb)'])
     date_arr = list(weightdf['Date'].values)
     endw_arr = list(weightdf['End Weight (lb)'].values)

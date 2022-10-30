@@ -1,11 +1,22 @@
 import datetime
 
-import numpy as np
-from meteostat import Hourly, Point
 import matplotlib.pyplot as plt
+import numpy as np
+
+
+def compare_temp_methods(client, runids, temps):
+    # TEMPORARY routine to compare temp recording methods- delete later
+    from meteostat import Hourly, Point
+    for runid in runids:
+        act = client.get_activity(runid)
+        pt = Point(act.start_latlng.lat, act.start_latlng.lon, np.mean([act.elev_low, act.elev_high]))
+        dat = Hourly(pt, act.start_date_local, act.start_date_local + act.elapsed_time)
+        dat = dat.fetch()
+        a = 1
 
 
 def temp_history_test():
+    from meteostat import Hourly, Point
     lon, lat, alt = -77.56772441661252, 41.462899053757894, 476.94935091933206  # bft center (alt in [m])
     strt = datetime.datetime(2022, 10, 2, 0, 0, 0, 0)  # midnight
     end = datetime.datetime(2022, 10, 2, 17, 45, 0, 0)  # 5:45p

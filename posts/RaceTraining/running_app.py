@@ -11,6 +11,7 @@ from posts.RaceTraining.fig_tools import fig_architect
 # todo: tidy plot of splits
 # todo: implement new shoe tracking system- colors? labels?
 
+
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
     code = HiddenField()
