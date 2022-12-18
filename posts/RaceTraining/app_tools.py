@@ -11,9 +11,10 @@ import pandas as pd
 import stravalib.exc
 from stravalib import unithelper
 from stravalib.client import Client
+
+
 # from meteostat import Hourly, Point
 # import meteostat
-from posts.RaceTraining.playground import compare_temp_methods
 
 
 class BillExcept(Exception):
@@ -142,7 +143,10 @@ def get_past_races(racekeys=None):
                   'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 31),
                   'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
                   'Shawangunk Ridge 30M 2022': datetime.datetime(2022, 9, 10),
-                  'Black Forest 100k 2022': datetime.datetime(2022, 10, 2)})
+                  'Black Forest 100k 2022': datetime.datetime(2022, 10, 2),
+                  'Frosty Fat Sass 6H 2023': datetime.datetime(2023, 1, 28),
+                  'Naked Bavarian 40M 2023': datetime.datetime(2023, 3, 4),
+                  'Zion 100M 2023': datetime.datetime(2023, 4, 15)})
     # road:
     races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
                   'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
