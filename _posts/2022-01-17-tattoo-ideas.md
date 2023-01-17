@@ -13,4 +13,4 @@ Above is the line *shape* that I'd like, but I'd like to add some character to t
 
 <img src="/images/posts/tattoo_good_linestyle.png" width="20%"/>
 
-<img scr="/images/posts/possible_shading_style.png" width="20%"/>
+<img scr="/images/posts/possible_shading_style.PNG" width="20%"/>
