@@ -12,4 +12,5 @@ This is the image of the tattoo design. It's an armband tattoo, so it wraps back
 ![image](/images/posts/race_elevation.png)
 
 I'd like to adapt the idea above to give it some character- this is a linestyle I like
-![image](/images/posts/tattoo_good_linestyle.png)
+<img src="/images/posts/tattoo_good_linestyle.png" width="20%">
+#![image](/images/posts/tattoo_good_linestyle.png)
