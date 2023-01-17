@@ -15,7 +15,7 @@ Above is the line *shape* that I'd like, but I'd like to add some character to t
 
 <img src="/images/posts/tat_hard_shading.png" width="20%"/>
 
-<img src="/images/posts/tat_line_shading.png" width="20%"/>
+<img src="/images/posts/tat_line_shading.jpg" width="20%"/>
 
 <img src="/images/posts/tat_mtn_trees.png" width="20%"/>
 
