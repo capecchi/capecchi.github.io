@@ -8,6 +8,8 @@ from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
 from posts.RaceTraining.app_tools import *
 from posts.RaceTraining.fig_tools import fig_architect
 
+# todo: weight before race plot
+# todo: add races to weight history as in my weekly mileage plot
 # todo: tidy plot of splits
 # todo: implement new shoe tracking system- colors? labels?
 
