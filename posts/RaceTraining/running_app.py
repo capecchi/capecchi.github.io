@@ -8,6 +8,7 @@ from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
 from posts.RaceTraining.app_tools import *
 from posts.RaceTraining.fig_tools import fig_architect
 
+
 # todo: weight before race plot
 # todo: add races to weight history as in my weekly mileage plot
 # todo: tidy plot of splits
@@ -26,9 +27,9 @@ class MyForm(Form):
     race_options = [(r, r) for r in races.keys()]
     runs = MultiCheckboxField(label='Race Options', choices=race_options)
     docode = SubmitField('Run Analysis')
-    # noplot = [('rdist', 'Distance vs. Weeks Before'), ('rpace', 'Pace vs. Weeks Before')]
+    # noplot = [('rdist', 'Distance vs. Weeks Before'), ('rpace', 'Pace vs. Weeks Before'),('rcumcal', 'Calories vs. Weeks Before (cumulative)')]
     plot_options = [('rcumdist', 'Distance vs. Weeks Before (cumulative)'),
-                    ('rcumcal', 'Calories vs. Weeks Before (cumulative)'), ('rpvd', 'Pace vs. Distance'),
+                    ('rpvd', 'Pace vs. Distance'),
                     ('rswt', 'Manual Data Analysis (sweatrate, shoe mileage, fluid/calorie intake vs mileage)'),
                     ('rcalbytype', 'Calories by Activity Type over past 18 weeks (cumulative)'),
                     ('weighthistory', 'Weight history')]
@@ -40,8 +41,11 @@ class MyForm(Form):
 
 def do_prepopulate(form: MyForm, code):
     if form.runs.data is None and form.plots.data is None:
-        form.runs.data = ['Past 18 weeks']
-        form.plots.data = ['rswt', 'calbytype']
+        form.runs.data = ['Superior 50k 2018', 'Superior 50k 2019', 'Batona (virtual) 33M 2020',
+                          'Dirty German (virtual) 50k 2020', 'Stone Mill 50M 2020', 'Shawangunk Ridge 30M 2022',
+                          'Black Forest 100k 2022', 'Frosty Fat Sass 6H 2023', 'Naked Bavarian 40M 2023',
+                          'Zion 100M 2023']
+        form.plots.data = ['rcumdist', 'rpvd', 'rswt', 'calbytype', 'weighthistory']
     form.code.data = code
     form.message = 'select races/plot options'
 
