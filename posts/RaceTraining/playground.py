@@ -3,6 +3,24 @@ import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 
+from posts.RaceTraining.app_tools import get_training_data_file, get_past_races
+import pandas as pd
+
+
+def datetime_troubleshooting():
+    fn = get_training_data_file()
+    df = pd.read_excel(fn, sheet_name='data', engine='openpyxl')
+    weightdf = df.dropna(axis=0, how='any', subset=['Date', 'End Weight (lb)'])
+    date_arr = list(weightdf['Date'].values)
+    races = get_past_races()
+    now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+    for rd in [races[k] for k in races.keys()]:
+        print((rd-now).days)
+        print(rd)
+        print(rd-min(date_arr))
+        print(min(date_arr))
+
 
 def compare_temp_methods(client, runids, temps):
     # TEMPORARY routine to compare temp recording methods- delete later
@@ -57,7 +75,8 @@ def rect_on_histogram_test():
 
 
 if __name__ == '__main__':
-    temp_history_test()
+    # temp_history_test()
     # rect_on_histogram_test()
     # color_test()
+    datetime_troubleshooting()
     a = 1

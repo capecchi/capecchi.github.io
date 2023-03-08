@@ -41,10 +41,10 @@ class MyForm(Form):
 
 def do_prepopulate(form: MyForm, code):
     if form.runs.data is None and form.plots.data is None:
-        form.runs.data = ['Superior 50k 2018', 'Superior 50k 2019', 'Batona (virtual) 33M 2020',
-                          'Dirty German (virtual) 50k 2020', 'Stone Mill 50M 2020', 'Shawangunk Ridge 30M 2022',
-                          'Black Forest 100k 2022', 'Frosty Fat Sass 6H 2023', 'Naked Bavarian 40M 2023',
-                          'Zion 100M 2023']
+        form.runs.data = ['Superior 50k 2018', 'Driftless 50k 2018', 'Superior 50k 2019', 'Batona (virtual) 33M 2020',
+                          'Dirty German (virtual) 50k 2020', 'Stone Mill 50M 2020', 'Queens Half 2022',
+                          'Shawangunk Ridge 30M 2022', 'Black Forest 100k 2022', 'Frosty Fat Sass 6H 2023',
+                          'Naked Bavarian 40M 2023', 'Zion 100M 2023', 'Past 18 weeks']
         form.plots.data = ['rcumdist', 'rpvd', 'rswt', 'calbytype', 'weighthistory']
     form.code.data = code
     form.message = 'select races/plot options'

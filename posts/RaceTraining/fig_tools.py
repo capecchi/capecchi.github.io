@@ -33,7 +33,7 @@ def fig_architect(df, sho, races, plots=None):
     if 'rcalbytype' in plots:
         graphs.append(create_calbytype_fig(df))
     if 'weighthistory' in plots:
-        graphs.append(create_weighthist_fig(df))
+        graphs.append(create_weighthist_fig(df, races))
     message = 'Analysis Complete'
     return graphs, message
 
@@ -202,7 +202,8 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
     split_traces.append(go.Scatter(x=[dist[-1]], y=[runs['Split Shift (min/mile)'].values[-1]], mode='markers',
                                    marker=dict(line=dict(width=1), color='rgba(0,0,0,0)', symbol='star-diamond-dot',
                                                size=10)))
-    pvd_traces, pvt_traces = add_max_effort_curve(pvd_traces, pvt_traces, max_dist=max(dist))  # add here so data only counted once
+    pvd_traces, pvt_traces = add_max_effort_curve(pvd_traces, pvt_traces,
+                                                  max_dist=max(dist))  # add here so data only counted once
     recent, htemp = (dist[-1], pace[-1]), hovertemp
     htxt = f'pace: {int(pace[-1])}:{str(int((pace[-1] - int(pace[-1])) * 60)).zfill(2)} (min/mile)<br>date: {prettydates[-1]}'
 
@@ -538,15 +539,35 @@ def create_calbytype_fig(df):
     return calbytype_fig
 
 
-def create_weighthist_fig(df):
+def create_weighthist_fig(df, races):
     # todo: add weighted running average (14-day? 7-day?)
-    # todo: add race dates (vertical dashed like on dist plot?)
+
     weightdf = df.dropna(axis=0, how='any', subset=['Date', 'End Weight (lb)'])
     date_arr = list(weightdf['Date'].values)
     endw_arr = list(weightdf['End Weight (lb)'].values)
 
-    traces = [go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='markers')]
-    playout = go.Layout(xaxis=dict(title='Date'), yaxis=dict(title='Weight (lb)'))
+    today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + day_1
+    now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    days_before = [(pd.Timestamp(val) - today).days for val in date_arr]
+
+    # remove races not in window over which we have weight history data
+    [races.pop(k) for k in list(races.keys()) if races[k] >= now or races[k] < pd.Timestamp(min(date_arr))]
+
+    avw, minw, maxw = np.mean(endw_arr), min(endw_arr), max(endw_arr)
+    traces = [go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='markers', showlegend=False)]
+    xann = [rd for rd in [races[k] for k in races.keys()]]
+    yann = np.linspace(minw, maxw, endpoint=True, num=len(races.keys()) + 2)
+    yann = yann[1:-1]
+    traces.append(go.Scatter(
+        x=xann, y=yann, text=[k for k in races.keys()], mode='text+markers',
+        textposition='middle left', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
+
+    shps = []
+    for rd in [races[k] for k in races.keys()]:
+        # if (rd - now).days < 0 and rd >= pd.Timestamp(min(date_arr)):
+        shps.append({'type': 'line', 'x0': rd, 'y0': minw, 'x1': rd, 'y1': maxw,
+                     'line': {'color': 'black', 'width': 1}})
+    playout = go.Layout(xaxis=dict(title='Date'), yaxis=dict(title='Weight (lb)'), shapes=shps)
     weight_fig = go.Figure(data=traces, layout=playout)
     weight_fig.write_html(f'{img_path}rta_weighthist.html')
     print('saved weight history image')
