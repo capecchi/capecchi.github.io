@@ -548,26 +548,22 @@ def create_weighthist_fig(df, races):
 
     today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + day_1
     now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    # use of today vs now:
+    # by adding a day to today, (raceday-today).days returns 1 for yesterday instead of 0 since timedelta < 1 day
     days_before = [(pd.Timestamp(val) - today).days for val in date_arr]
-
     # remove races not in window over which we have weight history data
     [races.pop(k) for k in list(races.keys()) if races[k] >= now or races[k] < pd.Timestamp(min(date_arr))]
 
-    avw, minw, maxw = np.mean(endw_arr), min(endw_arr), max(endw_arr)
-    traces = [go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='markers', showlegend=False)]
+    traces = [go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='lines', line=dict(dash='dash'), showlegend=False),
+              go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='markers', showlegend=False)]
     xann = [rd for rd in [races[k] for k in races.keys()]]
-    yann = np.linspace(minw, maxw, endpoint=True, num=len(races.keys()) + 2)
-    yann = yann[1:-1]
+    intx2 = [(rd - today).days for rd in [races[k] for k in races.keys()]]  # days before today for each race
+    yann = np.interp(intx2, days_before, endw_arr)  # interpolated weights on race days
     traces.append(go.Scatter(
         x=xann, y=yann, text=[k for k in races.keys()], mode='text+markers',
-        textposition='middle left', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
+        textposition='middle left', showlegend=False, marker=dict(color='red', line=dict(width=1))))
 
-    shps = []
-    for rd in [races[k] for k in races.keys()]:
-        # if (rd - now).days < 0 and rd >= pd.Timestamp(min(date_arr)):
-        shps.append({'type': 'line', 'x0': rd, 'y0': minw, 'x1': rd, 'y1': maxw,
-                     'line': {'color': 'black', 'width': 1}})
-    playout = go.Layout(xaxis=dict(title='Date'), yaxis=dict(title='Weight (lb)'), shapes=shps)
+    playout = go.Layout(xaxis=dict(title='Date'), yaxis=dict(title='Weight (lb)'))
     weight_fig = go.Figure(data=traces, layout=playout)
     weight_fig.write_html(f'{img_path}rta_weighthist.html')
     print('saved weight history image')

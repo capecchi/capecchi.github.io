@@ -2,6 +2,7 @@ import datetime
 
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.interpolate import CubicSpline
 
 from posts.RaceTraining.app_tools import get_training_data_file, get_past_races
 import pandas as pd
@@ -10,16 +11,34 @@ import pandas as pd
 def datetime_troubleshooting():
     fn = get_training_data_file()
     df = pd.read_excel(fn, sheet_name='data', engine='openpyxl')
+    df = df.sort_values(by=['Date'])  # put in chronological order
     weightdf = df.dropna(axis=0, how='any', subset=['Date', 'End Weight (lb)'])
     date_arr = list(weightdf['Date'].values)
-    races = get_past_races()
-    now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    endw_arr = list(weightdf['End Weight (lb)'].values)
 
-    for rd in [races[k] for k in races.keys()]:
-        print((rd-now).days)
-        print(rd)
-        print(rd-min(date_arr))
-        print(min(date_arr))
+    now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    today = now + datetime.timedelta(days=1)
+    days_before = [(pd.Timestamp(val) - now).days for val in date_arr]
+
+    # intx = np.linspace(min(days_before), 0, endpoint=True)
+    cs = CubicSpline(days_before, endw_arr)
+    xx = np.linspace(min(days_before), 0, endpoint=True)
+    dxx = [today-pd.Timedelta(days=abs(xx[i])) for i in np.arange(len(xx))]
+    yy = cs(xx)
+
+    avw, minw, maxw = np.mean(endw_arr), min(endw_arr), max(endw_arr)
+    xann = [rd for rd in [races[k] for k in races.keys()]]
+    intx2 = [(rd-today).days for rd in [races[k] for k in races.keys()]]  # days before today for each race
+    yann = cs(intx2)
+
+
+
+    inty = np.interp(intx, days_before, endw_arr)
+    intd = [now-pd.Timedelta(days=abs(intx[i])) for i in np.arange(len(intx))]
+
+    intx2 = [(rd-today).days for rd in [races[k] for k in races.keys()]]  # days before today for each race
+    yann = np.interp(intx2,days_before, endw_arr)  # interpolated weights on race days
+    a=1
 
 
 def compare_temp_methods(client, runids, temps):
