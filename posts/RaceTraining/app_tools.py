@@ -12,6 +12,8 @@ import stravalib.exc
 from stravalib import unithelper
 from stravalib.client import Client
 
+from helpful_stuff import get_my_direc
+
 
 # from meteostat import Hourly, Point
 # import meteostat
@@ -165,14 +167,8 @@ def get_past_races(racekeys=None):
 
 
 def get_training_data_file():
-    if os.path.isdir('C:/Users/Owner/'):
-        fn = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/posts/RaceTraining/training_data.xlsx'
-    elif os.path.isdir('C:/Users/wcapecch/'):
-        fn = 'C:/Users/wcapecch/PycharmProjects/capecchi.github.io/posts/RaceTraining/training_data.xlsx'
-    elif os.path.isdir('C:/Users/willi/'):
-        fn = 'C:/Users/willi/PycharmProjects/capecchi.github.io/posts/RaceTraining/training_data.xlsx'
-    else:
-        raise BillExcept('cannot locate training data file')
+    fn = get_my_direc(append='PycharmProjects/capecchi.github.io/posts/RaceTraining/training_data.xlsx',
+                      err='cannot locate training data file')
     return fn
 
 

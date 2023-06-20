@@ -4,7 +4,6 @@ import plotly
 import stravalib
 from bottle import run, redirect, jinja2_view, request, get, post
 from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField, StringField
-
 from posts.RaceTraining.app_tools import *
 from posts.RaceTraining.fig_tools import fig_architect
 
