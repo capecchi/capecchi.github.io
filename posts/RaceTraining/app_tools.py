@@ -169,6 +169,8 @@ def get_training_data_file():
         fn = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/posts/RaceTraining/training_data.xlsx'
     elif os.path.isdir('C:/Users/wcapecch/'):
         fn = 'C:/Users/wcapecch/PycharmProjects/capecchi.github.io/posts/RaceTraining/training_data.xlsx'
+    elif os.path.isdir('C:/Users/willi/'):
+        fn = 'C:/Users/willi/PycharmProjects/capecchi.github.io/posts/RaceTraining/training_data.xlsx'
     else:
         raise BillExcept('cannot locate training data file')
     return fn

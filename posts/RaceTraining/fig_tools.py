@@ -42,6 +42,8 @@ if os.path.isdir('C:/Users/Owner/'):
 	img_path = 'C:/Users/Owner/PycharmProjects/capecchi.github.io/images/posts/'
 elif os.path.isdir('C:/Users/wcapecch/'):
 	img_path = 'C:/Users/wcapecch/PycharmProjects/capecchi.github.io/images/posts/'
+elif os.path.isdir('C:/Users/willi/'):
+	img_path = 'C:/Users/willi/PycharmProjects/capecchi.github.io/images/posts/'
 else:
 	raise BillExcept('cannot connect to image directory')
 
