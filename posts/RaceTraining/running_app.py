@@ -8,7 +8,7 @@ from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
 from posts.RaceTraining.app_tools import *
 from posts.RaceTraining.fig_tools import fig_architect
 
-
+# todo: allow for split mileage between shoes (Zion = 50Zion + 50Smaug)
 # todo: tidy plot of splits
 # todo: implement new shoe tracking system- colors? labels?
 

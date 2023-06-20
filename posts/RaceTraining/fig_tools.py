@@ -552,7 +552,7 @@ def create_weighthist_fig(df, races):
 	# use of today vs now:
 	# by adding a day to today, (raceday-today).days returns 1 for yesterday instead of 0 since timedelta < 1 day
 	days_before = [(pd.Timestamp(val) - today).days for val in date_arr]
-	# remove races not in window over which we have weight history data
+	# remove races before we have weight history data
 	[races.pop(k) for k in list(races.keys()) if races[k] < pd.Timestamp(min(date_arr))]
 	
 	traces = [go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='lines', line=dict(dash='dash'),
