@@ -12,16 +12,11 @@ import stravalib.exc
 from stravalib import unithelper
 from stravalib.client import Client
 
-from helpful_stuff import get_my_direc
+from helpful_stuff import get_my_direc, BillExcept
 
 
 # from meteostat import Hourly, Point
 # import meteostat
-
-
-class BillExcept(Exception):
-    def __init__(self, message=None):
-        self.message = message
 
 
 def get_client(code):

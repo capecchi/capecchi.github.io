@@ -10,7 +10,7 @@ from posts.RaceTraining.fig_tools import fig_architect
 # todo: allow for split mileage between shoes (Zion = 50Zion + 50Smaug)
 # todo: tidy plot of splits
 # todo: implement new shoe tracking system- colors? labels?
-
+# todo: shoe labels on shoe-milage not lining up
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)

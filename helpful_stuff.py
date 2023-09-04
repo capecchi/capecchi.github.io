@@ -1,5 +1,9 @@
 import os
-from posts.RaceTraining.app_tools import BillExcept
+
+
+class BillExcept(Exception):
+    def __init__(self, message=None):
+        self.message = message
 
 
 def get_my_direc(append='', err=''):
