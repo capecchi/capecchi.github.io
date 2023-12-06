@@ -390,7 +390,7 @@ def create_rman_fig(df, sho):
     '''creates sweat rate, shoe mileage, comsumption plots'''
     analysis_startdate = datetime.datetime(2020, 9, 12, 0, 0, 0, 0)  # hard coded start date
     colors = plotly.colors.DEFAULT_PLOTLY_COLORS
-    man_fig = make_subplots(rows=3, cols=1, vertical_spacing=.12)
+    man_fig = make_subplots(rows=4, cols=1, vertical_spacing=.12)
 
     # SWEAT RATE PLOT
     # restrict to runs between 4-10miles
@@ -423,23 +423,6 @@ def create_rman_fig(df, sho):
     man_fig.add_shape(type='rect', x0=lastrunbin[0], y0=numinlastbin - 1, x1=lastrunbin[1], y1=numinlastbin,
                       line=dict(width=2, color='black'), row=1, col=1)
 
-    # SHOE MILEAGE
-    sho_dist, shoe_options = sho['cum_dist (mi)'].values, sho['shoe_options'].values
-    hovertemp = '%{x:.0f} miles on %{y}<extra></extra>'  # <extra></extra> removes trace name from hover
-    man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', showlegend=False,
-                             hovertemplate=hovertemp), row=2, col=1)  # shoe mileage
-    # add rect for most recent activity
-    runs = df[(df['Type'] == 'Run') & (df['Date'] > analysis_startdate)]  # don't restrict milage to >4, <10
-    last_shoes, last_dist = runs['Shoes Worn'].values[-1], runs['Dist (mi)'].values[-1]
-    try:
-        x1rect = sho_dist[shoe_options == last_shoes][0]
-        x0rect = x1rect - last_dist
-        yrect = np.where(shoe_options == last_shoes)[0][0]
-        man_fig.add_shape(type='rect', x0=x0rect, y0=yrect - .5, x1=x1rect, y1=yrect + .5,
-                          line=dict(width=2, color='black'), row=2, col=1)
-    except IndexError:  # most likely last activity wasn't a run
-        pass
-
     # LITERS/CALORIES CONSUMED
     runs = df.dropna(axis=0, how='any', subset=['Liters Consumed', 'Calories Consumed'])
     runs = runs[(runs['Date'] > analysis_startdate) & (runs['Type'] == 'Run')]
@@ -457,41 +440,57 @@ def create_rman_fig(df, sho):
 
     # zone of good hydration
     man_fig.add_trace(
-        go.Scatter(x=dur, y=.8 * dur, line_color=colors[2], showlegend=False), row=3, col=1)
+        go.Scatter(x=dur, y=.8 * dur, line_color=colors[2], showlegend=False), row=2, col=1)
     man_fig.add_trace(
-        go.Scatter(x=dur, y=1. * dur, line_color=colors[2], fill='tonexty', showlegend=False), row=3, col=1)
+        go.Scatter(x=dur, y=1. * dur, line_color=colors[2], fill='tonexty',showlegend=False), row=2, col=1)
     man_fig.add_trace(
         go.Scatter(x=duration_h, y=lit_cons, mode='markers', marker_color=colors[2],
-                   showlegend=False, text=hovertext, hovertemplate=hovertemp1), row=3, col=1)  # fluid consumption
+                   showlegend=False, text=hovertext, hovertemplate=hovertemp1), row=2, col=1)  # fluid consumption
     man_fig.add_trace(go.Scatter(x=[duration_h[-1]], y=[lit_cons[-1]], mode='markers', name='most recent',
                                  marker=dict(line=dict(width=1), color=colors[2], symbol='star-diamond-dot',
-                                             size=10), showlegend=False), row=3, col=1)
+                                             size=10), showlegend=False), row=2, col=1)
 
     # zone of good fueling
     man_fig.add_trace(
-        go.Scatter(x=dur, y=150. * dur, line_color=colors[3], showlegend=False, yaxis='y4',
-                   xaxis='x3'))
+        go.Scatter(x=dur, y=150. * dur, line_color=colors[3], showlegend=False), row=3, col=1)
     man_fig.add_trace(
-        go.Scatter(x=dur, y=200. * dur, line_color=colors[3], fill='tonexty', showlegend=False, yaxis='y4',
-                   xaxis='x3'))
+        go.Scatter(x=dur, y=200. * dur, line_color=colors[3], fill='tonexty', showlegend=False, ), row=3, col=1)
     man_fig.add_trace(
-        go.Scatter(x=duration_h, y=cal_cons, mode='markers', yaxis='y4', xaxis='x3',
+        go.Scatter(x=duration_h, y=cal_cons, mode='markers',
                    marker_color=colors[3], showlegend=False, text=hovertext,
-                   hovertemplate=hovertemp2))  # calorie consumption
+                   hovertemplate=hovertemp2), row=3, col=1)  # calorie consumption
     man_fig.add_trace(go.Scatter(x=[duration_h[-1]], y=[cal_cons[-1]], mode='markers', name='most recent',
                                  marker=dict(line=dict(width=1), color=colors[3], symbol='star-diamond-dot',
-                                             size=10), yaxis='y4', xaxis='x3', showlegend=False))
+                                             size=10), showlegend=False), row=3, col=1)
+
+    # SHOE MILEAGE
+    sho_dist, shoe_options = sho['cum_dist (mi)'].values, sho['shoe_options'].values
+    hovertemp = '%{x:.0f} miles on %{y}<extra></extra>'  # <extra></extra> removes trace name from hover
+    man_fig.add_trace(go.Bar(x=shoe_options, y=sho_dist, orientation='v', showlegend=False,
+                             hovertemplate=hovertemp), row=4, col=1)  # shoe mileage
+    # man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', showlegend=False,
+    #                          hovertemplate=hovertemp), row=2, col=1)  # shoe mileage
+    # add rect for most recent activity
+    # runs = df[(df['Type'] == 'Run') & (df['Date'] > analysis_startdate)]  # don't restrict milage to >4, <10
+    # last_shoes, last_dist = runs['Shoes Worn'].values[-1], runs['Dist (mi)'].values[-1]
+    # try:
+    #     x1rect = sho_dist[shoe_options == last_shoes][0]
+    #     x0rect = x1rect - last_dist
+    #     yrect = np.where(shoe_options == last_shoes)[0][0]
+    #     man_fig.add_shape(type='rect', x0=x0rect, y0=yrect - .5, x1=x1rect, y1=yrect + .5,
+    #                       line=dict(width=2, color='black'), row=2, col=1)
+    # except IndexError:  # most likely last activity wasn't a run
+    #     pass
 
     yr = np.ceil(np.nanmax([np.nanmax(lit_cons), np.nanmax(cal_cons) / 500.]))
-    man_fig.layout.update(height=750, barmode='stack',
+    man_fig.layout.update(height=1000, barmode='stack',
                           xaxis1=dict(title='Sweat Loss Rate (L/h)', range=[0, 3]),
-                          xaxis2=dict(title='Miles on Shoes'),
-                          # xaxis3=dict(title='Distance (miles)'),
+                          xaxis2=dict(title='Duration (hr)'),
                           xaxis3=dict(title='Duration (hr)'),
                           yaxis1=dict(title='Count'),
-                          yaxis3=dict(title='Liters Consumed', color=colors[2], range=[-.5, yr]),
-                          yaxis4=dict(title='Calories Consumed', color=colors[3], side='right',
-                                      overlaying='y3', range=[-250, yr * 500]),
+                          yaxis2=dict(title='Liters Consumed', color=colors[2]),
+                          yaxis3=dict(title='Calories Consumed', color=colors[3]),
+                          yaxis4=dict(title='Miles on Shoes'),
                           showlegend=True, legend_title_text='Temp (F)')
     man_fig.update_yaxes(automargin=True)
     man_fig.write_html(f'{img_path}rta_man.html')
