@@ -7,10 +7,13 @@ from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
 from posts.RaceTraining.app_tools import *
 from posts.RaceTraining.fig_tools import fig_architect
 
+
+# todo: is there a way to allow for toggling btwn distance/time/calories for the y-axis of all this data? it'd be slick
+# todo: fix fit to data
 # todo: allow for split mileage between shoes (Zion = 50Zion + 50Smaug)
 # todo: tidy plot of splits
 # todo: implement new shoe tracking system- colors? labels?
-# todo: shoe labels on shoe-milage not lining up
+# todo: put shoe mileage tracking on its own plot
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
