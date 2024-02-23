@@ -139,12 +139,14 @@ def cumulative_v_weeks2race(df, races):
     #     go.Scatter(x=[t.x[-1] for t in traces if len(t.x) > 0], y=[t.y[-1] for t in traces if len(t.y) > 0],
     #                text=[f'{round(t.y[-1], 1)}' for t in traces if len(t.y) > 0], mode='text',
     #                textposition='middle left', showlegend=False, hoverinfo='none'))
-    butt_dist = dict(method="restyle", args=[{'y': ydist}], label='Distance')
-    butt_cals = dict(method="restyle", args=[{'y': ycals}], label='Calories')
-    butt_time = dict(method="restyle", args=[{'y': ytime}], label='Elapsed Time')
+    butt_dist = dict(method="update", args=[{'y': ydist}, {'yaxis.title': 'Distance (cumulative miles)'}],
+                     label='Distance')
+    butt_cals = dict(method="update", args=[{'y': ycals}, {'yaxis.title': 'Calories (cumulative)'}], label='Calories')
+    butt_time = dict(method="update", args=[{'y': ytime}, {'yaxis.title': 'Elapsed Time (cumulative hours)'}],
+                     label='Elapsed Time')
     clayout = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
                         yaxis=dict(title='Distance (cumulative miles)'), legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'),
-                        updatemenus=dict(active=0, buttons=[butt_dist, butt_cals, butt_time]))
+                        updatemenus=[dict(active=0, buttons=[butt_dist, butt_cals, butt_time])])
     cumdist_fig = go.Figure(data=traces, layout=clayout)
     cumdist_fig.write_html(f'{img_path}rta_cumdist.html')
     print('saved cumdist image')
