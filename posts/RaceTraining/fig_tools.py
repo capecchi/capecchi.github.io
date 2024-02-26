@@ -73,40 +73,6 @@ def create_rdist_fig(df, races):
     return dist_fig
 
 
-def cumdist_v_weeks2race(df, races):
-    print('Creating CUMDIST figure')
-    traces = []
-    for i, (k, v) in enumerate(races.items()):
-        # read: if race day is after today, ie in the future, then thicker line plot
-        if v > datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
-            width = 3
-        else:
-            width = 2
-        op = (i + 1.) / len(races.items()) * .75 + .25
-        runs = df[(df['Type'] == 'Run') & (v - wks_18 < df['Date']) & (df['Date'] < v + day_1)]
-        runs = runs[
-            (runs['Dist (mi)'] > 2)]  # & (runs['Pace (min/mi)'] < 15)]  # why'd I put this in? I run slo as hell
-        race_day = (v + day_1).replace(hour=0, minute=0, second=0, microsecond=0)
-        days_before = [(pd.Timestamp(val) - race_day).days for val in runs['Date'].values]
-        cumdist = np.nancumsum(runs['Dist (mi)'].values)
-        hovertext = [f'days to race: {abs(x)}<br>total miles: {y:.2f}' for (x, y) in
-                     zip(days_before, cumdist)]
-        hovertemp = '%{text}'
-        traces.append(
-            go.Scatter(x=days_before, y=cumdist, opacity=op, name=k, hovertemplate=hovertemp, text=hovertext,
-                       mode='lines+markers', line=dict(width=width)))
-    traces.append(
-        go.Scatter(x=[t.x[-1] for t in traces if len(t.x) > 0], y=[t.y[-1] for t in traces if len(t.y) > 0],
-                   text=[f'{round(t.y[-1], 1)}' for t in traces if len(t.y) > 0], mode='text',
-                   textposition='middle left', showlegend=False, hoverinfo='none'))
-    clayout = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
-                        yaxis=dict(title='Distance (cumulative miles)'), legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
-    cumdist_fig = go.Figure(data=traces, layout=clayout)
-    cumdist_fig.write_html(f'{img_path}rta_cumdist.html')
-    print('saved cumdist image')
-    return cumdist_fig
-
-
 def cumulative_v_weeks2race(df, races):
     print('Creating CUMDIST figure')
     traces = []
