@@ -549,8 +549,6 @@ def create_calbytype_fig(df):
 
 
 def create_weighthist_fig(df, races):
-    # todo: add weighted running average (14-day? 7-day?)
-
     weightdf = df.dropna(axis=0, how='any', subset=['Date', 'End Weight (lb)'])
     date_arr = list(weightdf['Date'].values)
     endw_arr = list(weightdf['End Weight (lb)'].values)
@@ -563,19 +561,30 @@ def create_weighthist_fig(df, races):
     # remove races before we have weight history data
     [races.pop(k) for k in list(races.keys()) if races[k] < pd.Timestamp(min(date_arr))]
     # remove races in the future
-    [races.pop(k) for k in list(races.keys()) if races[k] > datetime.datetime.today()]
+    [races.pop(k) for k in list(races.keys()) if races[k] > now]
 
-    traces = [go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='lines', line=dict(dash='dash'),
-                         showlegend=False),
-              go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='markers', showlegend=False)]
     xann = [rd for rd in [races[k] for k in races.keys()]]
     intx2 = [(rd - today).days for rd in [races[k] for k in races.keys()]]  # days before today for each race
     yann = np.interp(intx2, days_before, endw_arr)  # interpolated weights on race days
+
+    dns = float(date_arr[-1] - date_arr[0])  # ns between first/last weight value
+    ns_vals = [d - min(date_arr) for d in date_arr]
+    ndays = int(dns / 1.e9 / 60 / 60 / 24)  # convert elapsed ns to elapsed num of days
+    xx = np.linspace(0, dns, num=ndays)
+    xd = [pd.Timestamp(min(date_arr) + np.timedelta64(int(x), 'ns')) for x in xx]
+    yy = np.interp(xx, ns_vals, endw_arr)
+    nday_avg = 21
+    avg_x = xd[nday_avg - 1:]
+    avg_y = np.zeros_like(avg_x)
+    for i in np.arange(len(avg_x)):
+        avg_y[i] = np.average(yy[i:i + nday_avg], weights=np.arange(1, nday_avg + 1))
+    traces = [go.Scatter(x=avg_x, y=avg_y, mode='lines', name=f'{nday_avg} day WME'),
+              go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='markers', showlegend=False)]
     traces.append(go.Scatter(
         x=xann, y=yann, text=[k for k in races.keys()], mode='text+markers',
         textposition='middle left', showlegend=False, marker=dict(color='red', line=dict(width=1))))
-
-    playout = go.Layout(xaxis=dict(title='Date'), yaxis=dict(title='Weight (lb)'))
+    playout = go.Layout(xaxis=dict(title='Date'), yaxis=dict(title='Weight (lb)'),
+                        legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
     weight_fig = go.Figure(data=traces, layout=playout)
     weight_fig.write_html(f'{img_path}rta_weighthist.html')
     print('saved weight history image')
