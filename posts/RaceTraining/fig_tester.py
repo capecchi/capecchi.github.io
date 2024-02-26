@@ -13,6 +13,16 @@ races2analyze = ['Superior 50k 2018', 'Driftless 50k 2018', 'Superior 50k 2019',
                  'Hyner 50k 2024', 'Worlds End 100k 2024', 'Eastern States 100M 2024', 'Black Forest 100k 2024']
 
 
+def test_weighthist_fig():
+    fn = get_training_data_file()
+    races = get_past_races(racekeys=races2analyze)
+    df = pd.read_excel(fn, sheet_name='data', engine='openpyxl')
+    df = df.sort_values(by=['Date'])  # put in chronological order
+    f1, f2 = create_weighthist_fig(df, races)
+    f1.show()
+    # f2.show()
+
+
 def test_cumulative_v_weeks2race():
     fn = get_training_data_file()
     races = get_past_races(racekeys=races2analyze)
@@ -23,4 +33,5 @@ def test_cumulative_v_weeks2race():
 
 
 if __name__ == '__main__':
-    test_cumulative_v_weeks2race()
+    # test_cumulative_v_weeks2race()
+    test_weighthist_fig()
