@@ -8,30 +8,32 @@ redirect_url = f'https://www.strava.com/oauth/authorize?client_id=34049&redirect
 
 def add_time_col(code):
     # add elapsed time columns
-    time_arr = []
+    doit = False
 
-    client = get_client(code)
+    if doit:
+        client = get_client(code)
 
-    fn = get_training_data_file()
-    sho = pd.read_excel(fn, sheet_name='shoes', engine='openpyxl')
-    df = pd.read_excel(fn, sheet_name='data', engine='openpyxl', index_col='runid')  # use runid as index
+        fn = get_training_data_file()
+        sho = pd.read_excel(fn, sheet_name='shoes', engine='openpyxl')
+        df = pd.read_excel(fn, sheet_name='data', engine='openpyxl', index_col='runid')  # use runid as index
 
-    for runid in df.index:
-        if not np.isfinite(df.at[runid, 'Elapsed Time (sec)']):
-            print(f'updating runid: {runid}')
-            try:
-                act = client.get_activity(runid)
-                elaps_sec = int(act.elapsed_time.total_seconds())
-                df.at[runid, 'Elapsed Time (sec)'] = elaps_sec
-            except:
-                print(f'*failed to update {runid}*')
+        for runid in df.index:
+            if not np.isfinite(df.at[runid, 'Elapsed Time (sec)']):
+                print(f'updating runid: {runid}')
+                try:
+                    act = client.get_activity(runid)
+                    elaps_sec = int(act.elapsed_time.total_seconds())
+                    df.at[runid, 'Elapsed Time (sec)'] = elaps_sec
+                except:
+                    print(f'*failed to update {runid}*')
 
-    with pd.ExcelWriter(fn) as writer:
-        df.to_excel(writer, sheet_name='data', index=True)
-        sho.to_excel(writer, sheet_name='shoes', index=False)
+        with pd.ExcelWriter(fn) as writer:
+            df.to_excel(writer, sheet_name='data', index=True)
+            sho.to_excel(writer, sheet_name='shoes', index=False)
 
-    print('--> DATA FILE UPDATED <--')
-
+        print('--> DATA FILE UPDATED <--')
+    else:
+        pass
 
 def do_updates(code):
     # add type, calories, pace columns

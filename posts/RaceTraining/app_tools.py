@@ -143,7 +143,11 @@ def get_past_races(racekeys=None):
                   'Black Forest 100k 2022': datetime.datetime(2022, 10, 2),
                   'Frosty Fat Sass 6H 2023': datetime.datetime(2023, 1, 28),
                   'Naked Bavarian 40M 2023': datetime.datetime(2023, 3, 4),
-                  'Zion 100M 2023': datetime.datetime(2023, 4, 15)})
+                  'Zion 100M 2023': datetime.datetime(2023, 4, 15),
+                  'Hyner 50k 2024': datetime.datetime(2024, 4, 20),
+                  'Worlds End 100k 2024': datetime.datetime(2024, 6, 1),
+                  'Eastern States 100M 2024': datetime.datetime(2024, 8, 10),
+                  'Black Forest 100k 2024': datetime.datetime(2024, 10, 6)})
     # road:
     races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
                   'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
