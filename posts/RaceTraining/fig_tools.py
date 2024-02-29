@@ -236,19 +236,19 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
         textposition='middle right', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
     wklyav_data.append(go.Scatter(x=dates, y=dist, name='runs', mode='markers'))
 
-    for i, (k, v) in enumerate(races.items()):
+    for i, (k, v) in enumerate(races.items()):  # add race specific data
         runs = df[(df['Type'] == 'Run') & (v - wks_18 < df['Date']) & (df['Date'] < v + day_1)]
         runs = runs[(runs['Dist (mi)'] > 2)]  # & (runs['Pace (min/mi)'] < 15)]
-        dist, pace, dates = runs['Dist (mi)'].values, runs['Pace (min/mi)'].values, runs['Date'].values
-        timevals = pace * dist / 60.  # hr
-        prettydates = [pd.to_datetime(str(dates[i])) for i in range(len(dates))]
-        prettydates = [ts.strftime('%d %b %Y %I:%M:%S %p') for ts in prettydates]
-        hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {prettydates[i]}' for
-                     i, s in enumerate(pace)]
+        rs_dist, rs_pace, rs_dates = runs['Dist (mi)'].values, runs['Pace (min/mi)'].values, runs['Date'].values
+        rs_timevals = rs_pace * rs_dist / 60.  # hr
+        rs_prettydates = [pd.to_datetime(str(rs_dates[i])) for i in range(len(rs_dates))]
+        rs_prettydates = [ts.strftime('%d %b %Y %I:%M:%S %p') for ts in rs_prettydates]
+        rs_hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {rs_prettydates[i]}'
+                        for i, s in enumerate(rs_pace)]
         pvd_traces.append(
-            go.Scatter(x=dist, y=pace, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
+            go.Scatter(x=rs_dist, y=rs_pace, mode='markers', name=k, text=rs_hovertext, hovertemplate=hovertemp))
         pvt_traces.append(
-            go.Scatter(x=timevals, y=pace, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
+            go.Scatter(x=rs_timevals, y=rs_pace, mode='markers', name=k, text=rs_hovertext, hovertemplate=hovertemp))
     pvd_traces.append(go.Scatter(x=[recent[0]], y=[recent[1]], mode='markers', name='most recent',
                                  marker=dict(line=dict(width=1), color='rgba(0,0,0,0)', symbol='star-diamond-dot',
                                              size=10), text=[htxt], hovertemplate=htemp))
@@ -285,7 +285,7 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
 
 
 def add_max_effort_curve(pvd_traces, pvt_traces, max_dist=100):
-    max_dist *= 1.60934  # convert miles to km
+    max_dist_km = max_dist * 1.60934  # convert miles to km
     a = 450.  # W
     b = 21000.  # J
     tau = 10.  # s
@@ -304,7 +304,7 @@ def add_max_effort_curve(pvd_traces, pvt_traces, max_dist=100):
         a2 = a * (.085 * (time / 3600) ** 2 - 3.908 / 3600 * time + 91.82) / 100.  # [Formenti/Davies]
         # a2 = a * (940 - time / 60) / 1000.  # [Wilke/Saltin]
         spd = 3.6 / c * ((a2 + b / time - a2 * tau / time * (1 - np.exp(-time / tau))) / ef - wbas)
-        return spd * time / 60. / 60. - max_dist
+        return spd * time / 60. / 60. - max_dist_km
 
     tmax = 5. * 60 * 60  # initial guess [s]
     h = dist(tmax) / (dist(tmax + .5) - dist(tmax - .5))
@@ -321,58 +321,39 @@ def add_max_effort_curve(pvd_traces, pvt_traces, max_dist=100):
     minetti_spd[np.where((15. < minetti_spd) | (minetti_spd < 0.))] = np.nan
 
     # do fit to my data
-    bdist, bspeed = [], []  # miles, mph
+    bdist, bpace = [], []  # miles, min/mile
     not_important = [bdist.extend(s.x) for s in pvd_traces]
-    not_important = [bspeed.extend(s.y) for s in pvd_traces]
-    bdist, bspeed = np.array(bdist), np.array(bspeed)
+    not_important = [bpace.extend(s.y) for s in pvd_traces]
+    bdist, bpace = np.array(bdist), np.array(bpace)
 
-    bspeed = 60. / bspeed  # if inputting pace, convert to speed for fitting
+    # bin and keep only highest in range
+    xbin, dist_max, pace_max = 2, [], []  # size [miles] of bin
+    for xb in np.arange(0, max_dist, xbin):
+        if len(bpace[(bdist >= xb) & (bdist < xb + xbin)]) > 0:  # check to ensure data exists in this range
+            imax = \
+                np.where(bpace[(bdist >= xb) & (bdist < xb + xbin)] == min(bpace[(bdist >= xb) & (bdist < xb + xbin)]))[
+                    0][
+                    0]  # (note fastest pace means min(pace))
+            dist_max.append(bdist[(bdist >= xb) & (bdist < xb + xbin)][imax])
+            pace_max.append(bpace[(bdist >= xb) & (bdist < xb + xbin)][imax])
+    bdist, bpace = np.array(dist_max), np.array(pace_max)
 
-    if 1:  # bent linear
-        def minfunc1(fit):  #
-            ydiff = bspeed - (fit[0] * bdist + fit[1])
-            fit[1] += max(ydiff)  # push up above all pts
+    bspeed = 60. / bpace  # if inputting pace, convert to speed for fitting
+
+    if 1:  # 1/x fit
+        def minfunc(fit):  # fit = [a, b, c] = a/(x-b) + c
+            ydiff = bspeed - (fit[0] / (bdist - fit[1]) + fit[2])
             return np.sum((ydiff - max(ydiff)) ** 2)
 
-        fit1 = [-.06, 8.5]
-        res = minimize(minfunc1, fit1, method='Nelder-Mead')
-        fit1 = res.x
-        ydiff = abs(bspeed - (fit1[0] * bdist + fit1[1]))
-        ipt1 = np.where(ydiff == min(ydiff))[0][0]
-        ipt2 = np.where(ydiff == min(np.delete(ydiff, ipt1)))[0][0]
-
-        rpts, thpts = np.sqrt(bdist ** 2 + bspeed ** 2), np.arctan2(bspeed, bdist)
-        throt = -np.arctan2(bspeed[ipt2] - bspeed[ipt1], bdist[ipt2] - bdist[ipt1])
-        x2, y2 = rpts * np.cos(thpts + throt), rpts * np.sin(thpts + throt)
-        xshift = np.mean([x2[ipt1], x2[ipt2]])  # center rotated pts about x=0
-        x2 -= xshift
-
-        def minfunc2(fit):
-            ydiff = y2 - (fit[0] * x2 ** 2 + fit[1])
-            fit[1] += max(ydiff)
-            return np.sum((ydiff - max(ydiff)) ** 2)
-
-        fit2 = [1.e-4, 0]
-        res = minimize(minfunc2, fit2, method='Nelder-Mead')
-        fit2 = res.x
-
+        fitin = [223., -30., 2.]  # close guess based off previous fits
+        res = minimize(minfunc, fitin, method='Nelder-Mead')
+        fit = res.x
+        fit[2] += max(bspeed - (fit[0] / (bdist - fit[1]) + fit[2]))
         print(res.message)
-        xx = 1.5 * np.linspace(min(x2), max(x2), endpoint=True)
-        yy = fit2[0] * xx ** 2 + fit2[1]
-        xx += xshift  # shift back in place
-        rr, thth = np.sqrt(xx ** 2 + yy ** 2), np.arctan2(yy, xx)
-        bill_dist, bill_speed = rr * np.cos(thth - throt), rr * np.sin(thth - throt)  # rotate back in place
+        print(f'asymptotic pace is {60. / fit[2]:.2f} min/mile')
+        bill_dist = np.linspace(min(bdist), max(bdist) + 5)
+        bill_speed = fit[0] / (bill_dist - fit[1]) + fit[2]
         bill_pace = 60. / bill_speed  # [min/mile]
-
-    # debugging:::
-    # x = np.linspace(0, max(bdist))
-    # plt.plot(bdist, bspeed, 'o')
-    # plt.plot(x, fit1[0] * x + fit1[1])
-    # for ip in [ipt1, ipt2]:
-    # 	plt.plot(bdist[ip], bspeed[ip], 'x')
-    # plt.plot(x2, y2, 'o')
-    # plt.plot(x2, fit2[0] * x2 ** 2 + fit2[1])
-    # plt.plot(bill_dist, bill_speed, 'x')
 
     hovertext = [f'{int(bp)}:{str(int((bp - int(bp)) * 60)).zfill(2)}' for bp in bill_pace]
 
