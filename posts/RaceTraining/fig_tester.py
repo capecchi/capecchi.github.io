@@ -31,9 +31,9 @@ def test_cumulative_v_weeks2race():
 
 def test_pace_v_dist_and_duration_splits_wklyavg():
     f1, f2, f3, f4 = pace_v_dist_and_duration_splits_wklyavg(df, races)
-    f1.show()
-    f2.show()
-    # f3.show()
+    # f1.show()
+    # f2.show()
+    f3.show()
     # f4.show()
 
 

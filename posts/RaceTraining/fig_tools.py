@@ -206,8 +206,12 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
                                  hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
     pvt_traces.append(go.Scatter(x=timevals, y=pace, mode='markers', name=f'past {nyr} years', text=hovertext,
                                  hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
-    split_traces.append(go.Scatter(x=dist, y=runs['Split Shift (min/mile)'].values, mode='markers', text=hovertext,
-                                   hovertemplate=hovertemp))
+    sort_splits = sorted(zip(runs['Split Shift (min/mile)'].values, dist))  # tuple list of [(split, dist), ...]
+    sorted_split, sorted_dist = [s[0] for s in sort_splits], [s[1] for s in sort_splits]
+    split_traces.append(go.Scatter(x=sorted_dist, y=sorted_split, mode='markers', text=hovertext,
+                                   hovertemplate=hovertemp,
+                                   marker=dict(line=dict(width=.5, color='black'), color=sorted_split, cmin=-5, cmax=5,
+                                               colorscale='rdylgn_r')))
     split_traces.append(go.Scatter(x=[dist[-1]], y=[runs['Split Shift (min/mile)'].values[-1]], mode='markers',
                                    marker=dict(line=dict(width=1), color='rgba(0,0,0,0)', symbol='star-diamond-dot',
                                                size=10)))
@@ -270,7 +274,7 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
     print('saved pace-vs-duration image')
 
     split_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
-                             yaxis=dict(title='change to av. splits (2nd-1st half) (min/mile)'))
+                             yaxis=dict(title='change to av. splits (2nd-1st half) (min/mile)', range=[-5, 5]))
     splits_fig = go.Figure(data=split_traces, layout=split_layout)
     splits_fig.write_html(f'{img_path}rta_splitsvsdist.html')
     print('saved splits-vs-dist image')
