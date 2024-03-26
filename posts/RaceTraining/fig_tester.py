@@ -37,8 +37,16 @@ def test_pace_v_dist_and_duration_splits_wklyavg():
     # f4.show()
 
 
+def man_fig_tester():
+    sho = pd.read_excel(fn, sheet_name='shoes', engine='openpyxl')
+    f1, f2 = create_rman_fig(df, sho)
+    # f1.show()
+    f2.show()
+
+
 if __name__ == '__main__':
     # test_cumulative_v_weeks2race()
     # test_weighthist_fig()
     # test_pace_v_dist()
-    test_pace_v_dist_and_duration_splits_wklyavg()
+    # test_pace_v_dist_and_duration_splits_wklyavg()
+    man_fig_tester()

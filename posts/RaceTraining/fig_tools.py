@@ -33,7 +33,7 @@ def fig_architect(df, sho, races, plots=None):
     if 'rpvd' in plots:
         [graphs.append(g) for g in pace_v_dist_and_duration_splits_wklyavg(df, races)]
     if 'rswt' in plots:
-        graphs.append(create_rman_fig(df, sho))
+        [graphs.append(g) for g in create_rman_fig(df, sho)]
     if 'rcalbytype' in plots:
         graphs.append(create_calbytype_fig(df))
     message = 'Analysis Complete'
@@ -388,7 +388,7 @@ def create_rman_fig(df, sho):
     '''creates sweat rate, shoe mileage, comsumption plots'''
     analysis_startdate = datetime.datetime(2020, 9, 12, 0, 0, 0, 0)  # hard coded start date
     colors = plotly.colors.DEFAULT_PLOTLY_COLORS
-    man_fig = make_subplots(rows=4, cols=1, vertical_spacing=.12)
+    man_fig = make_subplots(rows=3, cols=1, vertical_spacing=.12)
 
     # SWEAT RATE PLOT
     # restrict to runs between 4-10miles
@@ -463,22 +463,21 @@ def create_rman_fig(df, sho):
 
     # SHOE MILEAGE
     sho_dist, shoe_options = sho['cum_dist (mi)'].values, sho['shoe_options'].values
-    hovertemp = '%{x:.0f} miles on %{y}<extra></extra>'  # <extra></extra> removes trace name from hover
-    man_fig.add_trace(go.Bar(x=shoe_options, y=sho_dist, orientation='v', showlegend=False,
-                             hovertemplate=hovertemp), row=4, col=1)  # shoe mileage
-    # man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', showlegend=False,
-    #                          hovertemplate=hovertemp), row=2, col=1)  # shoe mileage
+    hovertemp = '%{y:.0f} miles on %{x}<extra></extra>'  # <extra></extra> removes trace name from hover
+    sho_trace = [go.Bar(x=shoe_options, y=sho_dist, orientation='v', showlegend=False,
+                        hovertemplate=hovertemp)]  # shoe mileage
+    sho_fig = go.Figure(data=sho_trace, layout=go.Layout(yaxis=dict(title='Mileage', hoverformat='.2f')))
     # add rect for most recent activity
-    # runs = df[(df['Type'] == 'Run') & (df['Date'] > analysis_startdate)]  # don't restrict milage to >4, <10
-    # last_shoes, last_dist = runs['Shoes Worn'].values[-1], runs['Dist (mi)'].values[-1]
-    # try:
-    #     x1rect = sho_dist[shoe_options == last_shoes][0]
-    #     x0rect = x1rect - last_dist
-    #     yrect = np.where(shoe_options == last_shoes)[0][0]
-    #     man_fig.add_shape(type='rect', x0=x0rect, y0=yrect - .5, x1=x1rect, y1=yrect + .5,
-    #                       line=dict(width=2, color='black'), row=2, col=1)
-    # except IndexError:  # most likely last activity wasn't a run
-    #     pass
+    runs = df[(df['Type'] == 'Run') & (df['Date'] > analysis_startdate)]  # don't restrict milage to >4, <10
+    last_shoes, last_dist = runs['Shoes Worn'].values[-1], runs['Dist (mi)'].values[-1]
+    try:
+        y1rect = sho_dist[shoe_options == last_shoes][0]
+        y0rect = y1rect - last_dist
+        xrect = np.where(shoe_options == last_shoes)[0][0]
+        sho_fig.add_shape(type='rect', x0=xrect - .5, y0=y0rect, x1=xrect + .5, y1=y1rect,
+                          line=dict(width=2, color='black'))
+    except IndexError:  # most likely last activity wasn't a run
+        pass
 
     yr = np.ceil(np.nanmax([np.nanmax(lit_cons), np.nanmax(cal_cons) / 500.]))
     man_fig.layout.update(height=1000, barmode='stack',
@@ -488,13 +487,14 @@ def create_rman_fig(df, sho):
                           yaxis1=dict(title='Count'),
                           yaxis2=dict(title='Liters Consumed', color=colors[2]),
                           yaxis3=dict(title='Calories Consumed', color=colors[3]),
-                          yaxis4=dict(title='Miles on Shoes'),
+                          # yaxis4=dict(title='Miles on Shoes'),
                           showlegend=True, legend_title_text='Temp (F)')
     man_fig.update_yaxes(automargin=True)
     man_fig.write_html(f'{img_path}rta_man.html')
-    print('saved manual analysis image')
+    sho_fig.write_html(f'{img_path}sho_mileage.html')
+    print('saved manual analysis images')
 
-    return man_fig
+    return man_fig, sho_fig
 
 
 def create_calbytype_fig(df):
