@@ -7,10 +7,11 @@ from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
 from posts.RaceTraining.app_tools import *
 from posts.RaceTraining.fig_tools import fig_architect
 
+
 # todo: allow for split mileage between shoes (Zion = 50Zion + 50Smaug)
 # todo: tidy plot of splits
 # todo: implement new shoe tracking system- colors? labels?
-# todo: shoe labels on shoe-milage not lining up
+# todo: put shoe mileage tracking on its own plot
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
@@ -41,7 +42,8 @@ def do_prepopulate(form: MyForm, code):
         form.runs.data = ['Superior 50k 2018', 'Driftless 50k 2018', 'Superior 50k 2019', 'Batona (virtual) 33M 2020',
                           'Dirty German (virtual) 50k 2020', 'Stone Mill 50M 2020', 'Queens Half 2022',
                           'Shawangunk Ridge 30M 2022', 'Black Forest 100k 2022', 'Frosty Fat Sass 6H 2023',
-                          'Naked Bavarian 40M 2023', 'Zion 100M 2023', 'Past 18 weeks']
+                          'Naked Bavarian 40M 2023', 'Zion 100M 2023', 'Hyner 50k 2024', 'Worlds End 100k 2024',
+                          'Eastern States 100M 2024', 'Black Forest 100k 2024', 'Past 18 weeks']
         form.plots.data = ['rcumdist', 'rpvd', 'rswt', 'calbytype', 'weighthistory']
     form.code.data = code
     form.message = 'select races/plot options'

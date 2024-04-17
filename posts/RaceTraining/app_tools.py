@@ -143,7 +143,11 @@ def get_past_races(racekeys=None):
                   'Black Forest 100k 2022': datetime.datetime(2022, 10, 2),
                   'Frosty Fat Sass 6H 2023': datetime.datetime(2023, 1, 28),
                   'Naked Bavarian 40M 2023': datetime.datetime(2023, 3, 4),
-                  'Zion 100M 2023': datetime.datetime(2023, 4, 15)})
+                  'Zion 100M 2023': datetime.datetime(2023, 4, 15),
+                  'Hyner 50k 2024': datetime.datetime(2024, 4, 20),
+                  'Worlds End 100k 2024': datetime.datetime(2024, 6, 1),
+                  'Eastern States 100M 2024': datetime.datetime(2024, 8, 10),
+                  'Black Forest 100k 2024': datetime.datetime(2024, 10, 6)})
     # road:
     races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
                   'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
@@ -187,8 +191,9 @@ def update_data_file(code, races2analyze=[]):
     runid_arr = list(df['runid'].values)
     date_arr = list(df['Date'].values)
     type_arr = list(df['Type'].values)
-    cals_arr = list(df['Calories'].values)
     dist_arr = list(df['Dist (mi)'].values)
+    cals_arr = list(df['Calories'].values)
+    elaps_arr = list(df['Elapsed Time (sec)'].values)
     pace_arr = list(df['Pace (min/mi)'].values)
     split_shift_arr = list(df['Split Shift (min/mile)'].values)  # 2nd half avg - 1st half avg splits
     strw_arr = list(df['Start Weight (lb)'].values)
@@ -211,8 +216,9 @@ def update_data_file(code, races2analyze=[]):
             runid_arr.append(act.id)
             date_arr.append(act.start_date_local)
             type_arr.append(act.type)
-            cals_arr.append(client.get_activity(act.id).calories)
             dist_arr.append(unithelper.miles(act.distance).num)
+            cals_arr.append(client.get_activity(act.id).calories)
+            elaps_arr.append(client.get_activity(act.id).elapsed_time.total_seconds())
             try:
                 pace_arr.append(60. / unithelper.miles_per_hour(act.average_speed).num)
             except ZeroDivisionError:
@@ -277,8 +283,8 @@ def update_data_file(code, races2analyze=[]):
             pass
 
     df_updated = pd.DataFrame(
-        {'runid': runid_arr, 'Date': date_arr, 'Type': type_arr, 'Calories': cals_arr, 'Dist (mi)': dist_arr,
-         'Pace (min/mi)': pace_arr, 'Split Shift (min/mile)': split_shift_arr,
+        {'runid': runid_arr, 'Date': date_arr, 'Type': type_arr, 'Dist (mi)': dist_arr, 'Calories': cals_arr,
+         'Elapsed Time (sec)': elaps_arr, 'Pace (min/mi)': pace_arr, 'Split Shift (min/mile)': split_shift_arr,
          'Start Weight (lb)': strw_arr, 'End Weight (lb)': endw_arr, 'Temp (F)': temp_arr,
          'Sweat Loss Rate (L/h)': swtrt_arr, 'Shoes Worn': sho_worn_arr, 'Liters Consumed': lit_cons_arr,
          'Calories Consumed': cal_cons_arr, 'Carbs Consumed (g)': carb_cons_arr, 'Calorie Description': cal_desc_arr})

@@ -21,7 +21,8 @@ def fig_architect(df, sho, races, plots=None):
     if 'rdist' in plots:
         graphs.append(create_rdist_fig(df, races))
     if 'rcumdist' in plots:
-        graphs.append(cumdist_v_weeks2race(df, races))
+        # graphs.append(cumdist_v_weeks2race(df, races))
+        graphs.append(cumulative_v_weeks2race(df, races))
     if 'rwk' in plots:
         # deprecated
         pass
@@ -32,7 +33,7 @@ def fig_architect(df, sho, races, plots=None):
     if 'rpvd' in plots:
         [graphs.append(g) for g in pace_v_dist_and_duration_splits_wklyavg(df, races)]
     if 'rswt' in plots:
-        graphs.append(create_rman_fig(df, sho))
+        [graphs.append(g) for g in create_rman_fig(df, sho)]
     if 'rcalbytype' in plots:
         graphs.append(create_calbytype_fig(df))
     message = 'Analysis Complete'
@@ -72,9 +73,10 @@ def create_rdist_fig(df, races):
     return dist_fig
 
 
-def cumdist_v_weeks2race(df, races):
+def cumulative_v_weeks2race(df, races):
     print('Creating CUMDIST figure')
     traces = []
+    ydist, ycals, ytime = [], [], []
     for i, (k, v) in enumerate(races.items()):
         # read: if race day is after today, ie in the future, then thicker line plot
         if v > datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
@@ -88,18 +90,29 @@ def cumdist_v_weeks2race(df, races):
         race_day = (v + day_1).replace(hour=0, minute=0, second=0, microsecond=0)
         days_before = [(pd.Timestamp(val) - race_day).days for val in runs['Date'].values]
         cumdist = np.nancumsum(runs['Dist (mi)'].values)
+        cumcals = np.nancumsum(runs['Calories'].values)
+        cumtime = np.nancumsum(runs['Elapsed Time (sec)'].values) / 60. / 60.  # convert to hrs
+        ydist.append(cumdist)
+        ycals.append(cumcals)
+        ytime.append(cumtime)
         hovertext = [f'days to race: {abs(x)}<br>total miles: {y:.2f}' for (x, y) in
                      zip(days_before, cumdist)]
         hovertemp = '%{text}'
         traces.append(
             go.Scatter(x=days_before, y=cumdist, opacity=op, name=k, hovertemplate=hovertemp, text=hovertext,
                        mode='lines+markers', line=dict(width=width)))
-    traces.append(
-        go.Scatter(x=[t.x[-1] for t in traces if len(t.x) > 0], y=[t.y[-1] for t in traces if len(t.y) > 0],
-                   text=[f'{round(t.y[-1], 1)}' for t in traces if len(t.y) > 0], mode='text',
-                   textposition='middle left', showlegend=False, hoverinfo='none'))
+    # traces.append(
+    #     go.Scatter(x=[t.x[-1] for t in traces if len(t.x) > 0], y=[t.y[-1] for t in traces if len(t.y) > 0],
+    #                text=[f'{round(t.y[-1], 1)}' for t in traces if len(t.y) > 0], mode='text',
+    #                textposition='middle left', showlegend=False, hoverinfo='none'))
+    butt_dist = dict(method="update", args=[{'y': ydist}, {'yaxis.title': 'Distance (cumulative miles)'}],
+                     label='Distance')
+    butt_cals = dict(method="update", args=[{'y': ycals}, {'yaxis.title': 'Calories (cumulative)'}], label='Calories')
+    butt_time = dict(method="update", args=[{'y': ytime}, {'yaxis.title': 'Elapsed Time (cumulative hours)'}],
+                     label='Elapsed Time')
     clayout = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
-                        yaxis=dict(title='Distance (cumulative miles)'), legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
+                        yaxis=dict(title='Distance (cumulative miles)'), legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'),
+                        updatemenus=[dict(active=0, buttons=[butt_dist, butt_cals, butt_time])])
     cumdist_fig = go.Figure(data=traces, layout=clayout)
     cumdist_fig.write_html(f'{img_path}rta_cumdist.html')
     print('saved cumdist image')
@@ -193,8 +206,12 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
                                  hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
     pvt_traces.append(go.Scatter(x=timevals, y=pace, mode='markers', name=f'past {nyr} years', text=hovertext,
                                  hovertemplate=hovertemp, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
-    split_traces.append(go.Scatter(x=dist, y=runs['Split Shift (min/mile)'].values, mode='markers', text=hovertext,
-                                   hovertemplate=hovertemp))
+    sort_splits = sorted(zip(runs['Split Shift (min/mile)'].values, dist))  # tuple list of [(split, dist), ...]
+    sorted_split, sorted_dist = [s[0] for s in sort_splits], [s[1] for s in sort_splits]
+    split_traces.append(go.Scatter(x=sorted_dist, y=sorted_split, mode='markers', text=hovertext,
+                                   hovertemplate=hovertemp,
+                                   marker=dict(line=dict(width=.5, color='black'), color=sorted_split, cmin=-5, cmax=5,
+                                               colorscale='rdylgn_r')))
     split_traces.append(go.Scatter(x=[dist[-1]], y=[runs['Split Shift (min/mile)'].values[-1]], mode='markers',
                                    marker=dict(line=dict(width=1), color='rgba(0,0,0,0)', symbol='star-diamond-dot',
                                                size=10)))
@@ -223,19 +240,19 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
         textposition='middle right', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
     wklyav_data.append(go.Scatter(x=dates, y=dist, name='runs', mode='markers'))
 
-    for i, (k, v) in enumerate(races.items()):
+    for i, (k, v) in enumerate(races.items()):  # add race specific data
         runs = df[(df['Type'] == 'Run') & (v - wks_18 < df['Date']) & (df['Date'] < v + day_1)]
         runs = runs[(runs['Dist (mi)'] > 2)]  # & (runs['Pace (min/mi)'] < 15)]
-        dist, pace, dates = runs['Dist (mi)'].values, runs['Pace (min/mi)'].values, runs['Date'].values
-        timevals = pace * dist / 60.  # hr
-        prettydates = [pd.to_datetime(str(dates[i])) for i in range(len(dates))]
-        prettydates = [ts.strftime('%d %b %Y %I:%M:%S %p') for ts in prettydates]
-        hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {prettydates[i]}' for
-                     i, s in enumerate(pace)]
+        rs_dist, rs_pace, rs_dates = runs['Dist (mi)'].values, runs['Pace (min/mi)'].values, runs['Date'].values
+        rs_timevals = rs_pace * rs_dist / 60.  # hr
+        rs_prettydates = [pd.to_datetime(str(rs_dates[i])) for i in range(len(rs_dates))]
+        rs_prettydates = [ts.strftime('%d %b %Y %I:%M:%S %p') for ts in rs_prettydates]
+        rs_hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {rs_prettydates[i]}'
+                        for i, s in enumerate(rs_pace)]
         pvd_traces.append(
-            go.Scatter(x=dist, y=pace, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
+            go.Scatter(x=rs_dist, y=rs_pace, mode='markers', name=k, text=rs_hovertext, hovertemplate=hovertemp))
         pvt_traces.append(
-            go.Scatter(x=timevals, y=pace, mode='markers', name=k, text=hovertext, hovertemplate=hovertemp))
+            go.Scatter(x=rs_timevals, y=rs_pace, mode='markers', name=k, text=rs_hovertext, hovertemplate=hovertemp))
     pvd_traces.append(go.Scatter(x=[recent[0]], y=[recent[1]], mode='markers', name='most recent',
                                  marker=dict(line=dict(width=1), color='rgba(0,0,0,0)', symbol='star-diamond-dot',
                                              size=10), text=[htxt], hovertemplate=htemp))
@@ -257,7 +274,7 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
     print('saved pace-vs-duration image')
 
     split_layout = go.Layout(xaxis=dict(title='Distance (miles)'),
-                             yaxis=dict(title='change to av. splits (2nd-1st half) (min/mile)'))
+                             yaxis=dict(title='change to av. splits (2nd-1st half) (min/mile)', range=[-5, 5]))
     splits_fig = go.Figure(data=split_traces, layout=split_layout)
     splits_fig.write_html(f'{img_path}rta_splitsvsdist.html')
     print('saved splits-vs-dist image')
@@ -272,7 +289,7 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
 
 
 def add_max_effort_curve(pvd_traces, pvt_traces, max_dist=100):
-    max_dist *= 1.60934  # convert miles to km
+    max_dist_km = max_dist * 1.60934  # convert miles to km
     a = 450.  # W
     b = 21000.  # J
     tau = 10.  # s
@@ -291,7 +308,7 @@ def add_max_effort_curve(pvd_traces, pvt_traces, max_dist=100):
         a2 = a * (.085 * (time / 3600) ** 2 - 3.908 / 3600 * time + 91.82) / 100.  # [Formenti/Davies]
         # a2 = a * (940 - time / 60) / 1000.  # [Wilke/Saltin]
         spd = 3.6 / c * ((a2 + b / time - a2 * tau / time * (1 - np.exp(-time / tau))) / ef - wbas)
-        return spd * time / 60. / 60. - max_dist
+        return spd * time / 60. / 60. - max_dist_km
 
     tmax = 5. * 60 * 60  # initial guess [s]
     h = dist(tmax) / (dist(tmax + .5) - dist(tmax - .5))
@@ -308,58 +325,39 @@ def add_max_effort_curve(pvd_traces, pvt_traces, max_dist=100):
     minetti_spd[np.where((15. < minetti_spd) | (minetti_spd < 0.))] = np.nan
 
     # do fit to my data
-    bdist, bspeed = [], []  # miles, mph
+    bdist, bpace = [], []  # miles, min/mile
     not_important = [bdist.extend(s.x) for s in pvd_traces]
-    not_important = [bspeed.extend(s.y) for s in pvd_traces]
-    bdist, bspeed = np.array(bdist), np.array(bspeed)
+    not_important = [bpace.extend(s.y) for s in pvd_traces]
+    bdist, bpace = np.array(bdist), np.array(bpace)
 
-    bspeed = 60. / bspeed  # if inputting pace, convert to speed for fitting
+    # bin and keep only highest in range
+    xbin, dist_max, pace_max = 2, [], []  # size [miles] of bin
+    for xb in np.arange(0, max_dist, xbin):
+        if len(bpace[(bdist >= xb) & (bdist < xb + xbin)]) > 0:  # check to ensure data exists in this range
+            imax = \
+                np.where(bpace[(bdist >= xb) & (bdist < xb + xbin)] == min(bpace[(bdist >= xb) & (bdist < xb + xbin)]))[
+                    0][
+                    0]  # (note fastest pace means min(pace))
+            dist_max.append(bdist[(bdist >= xb) & (bdist < xb + xbin)][imax])
+            pace_max.append(bpace[(bdist >= xb) & (bdist < xb + xbin)][imax])
+    bdist, bpace = np.array(dist_max), np.array(pace_max)
 
-    if 1:  # bent linear
-        def minfunc1(fit):  #
-            ydiff = bspeed - (fit[0] * bdist + fit[1])
-            fit[1] += max(ydiff)  # push up above all pts
+    bspeed = 60. / bpace  # if inputting pace, convert to speed for fitting
+
+    if 1:  # 1/x fit
+        def minfunc(fit):  # fit = [a, b, c] = a/(x-b) + c
+            ydiff = bspeed - (fit[0] / (bdist - fit[1]) + fit[2])
             return np.sum((ydiff - max(ydiff)) ** 2)
 
-        fit1 = [-.06, 8.5]
-        res = minimize(minfunc1, fit1, method='Nelder-Mead')
-        fit1 = res.x
-        ydiff = abs(bspeed - (fit1[0] * bdist + fit1[1]))
-        ipt1 = np.where(ydiff == min(ydiff))[0][0]
-        ipt2 = np.where(ydiff == min(np.delete(ydiff, ipt1)))[0][0]
-
-        rpts, thpts = np.sqrt(bdist ** 2 + bspeed ** 2), np.arctan2(bspeed, bdist)
-        throt = -np.arctan2(bspeed[ipt2] - bspeed[ipt1], bdist[ipt2] - bdist[ipt1])
-        x2, y2 = rpts * np.cos(thpts + throt), rpts * np.sin(thpts + throt)
-        xshift = np.mean([x2[ipt1], x2[ipt2]])  # center rotated pts about x=0
-        x2 -= xshift
-
-        def minfunc2(fit):
-            ydiff = y2 - (fit[0] * x2 ** 2 + fit[1])
-            fit[1] += max(ydiff)
-            return np.sum((ydiff - max(ydiff)) ** 2)
-
-        fit2 = [1.e-4, 0]
-        res = minimize(minfunc2, fit2, method='Nelder-Mead')
-        fit2 = res.x
-
+        fitin = [223., -30., 2.]  # close guess based off previous fits
+        res = minimize(minfunc, fitin, method='Nelder-Mead')
+        fit = res.x
+        fit[2] += max(bspeed - (fit[0] / (bdist - fit[1]) + fit[2]))
         print(res.message)
-        xx = 1.5 * np.linspace(min(x2), max(x2), endpoint=True)
-        yy = fit2[0] * xx ** 2 + fit2[1]
-        xx += xshift  # shift back in place
-        rr, thth = np.sqrt(xx ** 2 + yy ** 2), np.arctan2(yy, xx)
-        bill_dist, bill_speed = rr * np.cos(thth - throt), rr * np.sin(thth - throt)  # rotate back in place
+        print(f'asymptotic pace is {60. / fit[2]:.2f} min/mile')
+        bill_dist = np.linspace(min(bdist), max(bdist) + 5)
+        bill_speed = fit[0] / (bill_dist - fit[1]) + fit[2]
         bill_pace = 60. / bill_speed  # [min/mile]
-
-    # debugging:::
-    # x = np.linspace(0, max(bdist))
-    # plt.plot(bdist, bspeed, 'o')
-    # plt.plot(x, fit1[0] * x + fit1[1])
-    # for ip in [ipt1, ipt2]:
-    # 	plt.plot(bdist[ip], bspeed[ip], 'x')
-    # plt.plot(x2, y2, 'o')
-    # plt.plot(x2, fit2[0] * x2 ** 2 + fit2[1])
-    # plt.plot(bill_dist, bill_speed, 'x')
 
     hovertext = [f'{int(bp)}:{str(int((bp - int(bp)) * 60)).zfill(2)}' for bp in bill_pace]
 
@@ -423,23 +421,6 @@ def create_rman_fig(df, sho):
     man_fig.add_shape(type='rect', x0=lastrunbin[0], y0=numinlastbin - 1, x1=lastrunbin[1], y1=numinlastbin,
                       line=dict(width=2, color='black'), row=1, col=1)
 
-    # SHOE MILEAGE
-    sho_dist, shoe_options = sho['cum_dist (mi)'].values, sho['shoe_options'].values
-    hovertemp = '%{x:.0f} miles on %{y}<extra></extra>'  # <extra></extra> removes trace name from hover
-    man_fig.add_trace(go.Bar(x=sho_dist, y=shoe_options, orientation='h', showlegend=False,
-                             hovertemplate=hovertemp), row=2, col=1)  # shoe mileage
-    # add rect for most recent activity
-    runs = df[(df['Type'] == 'Run') & (df['Date'] > analysis_startdate)]  # don't restrict milage to >4, <10
-    last_shoes, last_dist = runs['Shoes Worn'].values[-1], runs['Dist (mi)'].values[-1]
-    try:
-        x1rect = sho_dist[shoe_options == last_shoes][0]
-        x0rect = x1rect - last_dist
-        yrect = np.where(shoe_options == last_shoes)[0][0]
-        man_fig.add_shape(type='rect', x0=x0rect, y0=yrect - .5, x1=x1rect, y1=yrect + .5,
-                          line=dict(width=2, color='black'), row=2, col=1)
-    except IndexError:  # most likely last activity wasn't a run
-        pass
-
     # LITERS/CALORIES CONSUMED
     runs = df.dropna(axis=0, how='any', subset=['Liters Consumed', 'Calories Consumed'])
     runs = runs[(runs['Date'] > analysis_startdate) & (runs['Type'] == 'Run')]
@@ -457,47 +438,63 @@ def create_rman_fig(df, sho):
 
     # zone of good hydration
     man_fig.add_trace(
-        go.Scatter(x=dur, y=.8 * dur, line_color=colors[2], showlegend=False), row=3, col=1)
+        go.Scatter(x=dur, y=.8 * dur, line_color=colors[2], showlegend=False), row=2, col=1)
     man_fig.add_trace(
-        go.Scatter(x=dur, y=1. * dur, line_color=colors[2], fill='tonexty', showlegend=False), row=3, col=1)
+        go.Scatter(x=dur, y=1. * dur, line_color=colors[2], fill='tonexty', showlegend=False), row=2, col=1)
     man_fig.add_trace(
         go.Scatter(x=duration_h, y=lit_cons, mode='markers', marker_color=colors[2],
-                   showlegend=False, text=hovertext, hovertemplate=hovertemp1), row=3, col=1)  # fluid consumption
+                   showlegend=False, text=hovertext, hovertemplate=hovertemp1), row=2, col=1)  # fluid consumption
     man_fig.add_trace(go.Scatter(x=[duration_h[-1]], y=[lit_cons[-1]], mode='markers', name='most recent',
                                  marker=dict(line=dict(width=1), color=colors[2], symbol='star-diamond-dot',
-                                             size=10), showlegend=False), row=3, col=1)
+                                             size=10), showlegend=False), row=2, col=1)
 
     # zone of good fueling
     man_fig.add_trace(
-        go.Scatter(x=dur, y=150. * dur, line_color=colors[3], showlegend=False, yaxis='y4',
-                   xaxis='x3'))
+        go.Scatter(x=dur, y=150. * dur, line_color=colors[3], showlegend=False), row=3, col=1)
     man_fig.add_trace(
-        go.Scatter(x=dur, y=200. * dur, line_color=colors[3], fill='tonexty', showlegend=False, yaxis='y4',
-                   xaxis='x3'))
+        go.Scatter(x=dur, y=200. * dur, line_color=colors[3], fill='tonexty', showlegend=False, ), row=3, col=1)
     man_fig.add_trace(
-        go.Scatter(x=duration_h, y=cal_cons, mode='markers', yaxis='y4', xaxis='x3',
+        go.Scatter(x=duration_h, y=cal_cons, mode='markers',
                    marker_color=colors[3], showlegend=False, text=hovertext,
-                   hovertemplate=hovertemp2))  # calorie consumption
+                   hovertemplate=hovertemp2), row=3, col=1)  # calorie consumption
     man_fig.add_trace(go.Scatter(x=[duration_h[-1]], y=[cal_cons[-1]], mode='markers', name='most recent',
                                  marker=dict(line=dict(width=1), color=colors[3], symbol='star-diamond-dot',
-                                             size=10), yaxis='y4', xaxis='x3', showlegend=False))
+                                             size=10), showlegend=False), row=3, col=1)
+
+    # SHOE MILEAGE
+    sho_dist, shoe_options = sho['cum_dist (mi)'].values, sho['shoe_options'].values
+    hovertemp = '%{y:.0f} miles on %{x}<extra></extra>'  # <extra></extra> removes trace name from hover
+    sho_trace = [go.Bar(x=shoe_options, y=sho_dist, orientation='v', showlegend=False,
+                        hovertemplate=hovertemp)]  # shoe mileage
+    sho_fig = go.Figure(data=sho_trace, layout=go.Layout(yaxis=dict(title='Mileage', hoverformat='.2f')))
+    # add rect for most recent activity
+    runs = df[(df['Type'] == 'Run') & (df['Date'] > analysis_startdate)]  # don't restrict milage to >4, <10
+    last_shoes, last_dist = runs['Shoes Worn'].values[-1], runs['Dist (mi)'].values[-1]
+    try:
+        y1rect = sho_dist[shoe_options == last_shoes][0]
+        y0rect = y1rect - last_dist
+        xrect = np.where(shoe_options == last_shoes)[0][0]
+        sho_fig.add_shape(type='rect', x0=xrect - .5, y0=y0rect, x1=xrect + .5, y1=y1rect,
+                          line=dict(width=2, color='black'))
+    except IndexError:  # most likely last activity wasn't a run
+        pass
 
     yr = np.ceil(np.nanmax([np.nanmax(lit_cons), np.nanmax(cal_cons) / 500.]))
-    man_fig.layout.update(height=750, barmode='stack',
+    man_fig.layout.update(height=1000, barmode='stack',
                           xaxis1=dict(title='Sweat Loss Rate (L/h)', range=[0, 3]),
-                          xaxis2=dict(title='Miles on Shoes'),
-                          # xaxis3=dict(title='Distance (miles)'),
+                          xaxis2=dict(title='Duration (hr)'),
                           xaxis3=dict(title='Duration (hr)'),
                           yaxis1=dict(title='Count'),
-                          yaxis3=dict(title='Liters Consumed', color=colors[2], range=[-.5, yr]),
-                          yaxis4=dict(title='Calories Consumed', color=colors[3], side='right',
-                                      overlaying='y3', range=[-250, yr * 500]),
+                          yaxis2=dict(title='Liters Consumed', color=colors[2]),
+                          yaxis3=dict(title='Calories Consumed', color=colors[3]),
+                          # yaxis4=dict(title='Miles on Shoes'),
                           showlegend=True, legend_title_text='Temp (F)')
     man_fig.update_yaxes(automargin=True)
     man_fig.write_html(f'{img_path}rta_man.html')
-    print('saved manual analysis image')
+    sho_fig.write_html(f'{img_path}sho_mileage.html')
+    print('saved manual analysis images')
 
-    return man_fig
+    return man_fig, sho_fig
 
 
 def create_calbytype_fig(df):
@@ -537,8 +534,6 @@ def create_calbytype_fig(df):
 
 
 def create_weighthist_fig(df, races):
-    # todo: add weighted running average (14-day? 7-day?)
-
     weightdf = df.dropna(axis=0, how='any', subset=['Date', 'End Weight (lb)'])
     date_arr = list(weightdf['Date'].values)
     endw_arr = list(weightdf['End Weight (lb)'].values)
@@ -550,18 +545,31 @@ def create_weighthist_fig(df, races):
     days_before = [(pd.Timestamp(val) - today).days for val in date_arr]
     # remove races before we have weight history data
     [races.pop(k) for k in list(races.keys()) if races[k] < pd.Timestamp(min(date_arr))]
+    # remove races in the future
+    [races.pop(k) for k in list(races.keys()) if races[k] > now]
 
-    traces = [go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='lines', line=dict(dash='dash'),
-                         showlegend=False),
-              go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='markers', showlegend=False)]
     xann = [rd for rd in [races[k] for k in races.keys()]]
     intx2 = [(rd - today).days for rd in [races[k] for k in races.keys()]]  # days before today for each race
     yann = np.interp(intx2, days_before, endw_arr)  # interpolated weights on race days
+
+    dns = float(date_arr[-1] - date_arr[0])  # ns between first/last weight value
+    ns_vals = [d - min(date_arr) for d in date_arr]
+    ndays = int(dns / 1.e9 / 60 / 60 / 24)  # convert elapsed ns to elapsed num of days
+    xx = np.linspace(0, dns, num=ndays)
+    xd = [pd.Timestamp(min(date_arr) + np.timedelta64(int(x), 'ns')) for x in xx]
+    yy = np.interp(xx, ns_vals, endw_arr)
+    nday_avg = 21
+    avg_x = xd[nday_avg - 1:]
+    avg_y = np.zeros_like(avg_x)
+    for i in np.arange(len(avg_x)):
+        avg_y[i] = np.average(yy[i:i + nday_avg], weights=np.arange(1, nday_avg + 1))
+    traces = [go.Scatter(x=avg_x, y=avg_y, mode='lines', name=f'{nday_avg} day WME'),
+              go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='markers', showlegend=False)]
     traces.append(go.Scatter(
         x=xann, y=yann, text=[k for k in races.keys()], mode='text+markers',
         textposition='middle left', showlegend=False, marker=dict(color='red', line=dict(width=1))))
-
-    playout = go.Layout(xaxis=dict(title='Date'), yaxis=dict(title='Weight (lb)'))
+    playout = go.Layout(xaxis=dict(title='Date'), yaxis=dict(title='Weight (lb)'),
+                        legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
     weight_fig = go.Figure(data=traces, layout=playout)
     weight_fig.write_html(f'{img_path}rta_weighthist.html')
     print('saved weight history image')
