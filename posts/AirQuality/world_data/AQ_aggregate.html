@@ -117,7 +117,7 @@ function filterBy(iparam) {
 
 map.on('load', function() {
 
-    d3.json('http://www.williamcapecchi.com/projects/AirQuality/aggregate_master.geojson', function(data) {
+    d3.json('http://www.williamcapecchi.com/posts/AirQuality/aggregate_master.geojson', function(data) {
 
         map.addSource('pollution', {
             'type': 'geojson',
