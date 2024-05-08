@@ -538,18 +538,21 @@ def create_weighthist_fig(df, races):
     date_arr = list(weightdf['Date'].values)
     endw_arr = list(weightdf['End Weight (lb)'].values)
 
+    rr = races  # make a copy here so other plots aren't affected
     today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + day_1
     now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     # use of today vs now:
     # by adding a day to today, (raceday-today).days returns 1 for yesterday instead of 0 since timedelta < 1 day
     days_before = [(pd.Timestamp(val) - today).days for val in date_arr]
     # remove races before we have weight history data
-    [races.pop(k) for k in list(races.keys()) if races[k] < pd.Timestamp(min(date_arr))]
+    [rr.pop(k) for k in list(rr.keys()) if rr[k] < pd.Timestamp(min(date_arr))]
     # remove races in the future
-    [races.pop(k) for k in list(races.keys()) if races[k] > now]
+    # [races.pop(k) for k in list(races.keys()) if races[k] > now]
+    # remove races > 18wks in future
+    [rr.pop(k) for k in list(rr.keys()) if rr[k] > now + datetime.timedelta(weeks=18)]
 
-    xann = [rd for rd in [races[k] for k in races.keys()]]
-    intx2 = [(rd - today).days for rd in [races[k] for k in races.keys()]]  # days before today for each race
+    xann = [rd for rd in [rr[k] for k in rr.keys()]]
+    intx2 = [(rd - today).days for rd in [rr[k] for k in rr.keys()]]  # days before today for each race
     yann = np.interp(intx2, days_before, endw_arr)  # interpolated weights on race days
 
     dns = float(date_arr[-1] - date_arr[0])  # ns between first/last weight value
@@ -566,7 +569,7 @@ def create_weighthist_fig(df, races):
     traces = [go.Scatter(x=avg_x, y=avg_y, mode='lines', name=f'{nday_avg} day WME'),
               go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='markers', showlegend=False)]
     traces.append(go.Scatter(
-        x=xann, y=yann, text=[k for k in races.keys()], mode='text+markers',
+        x=xann, y=yann, text=[k for k in rr.keys()], mode='text+markers',
         textposition='middle left', showlegend=False, marker=dict(color='red', line=dict(width=1))))
     playout = go.Layout(xaxis=dict(title='Date'), yaxis=dict(title='Weight (lb)'),
                         legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
@@ -576,13 +579,13 @@ def create_weighthist_fig(df, races):
 
     print('Creating weight2race figure')
     traces = []
-    for i, (k, v) in enumerate(races.items()):
+    for i, (k, v) in enumerate(rr.items()):
         # read: if race day is after today, ie in the future, then thicker line plot
         if v > datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
             width = 3
         else:
             width = 2
-        op = (i + 1.) / len(races.items()) * .75 + .25
+        op = (i + 1.) / len(rr.items()) * .75 + .25
         runs = weightdf[(weightdf['Type'] == 'Run') & (v - wks_18 < weightdf['Date']) & (weightdf['Date'] < v + day_1)]
         race_day = (v + day_1).replace(hour=0, minute=0, second=0, microsecond=0)
         days_before = [(pd.Timestamp(val) - race_day).days for val in runs['Date'].values]
