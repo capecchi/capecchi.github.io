@@ -14,7 +14,7 @@ Since GitHub (which hosts this site) is a static host, I can't dynamically make 
 Using the Strava API I can grab activities and access the attributes; distance and time arrays, calories, etc. One of the first things that came to mind was to compare my training efforts between different races.
 So with a list of races and their corresponding race date, I the data 18 weeks prior to and including race day. By looking at how my current effort compares, I can more realistically assess my readiness level for the upcoming race. The cumulative distance I find both the easiest to read and the most helpful in assessing my race-readiness and have recently added a cumulative calories analysis as well which includes any activity (e.g. cycling, swimming).
 
-<iframe src="/images/posts/rta_cum.html" height="500" width="100%"></iframe>
+<iframe src="/images/posts/rta_cumdist.html" height="500" width="100%"></iframe>
 
 I keep playing with this code, and started thinking about how pace varies with distance. I know if I train for a 5k I'll increase my pace as I get fitter. I also know I can run a 5k faster than a 10k. I've focused a lot on the former point, trying to improve my pace for a given distance, but never really considered the second point. At any given point of time (read: fixed level of fitness) there's a limit to how fast I can run a 5k, 10k, or any other distance. What does this curve of max-effort vs distance look like?
 

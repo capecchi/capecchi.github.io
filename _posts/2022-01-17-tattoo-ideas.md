@@ -3,7 +3,7 @@ layout: post
 title: tattoo-ideas
 date: 2023-01-17
 excerpt: idea long time running
-active: True
+active: False
 ---
 
 This is the image of the tattoo design. It's an armband tattoo, so it wraps back on itself, the blue triangles mark the location of overlap and aren't part of the design. My forearm is something like 11-12" around at the location I'm planning, and this'll maybe be 1-1.5" tall.

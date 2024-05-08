@@ -7,6 +7,8 @@ from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
 from posts.RaceTraining.app_tools import *
 from posts.RaceTraining.fig_tools import fig_architect
 
+
+# todo: FIX markdown(s). deactivate one of them, make sure all plots work, and update fit method description
 # todo: allow for split mileage between shoes (Zion = 50Zion + 50Smaug)
 # todo: tidy plot of splits
 # todo: implement new shoe tracking system- colors? labels?
