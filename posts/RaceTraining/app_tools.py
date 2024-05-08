@@ -175,16 +175,6 @@ def update_data_file(code, races2analyze=[]):
     fn = get_training_data_file()
     races = get_past_races(racekeys=races2analyze)
 
-    if len(races2analyze) < 1:
-        aft = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(weeks=18)
-        bef = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)
-    else:
-        aft = min(races.values()) - datetime.timedelta(weeks=18)  # 18 weeks before earliest race date
-        bef = max(races.values()) + datetime.timedelta(days=1)
-
-    client = get_client(code)
-    activities = get_activities(client, aft, bef)
-
     sho = pd.read_excel(fn, sheet_name='shoes', engine='openpyxl')
     shoe_options = sho['shoe_options'].values
     df = pd.read_excel(fn, sheet_name='data', engine='openpyxl')
@@ -205,6 +195,15 @@ def update_data_file(code, races2analyze=[]):
     cal_cons_arr = list(df['Calories Consumed'].values)  # to help plan food
     carb_cons_arr = list(df['Carbs Consumed (g)'].values)  # to also help plan food
     cal_desc_arr = list(df['Calorie Description'].values)
+
+    scan_for_new_activities_over_dataset = False  # shouldn't need to use often if ever
+    if scan_for_new_activities_over_dataset:
+        aft = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(weeks=18)
+    else:
+        aft = pd.Timestamp(max(date_arr))  # only check for activities since latest in data file
+    bef = datetime.datetime.now() + datetime.timedelta(days=1)  # set tomorrow to include all activities today
+    client = get_client(code)
+    activities = get_activities(client, aft, bef)
 
     activities = activities[::-1]  # put in chronological order
     # compare_temp_methods(client, runid_arr, temp_arr)

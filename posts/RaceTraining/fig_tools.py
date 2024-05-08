@@ -110,8 +110,10 @@ def cumulative_v_weeks2race(df, races):
     butt_cals = dict(method="update", args=[{'y': ycals}, {'yaxis.title': 'Calories (cumulative)'}], label='Calories')
     butt_time = dict(method="update", args=[{'y': ytime}, {'yaxis.title': 'Elapsed Time (cumulative hours)'}],
                      label='Elapsed Time')
+    # lgnd = dict(x=0, y=1, bgcolor='rgba(0,0,0,0)')
+    lgnd = dict(bgcolor='rgba(0,0,0,0)')
     clayout = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
-                        yaxis=dict(title='Distance (cumulative miles)'), legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'),
+                        yaxis=dict(title='Distance (cumulative miles)'), legend=lgnd,
                         updatemenus=[dict(active=0, buttons=[butt_dist, butt_cals, butt_time])])
     cumdist_fig = go.Figure(data=traces, layout=clayout)
     cumdist_fig.write_html(f'{img_path}rta_cumdist.html')
@@ -209,12 +211,12 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
     sort_splits = sorted(zip(runs['Split Shift (min/mile)'].values, dist))  # tuple list of [(split, dist), ...]
     sorted_split, sorted_dist = [s[0] for s in sort_splits], [s[1] for s in sort_splits]
     split_traces.append(go.Scatter(x=sorted_dist, y=sorted_split, mode='markers', text=hovertext,
-                                   hovertemplate=hovertemp,
+                                   hovertemplate=hovertemp, showlegend=False,
                                    marker=dict(line=dict(width=.5, color='black'), color=sorted_split, cmin=-5, cmax=5,
                                                colorscale='rdylgn_r')))
     split_traces.append(go.Scatter(x=[dist[-1]], y=[runs['Split Shift (min/mile)'].values[-1]], mode='markers',
                                    marker=dict(line=dict(width=1), color='rgba(0,0,0,0)', symbol='star-diamond-dot',
-                                               size=10)))
+                                               size=10), showlegend=False))
     pvd_traces, pvt_traces = add_max_effort_curve(pvd_traces, pvt_traces,
                                                   max_dist=max(dist))  # add here so data only counted once
     recent, htemp = (dist[-1], pace[-1]), hovertemp
@@ -538,7 +540,8 @@ def create_weighthist_fig(df, races):
     date_arr = list(weightdf['Date'].values)
     endw_arr = list(weightdf['End Weight (lb)'].values)
 
-    rr = races  # make a copy here so other plots aren't affected
+    rr = races.copy()  # make a copy here so other plots aren't affected
+    rr2 = races.copy()
     today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + day_1
     now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     # use of today vs now:
@@ -547,9 +550,9 @@ def create_weighthist_fig(df, races):
     # remove races before we have weight history data
     [rr.pop(k) for k in list(rr.keys()) if rr[k] < pd.Timestamp(min(date_arr))]
     # remove races in the future
-    # [races.pop(k) for k in list(races.keys()) if races[k] > now]
+    [rr.pop(k) for k in list(rr.keys()) if rr[k] > now]
     # remove races > 18wks in future
-    [rr.pop(k) for k in list(rr.keys()) if rr[k] > now + datetime.timedelta(weeks=18)]
+    [rr2.pop(k) for k in list(rr2.keys()) if rr2[k] > now + datetime.timedelta(weeks=18)]
 
     xann = [rd for rd in [rr[k] for k in rr.keys()]]
     intx2 = [(rd - today).days for rd in [rr[k] for k in rr.keys()]]  # days before today for each race
@@ -579,13 +582,13 @@ def create_weighthist_fig(df, races):
 
     print('Creating weight2race figure')
     traces = []
-    for i, (k, v) in enumerate(rr.items()):
+    for i, (k, v) in enumerate(rr2.items()):
         # read: if race day is after today, ie in the future, then thicker line plot
         if v > datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
             width = 3
         else:
             width = 2
-        op = (i + 1.) / len(rr.items()) * .75 + .25
+        op = (i + 1.) / len(rr2.items()) * .75 + .25
         runs = weightdf[(weightdf['Type'] == 'Run') & (v - wks_18 < weightdf['Date']) & (weightdf['Date'] < v + day_1)]
         race_day = (v + day_1).replace(hour=0, minute=0, second=0, microsecond=0)
         days_before = [(pd.Timestamp(val) - race_day).days for val in runs['Date'].values]

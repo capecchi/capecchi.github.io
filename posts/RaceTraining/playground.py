@@ -216,12 +216,20 @@ def rect_on_histogram_test():
     fig.show()
 
 
+def datafile_test():
+    from helpful_stuff import get_my_direc
+    yr = datetime.datetime.today().year
+    fn = get_my_direc(append=f'PycharmProjects/capecchi.github.io/posts/RaceTraining/training_data_{yr}.xlsx',
+                      err='cannot locate training data file')
+
+
 if __name__ == '__main__':
     # temp_history_test()
     # rect_on_histogram_test()
     # color_test()
     # datetime_troubleshooting()
     # data_toggle2()
-    my_data_toggle()
+    # my_data_toggle()
     # check_elapsed_time_data()
+    datafile_test()
     a = 1

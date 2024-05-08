@@ -7,11 +7,10 @@ from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
 from posts.RaceTraining.app_tools import *
 from posts.RaceTraining.fig_tools import fig_architect
 
-
 # todo: allow for split mileage between shoes (Zion = 50Zion + 50Smaug)
 # todo: tidy plot of splits
 # todo: implement new shoe tracking system- colors? labels?
-# todo: put shoe mileage tracking on its own plot
+# todo: for calories, maybe add more inputs since I always use tailwind, gus, etc, put entry fields for those for auto-calculation
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)
