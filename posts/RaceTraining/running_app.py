@@ -9,11 +9,8 @@ from posts.RaceTraining.fig_tools import fig_architect
 
 # todo: Chunk data on max effort curves into years instead of races
 # todo: For mileage history plot, is there a way to set xrange (prior 2 yrs maybe?) and allow sliding/zooming to see all data?
-# todo: break out sweat loss rate and others onto their own plots. No more subplots
-# todo: color code shoe mileage chart, gray out retired
 # todo: FIX markdown(s). deactivate one of them, make sure all plots work, and update fit method description
 # todo: allow for split mileage between shoes (Zion = 50Zion + 50Smaug)
-# todo: tidy plot of splits
 # todo: implement new shoe tracking system- colors? labels?
 # todo: for calories, maybe add more inputs since I always use tailwind, gus, etc, put entry fields for those for auto-calculation
 

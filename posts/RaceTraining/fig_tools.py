@@ -478,11 +478,23 @@ def create_rman_fig(df, sho, consumption=False):
 
     # SHOE MILEAGE
     sho_dist, shoe_options = sho['cum_dist (mi)'].values, sho['shoe_options'].values
+    ret = sho['retired_date'].values
+    # gray out retired shoes
+    ret_arr = np.array([0 if np.isnat(rr) else 1 for rr in ret])
+    activ_sho, ret_sho = np.copy(sho_dist), np.copy(sho_dist)
+    activ_sho[ret_arr == 1] = np.nan
+    ret_sho[ret_arr == 0] = np.nan
     hovertemp = '%{y:.0f} miles on %{x}<extra></extra>'  # <extra></extra> removes trace name from hover
-    sho_trace = [go.Bar(x=shoe_options, y=sho_dist, orientation='v', showlegend=False, hovertemplate=hovertemp,
-                        marker=dict(color=sho_dist, colorscale=grn_ylw_red_colorscale(max=500 / max(sho_dist)),
-                                    showscale=True, colorbar=dict(title='Mileage')))]  # shoe mileage
-    sho_fig = go.Figure(data=sho_trace, layout=go.Layout(yaxis=dict(title='Mileage', hoverformat='.2f')))
+    sho_trace = [go.Bar(x=shoe_options, y=activ_sho, orientation='v', showlegend=False, hovertemplate=hovertemp,
+                        marker=dict(color=activ_sho,
+                                    colorscale=grn_ylw_red_colorscale(maxval=min([500 / np.nanmax(activ_sho), 1])),
+                                    showscale=True, colorbar=dict(title='Mileage')),
+                        marker_line=dict(width=1, color='rgb(192,192,192)')),
+                 go.Bar(x=shoe_options, y=ret_sho, orientation='v', showlegend=False,
+                        hovertemplate=hovertemp, marker=dict(color='rgb(192,192,192)'))]  # shoe mileage
+
+    sho_fig = go.Figure(data=sho_trace,
+                        layout=go.Layout(yaxis=dict(title='Mileage', hoverformat='.2f'), barmode='stack'))
     # add rect for most recent activity
     runs = df[(df['Type'] == 'Run') & (df['Date'] > analysis_startdate)]  # don't restrict milage to >4, <10
     last_shoes, last_dist = runs['Shoes Worn'].values[-1], runs['Dist (mi)'].values[-1]
@@ -490,8 +502,8 @@ def create_rman_fig(df, sho, consumption=False):
         y1rect = sho_dist[shoe_options == last_shoes][0]
         y0rect = y1rect - last_dist
         xrect = np.where(shoe_options == last_shoes)[0][0]
-
-        sho_fig.add_shape(type='rect', x0=xrect - .5, y0=y0rect, x1=xrect + .5, y1=y1rect,
+        cwidth = 0.8  # this seemed to fit 5/16/24
+        sho_fig.add_shape(type='rect', x0=xrect - cwidth * .5, y0=y0rect, x1=xrect + cwidth * .5, y1=y1rect,
                           line=dict(width=2, color='black'))
     except IndexError:  # most likely last activity wasn't a run
         pass
