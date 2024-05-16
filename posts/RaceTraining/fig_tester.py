@@ -31,17 +31,18 @@ def test_cumulative_v_weeks2race():
 
 def test_pace_v_dist_and_duration_splits_wklyavg():
     f1, f2, f3, f4 = pace_v_dist_and_duration_splits_wklyavg(df, races)
-    # f1.show()
-    # f2.show()
-    f3.show()
-    # f4.show()
+    f1.show()
+    f2.show()
+    # f3.show()
+    f4.show()
 
 
 def man_fig_tester():
     sho = pd.read_excel(fn, sheet_name='shoes', engine='openpyxl')
-    f1, f2 = create_rman_fig(df, sho)
+    f1, f2, f3 = create_rman_fig(df, sho, consumption=True)
     # f1.show()
-    f2.show()
+    # f2.show()
+    f3.show()
 
 
 if __name__ == '__main__':
