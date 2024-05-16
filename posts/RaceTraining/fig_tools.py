@@ -239,7 +239,7 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
     yann = [wktot[i] for i in [-(rd - now).days for rd in [races[k] for k in races.keys()] if (rd - now).days < 0]]
     wklyav_data.append(go.Scatter(
         x=xann, y=yann, text=[k for k in races.keys() if (races[k] - now).days < 0], mode='text+markers',
-        textposition='middle right', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
+        textposition='middle left', showlegend=False, marker=dict(color='rgba(0,0,0,0)', line=dict(width=1))))
     wklyav_data.append(go.Scatter(x=dates, y=dist, name='runs', mode='markers'))
 
     for i, (k, v) in enumerate(races.items()):  # add race specific data
@@ -282,6 +282,7 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
     print('saved splits-vs-dist image')
 
     wklyav_layout = go.Layout(yaxis=dict(title='Mileage', hoverformat='.2f'),
+                              xaxis=dict(rangeslider=dict(visible=True, range=[dates[0], dates[10]])),
                               legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
     wklyav_fig = go.Figure(data=wklyav_data, layout=wklyav_layout)
     wklyav_fig.write_html(f'{img_path}rta_wklyav.html')

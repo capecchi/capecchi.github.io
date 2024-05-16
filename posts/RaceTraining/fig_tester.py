@@ -31,8 +31,8 @@ def test_cumulative_v_weeks2race():
 
 def test_pace_v_dist_and_duration_splits_wklyavg():
     f1, f2, f3, f4 = pace_v_dist_and_duration_splits_wklyavg(df, races)
-    f1.show()
-    f2.show()
+    # f1.show()
+    # f2.show()
     # f3.show()
     f4.show()
 
@@ -45,21 +45,10 @@ def man_fig_tester():
     f3.show()
 
 
-def bar_test():
-    yy = [450, np.nan, 150]
-    f = go.Figure(data=[go.Bar(x=['A', 'B', 'C'], y=yy, orientation='v', showlegend=False,
-                               marker=dict(color=yy,
-                                           colorscale=grn_ylw_red_colorscale(maxval=500 / 550),
-                                           showscale=True, colorbar=dict(title='Mileage')),
-                               marker_line=dict(width=1, color='rgb(192,192,192)'))])
-
-    f.show()
-
-
 if __name__ == '__main__':
     # test_cumulative_v_weeks2race()
     # test_weighthist_fig()
     # test_pace_v_dist()
-    # test_pace_v_dist_and_duration_splits_wklyavg()
-    man_fig_tester()
+    test_pace_v_dist_and_duration_splits_wklyavg()
+    # man_fig_tester()
     # bar_test()
