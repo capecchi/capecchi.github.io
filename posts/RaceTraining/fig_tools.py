@@ -223,17 +223,21 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
     htxt = f'pace: {int(pace[-1])}:{str(int((pace[-1] - int(pace[-1])) * 60)).zfill(2)} (min/mile)<br>date: {prettydates[-1]}'
 
     i, wktot, wktot_db, npdist, nppredays, wktot_dates = 0, [], [], np.array(dist), np.array(days_before), []
-    nday_av = 14
     while -i - 7 > min(days_before):
         wktot.append(np.sum(npdist[(nppredays > -i - 7) & (nppredays <= -i)]))
         wktot_db.append(-i)
         wktot_dates.append(datetime.date.today() - datetime.timedelta(days=i))  # no min, sec, usec
         i += 1
-    runav = [np.mean(wktot[i:i + nday_av]) for i in np.arange(len(wktot) - nday_av + 1)]
-    runav_dates = wktot_dates[:len(runav)]
+    nday_avg = 14
+    runav_dates = wktot_dates[:-(nday_avg - 1)]
+    runav = np.zeros_like(runav_dates)
+    for i in np.arange(len(runav_dates)):  # descending weights since dates are reversed
+        runav[i] = np.average(wktot[i:i + nday_avg], weights=np.arange(1, nday_avg + 1)[::-1])
+    # runav = [np.mean(wktot[i:i + nday_av]) for i in np.arange(len(wktot) - nday_av + 1)]
+    # runav_dates = wktot_dates[:len(runav)]
     wklyav_data = [go.Scatter(x=wktot_dates, y=wktot, mode='lines', name='weekly total'),
-                   go.Scatter(x=runav_dates, y=runav, mode='lines', name=f'{nday_av} day avg of tot',
-                              line=dict(dash='dash'))]
+                   go.Scatter(x=runav_dates, y=runav, mode='lines', name=f'{nday_avg} day WMA')]
+                              # line=dict(dash='dash'))]
     now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     xann = [rd for rd in [races[k] for k in races.keys()] if (rd - now).days < 0]
     yann = [wktot[i] for i in [-(rd - now).days for rd in [races[k] for k in races.keys()] if (rd - now).days < 0]]
@@ -587,9 +591,9 @@ def create_weighthist_fig(df, races):
     nday_avg = 21
     avg_x = xd[nday_avg - 1:]
     avg_y = np.zeros_like(avg_x)
-    for i in np.arange(len(avg_x)):
+    for i in np.arange(len(avg_x)):  # ascending weights for forward date array
         avg_y[i] = np.average(yy[i:i + nday_avg], weights=np.arange(1, nday_avg + 1))
-    traces = [go.Scatter(x=avg_x, y=avg_y, mode='lines', name=f'{nday_avg} day WME'),
+    traces = [go.Scatter(x=avg_x, y=avg_y, mode='lines', name=f'{nday_avg} day WMA'),
               go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='markers', showlegend=False)]
     traces.append(go.Scatter(
         x=xann, y=yann, text=[k for k in rr.keys()], mode='text+markers',
