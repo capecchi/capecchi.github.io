@@ -45,6 +45,16 @@ def man_fig_tester():
     f3.show()
 
 
+def rangeslider_test():
+    dates = np.linspace(10, 100)
+    dist = np.random.rand(len(dates))
+    wklyav_data = [go.Scatter(x=dates, y=dist, name='runs', mode='lines')]
+    wklyav_layout = go.Layout(yaxis=dict(title='Mileage', hoverformat='.2f'),
+                              xaxis=dict(rangeslider=dict(visible=True), range=[50, 60]))
+    wklyav_fig = go.Figure(data=wklyav_data, layout=wklyav_layout)
+    wklyav_fig.show()
+
+
 if __name__ == '__main__':
     # test_cumulative_v_weeks2race()
     # test_weighthist_fig()
@@ -52,3 +62,4 @@ if __name__ == '__main__':
     test_pace_v_dist_and_duration_splits_wklyavg()
     # man_fig_tester()
     # bar_test()
+    # rangeslider_test()

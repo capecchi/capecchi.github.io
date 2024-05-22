@@ -237,7 +237,7 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
     # runav_dates = wktot_dates[:len(runav)]
     wklyav_data = [go.Scatter(x=wktot_dates, y=wktot, mode='lines', name='weekly total'),
                    go.Scatter(x=runav_dates, y=runav, mode='lines', name=f'{nday_avg} day WMA')]
-                              # line=dict(dash='dash'))]
+    # line=dict(dash='dash'))]
     now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     xann = [rd for rd in [races[k] for k in races.keys()] if (rd - now).days < 0]
     yann = [wktot[i] for i in [-(rd - now).days for rd in [races[k] for k in races.keys()] if (rd - now).days < 0]]
@@ -285,8 +285,11 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
     splits_fig.write_html(f'{img_path}rta_splitsvsdist.html')
     print('saved splits-vs-dist image')
 
+    frmt = '%Y-%m-%d'
+    date_range = [(datetime.date.today() - datetime.timedelta(weeks=104)).strftime(frmt),
+                  (datetime.date.today() + datetime.timedelta(days=5)).strftime(frmt)]
     wklyav_layout = go.Layout(yaxis=dict(title='Mileage', hoverformat='.2f'),
-                              xaxis=dict(rangeslider=dict(visible=True, range=[dates[0], dates[10]])),
+                              xaxis=dict(rangeslider=dict(visible=True), range=date_range),
                               legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
     wklyav_fig = go.Figure(data=wklyav_data, layout=wklyav_layout)
     wklyav_fig.write_html(f'{img_path}rta_wklyav.html')
