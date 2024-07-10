@@ -6,9 +6,13 @@ all intersections and segments connecting intersections with their lengths
 import glob
 
 import geopy.distance as dist
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from bs4 import BeautifulSoup
+
+matplotlib.use('TkAgg')  # allows plotting in debug mode
+clrs = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
 
 def process_coordinate_string(str):
@@ -91,6 +95,9 @@ def plot_runs(runs: dict, ax):
         ax.plot(runs[run][:, 0], runs[run][:, 1], '-')
 
 
+set_break_dist = 200.  # [m] segments disjoint if > this dist apart
+
+
 def self_segment(run):  # lon, lat, alt
     dtor = np.pi / 180
     lon, lat = run[:, 0], run[:, 1]
@@ -131,7 +138,7 @@ def self_segment(run):  # lon, lat, alt
         else:
             isibs.append([None])
         segs.append(iseg)
-        i2scan = np.setdiff1d(i2scan, (iseg + len(lon)) % len(lon))
+        i2scan = np.setdiff1d(i2scan, (iseg + len(lon)) % len(lon))  # mod here so that if < 0 returns pos index for pts
         print('looping')
 
     juncs = []
@@ -161,14 +168,17 @@ def self_segment(run):  # lon, lat, alt
 
 
 def determine_pt_status(lon, lat, dlon, dlat, ipt, verbose=False):
+    # I don't like this- we create a box 50 m wide, the only consider different segments distinct if the distance between the points is > 100? seems arbitrary and weird
+    # create box around pt of size dlat x dlon
     ii = np.where((lon >= lon[ipt] - dlon / 2.) & (lon < lon[ipt] + dlon / 2.) & (
             lat >= lat[ipt] - dlat / 2.) & (lat < lat[ipt] + dlat / 2.))[0]
     if 2 < len(ii):  # must identify at least 2 indices in dlon dlat box we're investigating
+        # look for non-consecutive indices indicating different segments of route
         ibreak = np.where(ii - np.roll(ii, 1) != 1)[0]
         if len(ibreak) > 1:  # multiple segments detected
             for ib in ibreak:  # determine if break exceeds gap threshold
                 break_dist = dist.distance([lat[ii[ib]], lon[ib]], [lat[ib - 1], lon[ib - 1]]).m
-                if break_dist < 100.:
+                if break_dist < set_break_dist:
                     ibreak = np.delete(ibreak, np.where(ibreak == ib))
         if len(ibreak) > 1:  # multiple segments persist
             if verbose:
@@ -188,18 +198,18 @@ def determine_pt_status(lon, lat, dlon, dlat, ipt, verbose=False):
 
 
 if __name__ == "__main__":
-    park = 'C:/Users/Owner/Dropbox/ParkMaps/ElmCreekRuns/'
+    park = 'C:/Users/willi/Dropbox/ParkMaps/ElmCreekRuns/'
     rd = extract_park_runs_coords(park)
     for run in rd.keys():
         self_segment(rd[run])
 
-    fig = plt.figure('Park Runs')
-    ax = fig.add_subplot(111)
-    ax.set_xlabel('Longitude (deg)')
-    ax.set_ylabel('Latitude (deg)')
-    plot_runs(rd, ax)
-    # plt.show()
+    # fig = plt.figure('Park Runs')
+    # ax = fig.add_subplot(111)
+    # ax.set_xlabel('Longitude (deg)')
+    # ax.set_ylabel('Latitude (deg)')
+    # plot_runs(rd, ax)
+
     juncs = identify_junctions(rd)
     # srd = smooth_park_runs_coords(rd)
-
+    plt.tight_layout()
     plt.show()

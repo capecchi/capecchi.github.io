@@ -1,0 +1,76 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trail Maintenance</title>
+    <style>
+        .my-plot-container {
+            width: 95%;
+            height: 500px;
+            margin: 10px auto 10px;
+            border: 1px solid black;
+            padding: 1px;
+         }
+         div.a {
+            display:inline-block;
+            padding: 20px;
+            vertical-align: top;
+         }
+         ul {
+            list-style-type: none;
+            padding: 5px;
+         }
+    </style>
+</head>
+<body>
+
+<div>
+    <div>
+        <form method="post">
+            <div class="a">
+                <h2>Race Options</h2>
+                {{ form.runs }}
+            </div>
+            <div class="a">
+                <h2>Plot Options</h2>
+                {{ form.plots }}
+            </div>
+            <div>
+                {{ form.code }}
+            </div>
+            <div>
+                {{ form.docode }}
+            </div>
+            <div>
+                {{ form.message }}
+            </div>
+        </form>
+    </div>
+    {% if ids|length > 0 %}
+    <div>
+        {% for id in ids %}
+            <div id="{{id}}" class="my-plot-container"></div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+{% block scripts %}
+ <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+        var ids = {{ ids | safe }}
+        var graphs = {{ graphs | safe }}
+
+        for (var i in graphs) {
+            Plotly.plot(ids[i],
+                graphs[i].data,
+                graphs[i].layout || {});
+        }
+    </script>
+{% endblock %}
+
+</body>
+</html>
