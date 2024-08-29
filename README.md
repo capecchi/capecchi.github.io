@@ -2,7 +2,7 @@
 open terminal window  
 navigate to C:/Users/willi/PycharmProjects/capecchi.github.io/
 
->$bundle install  
+>$bundle install  (<-- may not need this line)  
 >$bundle exec jekyll serve --watch
 
 open http://localhost:4000/ in web browser  
