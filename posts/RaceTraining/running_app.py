@@ -50,7 +50,7 @@ def do_prepopulate(form: MyForm, code):
 
 
 port = 8888
-redirect_url = f'https://www.strava.com/oauth/authorize?client_id=34049&redirect_uri=http://localhost:{port}&response_type=code&scope=activity:read_all'
+redirect_url = f'https://www.strava.com/oauth/authorize?client_id=34049&redirect_uri=https://localhost:{port}&response_type=code&scope=activity:read_all'
 form = MyForm()
 
 
