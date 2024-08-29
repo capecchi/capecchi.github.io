@@ -146,7 +146,7 @@ def get_past_races(racekeys=None):
                   'Zion 100M 2023': datetime.datetime(2023, 4, 15),
                   'Hyner 50k 2024': datetime.datetime(2024, 4, 20),
                   'Worlds End 100k 2024': datetime.datetime(2024, 6, 1),
-                  'Eastern States 100M 2024': datetime.datetime(2024, 8, 10),
+                  'Teanaway 100M 2024': datetime.datetime(2024, 9, 21),
                   'Black Forest 100k 2024': datetime.datetime(2024, 10, 6)})
     # road:
     races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
@@ -196,7 +196,7 @@ def update_data_file(code, races2analyze=[]):
     carb_cons_arr = list(df['Carbs Consumed (g)'].values)  # to also help plan food
     cal_desc_arr = list(df['Calorie Description'].values)
 
-    scan_for_new_activities_over_dataset = False  # shouldn't need to use often if ever
+    scan_for_new_activities_over_dataset = True  # shouldn't need to use often if ever
     if scan_for_new_activities_over_dataset:
         aft = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(weeks=18)
     else:
