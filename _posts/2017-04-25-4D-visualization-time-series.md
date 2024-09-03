@@ -11,7 +11,7 @@ Jump To:
 <a href="#project">The Project</a>  
 <a href="#visualization">4D Visualization of Data</a>
 
-I recently completed a project for an Upwork client optimizing parameters in a time-series analysis. I thought both the project itself and the subsequent task of communicating the results through visuals presented some interesting material, and so I wanted to briefly mention a few things here.
+Back when I was doing gig work, I completed a project for an Upwork client optimizing parameters in a time-series analysis. I thought both the project itself and the subsequent task of communicating the results through visuals presented some interesting material, and so I wanted to briefly mention a few things here.
 
 <h2 id="project">The Project</h2>
 
