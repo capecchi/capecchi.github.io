@@ -17,7 +17,7 @@ Jump To:
 
 Data does not tell its own story. My graduate thesis project, towards which I worked meticulously for over five years, essentially boils down to around 8 billion numbers in various arrays. The mere record of these numbers would surely not have persuaded my thesis committee to grant me my PhD. The point is, of course, not that I *have* the numbers, but what the numbers mean: These numbers, in this arrangement, arriving in this order means-- something. It's a human task to turn data into information.
 
-A few weeks ago I found a database of air quality measurements from locations around the world. The data, available at [OpenAQ](https://openaq-data.s3.amazonaws.com/index.html), offers almost daily data going back to June of 2015. I decided to create a map to visualize this data to get a sense of what the mountain of spreadsheets had to show. I had never built a web scraper before, nor done much coding in Python, so I took this as an opportunity to learn a few new skills.
+A few weeks ago I found a database of air quality measurements from locations around the world. The data, available at [OpenAQ](https://openaq-data.s3.amazonaws.com/index.html), offers almost daily data going back to June of 2015. I decided to create a map to visualize this data to get a sense of what the mountain of spreadsheets had to show. I had never built a web scraper before, so I took this as an opportunity to learn a few new skills.
 
 <h2 id="scraping">Scraping and Analyzing</h2>
 
@@ -88,13 +88,11 @@ In addition to using a color scale to show the levels of concentrations, the rad
 ```
 Thus a value (concentration) of 0 results in a 5 pixel radius and increases to 40 pixels at a value of 100. A look at the raw data explains my choice for these settings.
 
-Plotting the raw data (simply versus index) gives the plot shown below. It is clear that there is a huge range in the values, due mostly to a small number of outliers with values way above the majority of the dataset.
-![figure](/images/posts/AQ_data1.png)
-If I were to set the marker radius to the maximum value in the data, the majority of the data would have nearly identically sized markers (all essentially the minimum marker size), drastically reducing the amount of information conveyed in the visualization. Ignoring some of the outliers and zooming in, the data takes on a more reasonable look with a larger number of points spread across this range.
-![figure](/images/posts/AQ_data2.png)
+Plotting the raw data (sorted) reveals the majority of the data is grouped at 1000 ppm or below, but due to the huge range of the outliers, setting the marker radius to the maximum value in the data would result in nearly identically sized markers (all essentially the minimum marker size), drastically reducing the amount of information conveyed in the visualization.
+![figure](/images/posts/AQ_data_log.png)
 In order to aid in the decision of where to set the upper limit for marker size, it is helpful to view a histogram of the data (note that the bin sizes vary).
 ![figure](/images/posts/AQ_hist.png)
-From this it is apparent that the number of records falls off with higher concentrations as expected. Moreover, over 95% of the records fall below a value of 100. For this reason I chose 100 as the upper stop for the map marker radius.
+From this it is apparent that the number of records falls off with higher concentrations as expected. Moreover, ~92.5% of the records fall below a value of 100. For this reason I chose 100 as the upper stop for the map marker radius.
 
 <h2 id="maps">Creating the Maps</h2>
 
