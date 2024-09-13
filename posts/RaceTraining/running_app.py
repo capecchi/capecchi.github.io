@@ -12,6 +12,7 @@ from posts.RaceTraining.fig_tools import fig_architect
 # todo: allow for split mileage between shoes (Zion = 50Zion + 50Smaug)
 # todo: implement new shoe tracking system- colors? labels?
 # todo: for calories, maybe add more inputs since I always use tailwind, gus, etc, put entry fields for those for auto-calculation
+# NOTE: pip install chardet -- I think this is what caused the issues with running the app
 
 class MultiCheckboxField(SelectMultipleField):
     widget = widgets.ListWidget(prefix_label=False)

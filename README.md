@@ -8,6 +8,25 @@ navigate to C:/Users/willi/PycharmProjects/capecchi.github.io/
 open http://localhost:4000/ in web browser  
 right click and inspect and look for errors/warnings on top right
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # jekyll-uno
 
 Jekyll-Uno - a minimal, responsive theme for Jekyll based on the [Uno](https://github.com/daleanthony/Uno) theme for Ghost.
