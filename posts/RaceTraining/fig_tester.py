@@ -19,7 +19,7 @@ df = df.sort_values(by=['Date'])  # put in chronological order
 
 
 def test_weighthist_fig():
-    f1, f2 = create_weighthist_fig(df, races)
+    f1 = create_weighthist_fig(df, races)
     f1.show()
     # f2.show()
 
@@ -57,9 +57,9 @@ def rangeslider_test():
 
 if __name__ == '__main__':
     # test_cumulative_v_weeks2race()
-    # test_weighthist_fig()
+    test_weighthist_fig()
     # test_pace_v_dist()
-    test_pace_v_dist_and_duration_splits_wklyavg()
+    # test_pace_v_dist_and_duration_splits_wklyavg()
     # man_fig_tester()
     # bar_test()
     # rangeslider_test()

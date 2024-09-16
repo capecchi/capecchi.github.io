@@ -17,7 +17,8 @@ def fig_architect(df, sho, races, plots=None):
     df = df.sort_values(by=['Date'])  # put in chronological order
     graphs = []
     if 'weighthistory' in plots:
-        [graphs.append(g) for g in create_weighthist_fig(df, races)]
+        graphs.append(create_weighthist_fig(df, races))
+        # [graphs.append(g) for g in create_weighthist_fig(df, races)]
     if 'rdist' in plots:
         graphs.append(create_rdist_fig(df, races))
     if 'rcumdist' in plots:
@@ -578,6 +579,8 @@ def create_weighthist_fig(df, races):
     [rr.pop(k) for k in list(rr.keys()) if rr[k] < pd.Timestamp(min(date_arr))]
     # remove races in the future
     [rr.pop(k) for k in list(rr.keys()) if rr[k] > now]
+    if 'Past 18 weeks' in rr.keys():
+        rr.pop('Past 18 weeks')
     # remove races > 18wks in future
     [rr2.pop(k) for k in list(rr2.keys()) if rr2[k] > now + datetime.timedelta(weeks=18)]
 
@@ -597,39 +600,40 @@ def create_weighthist_fig(df, races):
     for i in np.arange(len(avg_x)):  # ascending weights for forward date array
         avg_y[i] = np.average(yy[i:i + nday_avg], weights=np.arange(1, nday_avg + 1))
     traces = [go.Scatter(x=avg_x, y=avg_y, mode='lines', name=f'{nday_avg} day WMA'),
-              go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='markers', showlegend=False)]
-    traces.append(go.Scatter(
-        x=xann, y=yann, text=[k for k in rr.keys()], mode='text+markers',
-        textposition='middle left', showlegend=False, marker=dict(color='red', line=dict(width=1))))
+              go.Scatter(x=weightdf['Date'], y=weightdf['End Weight (lb)'], mode='markers', showlegend=False),
+              go.Scatter(x=xann, y=yann, mode='markers', showlegend=False,
+                         marker=dict(color='red', line=dict(width=1)))]
     playout = go.Layout(xaxis=dict(title='Date'), yaxis=dict(title='Weight (lb)'),
                         legend=dict(x=1, y=1, bgcolor='rgba(0,0,0,0)', xanchor='right', orientation='h'))
     weight_fig = go.Figure(data=traces, layout=playout)
+    for i in range(len(xann)):
+        weight_fig.add_annotation(text=list(rr.keys())[i], x=xann[i], y=yann[i], textangle=-45)
     weight_fig.write_html(f'{img_path}rta_weighthist.html')
     print('saved weight history image')
 
-    print('Creating weight2race figure')
-    traces = []
-    for i, (k, v) in enumerate(rr2.items()):
-        # read: if race day is after today, ie in the future, then thicker line plot
-        if v > datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
-            width = 3
-        else:
-            width = 2
-        op = (i + 1.) / len(rr2.items()) * .75 + .25
-        runs = weightdf[(weightdf['Type'] == 'Run') & (v - wks_18 < weightdf['Date']) & (weightdf['Date'] < v + day_1)]
-        race_day = (v + day_1).replace(hour=0, minute=0, second=0, microsecond=0)
-        days_before = [(pd.Timestamp(val) - race_day).days for val in runs['Date'].values]
-        weight2race = runs['End Weight (lb)'].values
-        hovertext = [f'days to race: {abs(x)}<br>weight: {y} (lb)' for (x, y) in
-                     zip(days_before, weight2race)]
-        hovertemp = '%{text}'
-        traces.append(
-            go.Scatter(x=days_before, y=weight2race, opacity=op, name=k, hovertemplate=hovertemp, text=hovertext,
-                       mode='lines+markers', line=dict(width=width)))
-    weight2racelay = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
-                               yaxis=dict(title='Weight (lb)'), legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
-    weight2racefig = go.Figure(data=traces, layout=weight2racelay)
-    weight2racefig.write_html(f'{img_path}rta_weight2race.html')
-    print('saved weight2race image')
+    # print('Creating weight2race figure')
+    # traces = []
+    # for i, (k, v) in enumerate(rr2.items()):
+    #     # read: if race day is after today, ie in the future, then thicker line plot
+    #     if v > datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0):
+    #         width = 3
+    #     else:
+    #         width = 2
+    #     op = (i + 1.) / len(rr2.items()) * .75 + .25
+    #     runs = weightdf[(weightdf['Type'] == 'Run') & (v - wks_18 < weightdf['Date']) & (weightdf['Date'] < v + day_1)]
+    #     race_day = (v + day_1).replace(hour=0, minute=0, second=0, microsecond=0)
+    #     days_before = [(pd.Timestamp(val) - race_day).days for val in runs['Date'].values]
+    #     weight2race = runs['End Weight (lb)'].values
+    #     hovertext = [f'days to race: {abs(x)}<br>weight: {y} (lb)' for (x, y) in
+    #                  zip(days_before, weight2race)]
+    #     hovertemp = '%{text}'
+    #     traces.append(
+    #         go.Scatter(x=days_before, y=weight2race, opacity=op, name=k, hovertemplate=hovertemp, text=hovertext,
+    #                    mode='lines+markers', line=dict(width=width)))
+    # weight2racelay = go.Layout(xaxis=dict(title='Weeks before race', tickmode='array', tickvals=tvals, ticktext=ttext),
+    #                            yaxis=dict(title='Weight (lb)'), legend=dict(x=0, y=1, bgcolor='rgba(0,0,0,0)'))
+    # weight2racefig = go.Figure(data=traces, layout=weight2racelay)
+    # weight2racefig.write_html(f'{img_path}rta_weight2race.html')
+    # print('saved weight2race image')
 
-    return weight_fig, weight2racefig
+    return weight_fig
