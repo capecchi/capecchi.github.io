@@ -8,6 +8,7 @@ import matplotlib
 from pace_predictor_method_development import extract_coords_gpx, smooth_run_coords_distwindow, compute_grade_pace
 
 # todo: compute total elevation vs distance to compare different races difficulty
+# todo move all plots to plotly
 
 matplotlib.use('TkAgg')  # allows plotting in debug mode
 clrs = plt.rcParams['axes.prop_cycle'].by_key()['color']

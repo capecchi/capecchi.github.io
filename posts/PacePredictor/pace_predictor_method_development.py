@@ -5,6 +5,8 @@ import gpxpy
 import geopy.distance as dist  # takes (lat, lon) as input coords
 from helpful_stuff import BillExcept
 
+# todo move all plots to plotly
+
 matplotlib.use('TkAgg')  # allows plotting in debug mode
 clrs = plt.rcParams['axes.prop_cycle'].by_key()['color']
 spm_minpmile = 26.8224
