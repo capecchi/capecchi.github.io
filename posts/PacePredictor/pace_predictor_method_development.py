@@ -67,6 +67,7 @@ def smooth_run_coords_timewindow(coords, twin: 10):  # smooth based on time wind
 
 
 def smooth_run_coords_distwindow(coords, dwin: 10):  # smooth based on distance window +/- dwin [m]
+    # Averages over all pts in range
     print('smoothing coordinates using distance')
     smooth = np.copy(coords)  # [lon, lat, elev, dcum, dstep, tcum, tstep]
     smooth[:, 2] = np.zeros(len(coords[:, 2]))  # zero out to recompute elev array
@@ -76,23 +77,37 @@ def smooth_run_coords_distwindow(coords, dwin: 10):  # smooth based on distance 
     return smooth
 
 
+def smooth_run_coords_distwindow2(coords, dwin: 20):  # smooth based on distance window +/- dwin [m]
+    # Averages using weights from points in range
+    print('smoothing coordinates using weighted distance')
+    w_smooth = np.copy(coords)  # [lon, lat, elev, dcum, dstep, tcum, tstep]
+    w_smooth[:, 2] = np.zeros(len(coords[:, 2]))  # zero out to recompute elev array
+    for i in range(len(coords[:, 0])):  # for each pt, average pts within dwin
+        idistwin = np.where(abs(coords[:, 3] - coords[i, 3]) <= dwin)[0]
+        w = -abs(idistwin - i) - min(-abs(idistwin - i)) + 1
+        w_smooth[i, 2] = np.average(coords[idistwin, 2], weights=w)  # average weighted elev
+    return w_smooth
+
+
 def compute_grade_pace(coords):  # [lon, lat, elev, dcum, dstep, tcum, tstep]
     print('computing grade & pace')
     gp = np.zeros((len(coords[:, 0]) - 1, 3))  # [grade, pace, dstep]
     gp[:, 2] = coords[1:, 4]  # attach segment distance
 
-    nwings = 3  # look nwings to each side of segment to compute
+    nwings = 1  # look nwings to each side of segment to compute
     for i in range(len(gp[:, 0])):
         nw = min([nwings, i + 1, len(gp[:, 0]) - i]) - 1  # if near the edge, reduce num wings to look at
-        dx = dist.distance((coords[i - nw, 1], coords[i - nw, 0]), (coords[i + 1 + nw, 1], coords[i + 1 + nw, 0])).m
+        dx = coords[i + nw + 1, 3] - coords[i - nw, 3]  # m
         if dx < 0:
             a = 1
         dy = coords[i + 1 + nw, 2] - coords[i - nw, 2]  # [m]
         dt = coords[i + 1 + nw, 5] - coords[i - nw, 5]  # [s]
         if dt < 0:
             a = 1
-        grade = np.arctan2(dy, dx) * 180 / np.pi / .9  # divide by 0.9 to convert angle to grade
+        grade = dy / dx * 100.
         pace = dt / dx * spm_minpmile  # convert s/m to [min/mile]
+        if pace < 0:
+            a = 1
         if pace < 120:  # set upper limit. I mean come on... 2 hr mile pace? ditch those outliers
             gp[i, 0], gp[i, 1] = grade, pace
         else:

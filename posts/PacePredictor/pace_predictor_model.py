@@ -18,7 +18,7 @@ rundirec = f'{basedirec}create_model_data/'
 fpkl = f'{basedirec}pace_model.p'
 gpx_model_files = os.listdir(f'{rundirec}')
 gpx_model_files = [f for f in gpx_model_files if f.endswith('.gpx')]
-gpx_predict = f'{basedirec}/Teanaway_100.gpx'
+gpx_predict = f'{basedirec}/Teanaway_100_planned.gpx'
 fs = 15
 plt.rcParams.update({'font.size': fs})
 fgsz1 = (15, 7)
