@@ -16,9 +16,10 @@ pct_thresh = 75  # ignore slowest paces above pct_thresh
 grade_bin_cntrs = np.arange(-100, 102, 2)
 
 
-def extract_coords_gpx(runfile, plot=False):
+def extract_coords_gpx(runfile, plot=False, raw=False):
     # returns [lon, lat, elev, dcum, dstep, tcum, tstep]
     lat, lon = 100., 0.  # impossible set of coords to start with
+    print(f'extracting gpx data from {runfile}')
     with open(runfile, 'r') as f:
         gpx = gpxpy.parse(f)
         run_coords = []
@@ -39,18 +40,21 @@ def extract_coords_gpx(runfile, plot=False):
     coords = np.array(run_coords)
     coords[:, 3] = np.cumsum(coords[:, 3])  # convert dx to cumulative distance [m]
 
-    # Here we remove all consecutive duplicate points (not moving) and will adjust our pace predictions later to keep
-    # total time consistent with initial gpx, so av pace will be slower than computed to account for stoppage time
-    idup = []
-    for ic in range(1, len(coords[:, 0])):
-        if coords[ic, 0] == coords[ic - 1, 0] and coords[ic, 1] == coords[ic - 1, 1]:
-            idup.append(ic)
-    if plot:
-        ax11.plot(coords[:, 0], coords[:, 1], label='raw data')
-        ax11.plot(coords[idup, 0], coords[idup, 1], 'o', label='stationary')
-    coords = np.delete(coords, idup, axis=0)
-    if np.where(coords[:, 4] == 0)[0] != [0]:
-        raise BillExcept('too many dx=0 found, expected 1 at first position')
+    if not raw:
+        print('    removing duplicates')
+        # Here we remove all consecutive duplicate points (not moving) and will adjust our pace predictions later to keep
+        # total time consistent with initial gpx, so av pace will be slower than computed to account for stoppage time
+        idup = []
+        for ic in range(1, len(coords[:, 0])):
+            if coords[ic, 0] == coords[ic - 1, 0] and coords[ic, 1] == coords[ic - 1, 1]:
+                idup.append(ic)
+        if plot:
+            ax11.plot(coords[:, 0], coords[:, 1], label='raw data')
+            ax11.plot(coords[idup, 0], coords[idup, 1], 'o', label='stationary')
+        coords = np.delete(coords, idup, axis=0)
+        if np.where(coords[:, 4] == 0)[0] != [0]:
+            raise BillExcept('too many dx=0 found, expected 1 at first position')
+
     return coords
 
 
