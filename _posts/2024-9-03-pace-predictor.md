@@ -8,8 +8,6 @@ tags: GPS
 active: True
 ---
 
-# todo: update table with new aid stations 
-
 ## Intro
 Whenever I get a big race on the books, I love diving into my spreadsheets. I have a spreadsheet for every major race I've done, and one of the most important tabs is a simple table; Aid Stations with their mileage across the top, different paces down the side, with the cells filled in with the time I would arrive corresponding to the Aid Station column and Pace row for that cell.  
 <iframe src="/images/posts/pp_pace_chart.html" height="500" width="100%"></iframe>
