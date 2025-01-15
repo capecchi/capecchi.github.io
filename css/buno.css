@@ -941,9 +941,9 @@ body {
 
 a {
 	text-decoration: none;
-	color: #e25440; }
+	color: #0066CC; }  /* 0000EE edited from #e25440 1/15/25 for pub list hyperlinks */
 	a:hover {
-		color: #b9301c;
+		color: #800080;  /* edited from #b9301c */
 		-o-transition: .5s;
 		-ms-transition: .5s;
 		-moz-transition: .5s;
