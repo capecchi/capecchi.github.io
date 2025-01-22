@@ -106,23 +106,26 @@ def self_segment(run):  # lon, lat, alt
     # dist.distance takes [lat, lon] as input
     # dis_frm_strt = np.append([0], [dist.distance(run[0][::-1][1:], run[i][::-1][1:]).m for i in np.arange(1, len(run))])
     delta = np.append([0], [dist.distance(run[i][::-1][1:], run[i + 1][::-1][1:]).m for i in np.arange(len(run) - 1)])
+    cumdist = np.nancumsum(delta)  # cumulative route distance
     rearth = 6371009.  # [m]
     rsearch = 50.  # [m] look for pts this close to others
     dlat = rsearch / rearth / dtor  # [deg]
     dlon = rsearch / (rearth * np.cos(avlat * dtor)) / dtor  # [deg]
-    i1, i2 = 300, 1410
+
+    loop = dist.distance(run[0][::-1][1:], run[-1][::-1][1:]).m < rsearch
 
     segs, isibs = [], []
     i2scan = np.arange(len(lon))
     while len(i2scan) > 0:
-        ptstat, _ = determine_pt_status(lon, lat, dlon, dlat, i2scan[0], verbose=True)
+        ptstat, _ = determine_pt_status(lon, lat, dlon, dlat, i2scan[0], cumdist, loop, verbose=True)
         posptstat, negptstat, ipos, ineg = ptstat, ptstat, i2scan[0], i2scan[0]
+        ijump = 10  # jump some pts and check again
         while posptstat == ptstat:
-            ipos += 10  # jump 100 pts and check again
-            posptstat, _ = determine_pt_status(lon, lat, dlon, dlat, ipos)
+            ipos += ijump
+            posptstat, _ = determine_pt_status(lon, lat, dlon, dlat, ipos, cumdist, loop)
         while negptstat == ptstat:
-            ineg -= 10
-            negptstat, _ = determine_pt_status(lon, lat, dlon, dlat, ineg)
+            ineg -= ijump
+            negptstat, _ = determine_pt_status(lon, lat, dlon, dlat, ineg, cumdist, loop)
         if ineg < 0:  # spanning start pt
             plt.plot(np.roll(lon, -ineg)[:ipos - ineg], np.roll(lat, -ineg)[:ipos - ineg])
         else:
@@ -133,7 +136,7 @@ def self_segment(run):  # lon, lat, alt
                 imid = int(np.median(iseg))
             else:
                 imid = int(np.median(iseg[:-1]))
-            _, isib = determine_pt_status(lon, lat, dlon, dlat, imid)
+            _, isib = determine_pt_status(lon, lat, dlon, dlat, imid, cumdist, loop)
             isibs.append(isib)
         else:
             isibs.append([None])
@@ -160,27 +163,31 @@ def self_segment(run):  # lon, lat, alt
     while len(ijunc2scan) > 0:
         jdist = [dist.distance(juncs[ijunc2scan[0]][::-1], juncs[iij][::-1]).m for iij in ijunc2scan]
         iav = np.where(np.array(jdist) < 100.)  # merge juncs within 100m
-        juncs_merged.append(np.mean(np.array(juncs)[ijunc2scan[iav]], axis=0))
+        newjunc = np.mean(np.array(juncs)[ijunc2scan[iav]], axis=0)
+        juncs_merged.append(newjunc)
         ijunc2scan = np.setdiff1d(ijunc2scan, ijunc2scan[iav])
     for j in juncs_merged:
         plt.plot(j[0], j[1], 's')
     a = 1
 
 
-def determine_pt_status(lon, lat, dlon, dlat, ipt, verbose=False):
-    # I don't like this- we create a box 50 m wide, the only consider different segments distinct if the distance between the points is > 100? seems arbitrary and weird
+def determine_pt_status(lon, lat, dlon, dlat, ipt, cumdist, loop, verbose=False):
     # create box around pt of size dlat x dlon
     ii = np.where((lon >= lon[ipt] - dlon / 2.) & (lon < lon[ipt] + dlon / 2.) & (
             lat >= lat[ipt] - dlat / 2.) & (lat < lat[ipt] + dlat / 2.))[0]
     if 2 < len(ii):  # must identify at least 2 indices in dlon dlat box we're investigating
         # look for non-consecutive indices indicating different segments of route
-        ibreak = np.where(ii - np.roll(ii, 1) != 1)[0]
-        if len(ibreak) > 1:  # multiple segments detected
+        ibreak = np.where((ii - np.roll(ii, 1) + len(lon)) % len(lon) != 1)[0]
+        if len(ibreak) > 0:  # multiple segments detected
             for ib in ibreak:  # determine if break exceeds gap threshold
-                break_dist = dist.distance([lat[ii[ib]], lon[ib]], [lat[ib - 1], lon[ib - 1]]).m
+                if loop:  # look forward and backward
+                    break_dist = min([abs(cumdist[ii[ib]] - cumdist[ipt]),
+                                      abs(cumdist[-1] + (cumdist[ipt] - cumdist[ii[ib]]))])  # cumulative dist from ref
+                else:
+                    break_dist = cumdist[ii[ib]] - cumdist[ipt]
                 if break_dist < set_break_dist:
                     ibreak = np.delete(ibreak, np.where(ibreak == ib))
-        if len(ibreak) > 1:  # multiple segments persist
+        if len(ibreak) > 0:  # multiple segments persist
             if verbose:
                 print('there is another')
             isibs = []  # array of one index from each segment (to tie them together later)
