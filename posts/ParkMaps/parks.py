@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import geopy.distance as dist
 from bs4 import BeautifulSoup
-from parkmap_tools import self_compare2, extract_park_runs_coords, segment_on_junctions, dual_compare, fold_together
+from parkmap_tools import self_compare, extract_park_runs_coords, segment_on_junctions, dual_compare, fold_together
 import uuid
 
 matplotlib.use('TkAgg')  # allows plotting in debug mode
@@ -65,7 +65,6 @@ class Park:
             self.analyze_run(park_runs[run], run)
 
     def analyze_run(self, coords, runname):
-        # segments_remaining = [coords]
 
         # step 1- segment on known junctions
         broken_up_segs = self.segment_on_junctions(coords)
@@ -73,8 +72,9 @@ class Park:
         # step 2- compare resulting segments with known segments, average into if same
         for seg in broken_up_segs:
             sameas = self.compare_to_known_segments(seg)
+            # todo Need to add handling for when new segment diverges from known, creating new junction
             if sameas is None:  # new segment
-                newjuncs, weights = self_compare2(seg)  # check for new juncs in new segment
+                newjuncs, weights = self_compare(seg)  # check for new juncs in new segment
                 if len(newjuncs) == 0:  # no new juncs, add as new segment
                     self.add_new_segment(seg, runname)
                 else:
@@ -83,13 +83,6 @@ class Park:
                     self.analyze_run(coords, runname)  # send through again with new junctions known
             else:
                 self.fold_into(sameas, seg)
-        a = 1
-        # step 3- take remaining "new" segments, self-segment, and add to park
-        # for seg in segments_remaining:
-        #     newjuncs, weights = self_compare(seg)
-        #     for (nj, wt) in zip(newjuncs, weights):
-        #         self.junctions.append(Junction(nj[1], nj[0], wt, runname))
-        #     self.analyze_run(coords, runname)  # send through again with new junctions known
 
     def segment_on_junctions(self, coords):
         broken_up_segs = segment_on_junctions(coords, self.junctions)
@@ -116,7 +109,7 @@ class Park:
         else:
             seglon, seglat = seg.lon_arr, seg.lat_arr
         newlon, newlat = fold_together(foldlon, foldlat, seglon, seglat, foldinto.dist)
-        foldinto.weight += 1  # todo: does this update Class variable??
+        foldinto.weight += 1
         foldinto.lon_arr = newlon
         foldinto.lat_arr = newlat
         foldinto.dist = foldinto.calculate_distance(foldinto.lon_arr, foldinto.lat_arr)

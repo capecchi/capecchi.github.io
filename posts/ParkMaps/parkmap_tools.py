@@ -190,7 +190,7 @@ def find_array_intersect(x1, y1, x2, y2):
     return interc
 
 
-def self_compare(seg: BrokenSegment):  # compares a segment with itself to look for junctions
+def self_compare_old(seg: BrokenSegment):  # compares a segment with itself to look for junctions
     lon, lat = seg.lon_arr, seg.lat_arr
     avlat = np.mean(lat)
     dlon = rsearch / (rearth * np.cos(avlat * dtor)) / dtor  # [deg]
@@ -291,11 +291,10 @@ def self_compare(seg: BrokenSegment):  # compares a segment with itself to look 
     return juncs_merged, weights
 
 
-def self_compare2(seg: BrokenSegment):  # compares a segment with itself to look for junctions
+def self_compare(seg: BrokenSegment):  # compares a segment with itself to look for junctions
     lon, lat = seg.lon_arr, seg.lat_arr
     avlat = np.mean(lat)
     dlon = rsearch / (rearth * np.cos(avlat * dtor)) / dtor  # [deg]
-    # plt.plot(lon, lat)
     # dist.distance takes [lat, lon] as input
     delta = np.array([dist.distance([lat[i], lon[i]], [lat[i + 1], lon[i + 1]]).m for i in np.arange(len(lon) - 1)])
     nsmooth = np.ceil(np.log2(max(delta)))  # subdivide so steps are < 1 m
@@ -333,28 +332,17 @@ def self_compare2(seg: BrokenSegment):  # compares a segment with itself to look
 
         if ipos < len(lon):
             juncs.append([lon[ipos], lat[ipos]])  # [lon, lat]
-
         print('looping')
 
-    # for j in juncs:
-    #     plt.plot(j[0], j[1], 'o')
-    # merge adjacent juncs
     juncs_merged, weights = [], []
     ijunc2scan = np.arange(len(juncs))
     while len(ijunc2scan) > 0:
         jdist = [dist.distance(juncs[ijunc2scan[0]][::-1], juncs[iij][::-1]).m for iij in ijunc2scan]
         iav = np.where(np.array(jdist) < junc_merge_dist)  # merge juncs within junc_merge_dist
         avgd_junc = np.mean(np.array(juncs)[ijunc2scan[iav]], axis=0)
-        # attempt at improving junc location----------------------------
-        ii = np.where((lon >= avgd_junc[0] - dlon) & (lon < avgd_junc[0] + dlon) & (
-                lat >= avgd_junc[1] - dlat) & (lat < avgd_junc[1] + dlat))[0]
-
-        # --------------------------------------------------------------
         juncs_merged.append(avgd_junc)
         weights.append(len(iav[0]))
         ijunc2scan = np.setdiff1d(ijunc2scan, ijunc2scan[iav])
-    # for j in juncs_merged:
-    #     plt.plot(j[0], j[1], 's')
     return juncs_merged, weights
 
 
