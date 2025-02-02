@@ -63,11 +63,12 @@ def segment_on_junctions(coords, junctions):
         if 0 in ii[ibreak]:  # start included- check if coords are loop?
             if dist.distance([lat[0], lon[0]], [lat[-1], lon[-1]]).m < rsearch:
                 ibreak = np.delete(ibreak, np.where(ii[ibreak] == 0))
-        for ib in ibreak:  # go through each seg and find closest pt
-            if ib == ibreak[-1]:
+        for iib, ib in enumerate(ibreak):  # go through each seg and find closest pt
+            if ib == ibreak[-1]:  # if last index, take segment to end
                 iseg = ii[ib:]
             else:
-                iseg = ii[ibreak[ib]:ibreak[ib + 1]]
+                iseg = ii[ibreak[iib]:ibreak[iib + 1]]
+                # iseg = ii[ibreak[ib]:ibreak[ib + 1]]  this is bad- ib doesn't index ibreak
             jdist = [dist.distance([junc.lat, junc.lon], [lat[ic], lon[ic]]).m for ic in
                      iseg]  # compute dist to each pt
             iclosest = np.where(np.array(jdist) == min(jdist))[0][0]
@@ -308,11 +309,11 @@ def self_compare(seg: BrokenSegment):  # compares a segment with itself to look 
     scanning = True
     ipos = 0
     while scanning:
-        ptstat, _ = determine_pt_status(lon, lat, dlon, dlat, ipos, cumdist, loop, verbose=True)
+        ptstat, _ = determine_pt_status(lon, lat, dlon, dlat, ipos, cumdist, loop)  # , verbose=True)
         posptstat = ptstat
 
         # big moves
-        ijump = 500  # jump some pts and check again
+        ijump = 100  # jump some pts and check again
         while posptstat == ptstat:
             ipos += ijump
             if ipos >= len(lon):
@@ -332,7 +333,137 @@ def self_compare(seg: BrokenSegment):  # compares a segment with itself to look 
 
         if ipos < len(lon):
             juncs.append([lon[ipos], lat[ipos]])  # [lon, lat]
-        print('looping')
+
+    juncs_merged, weights = [], []
+    ijunc2scan = np.arange(len(juncs))
+    while len(ijunc2scan) > 0:
+        jdist = [dist.distance(juncs[ijunc2scan[0]][::-1], juncs[iij][::-1]).m for iij in ijunc2scan]
+        iav = np.where(np.array(jdist) < junc_merge_dist)  # merge juncs within junc_merge_dist
+        avgd_junc = np.mean(np.array(juncs)[ijunc2scan[iav]], axis=0)
+        juncs_merged.append(avgd_junc)
+        weights.append(len(iav[0]))
+        ijunc2scan = np.setdiff1d(ijunc2scan, ijunc2scan[iav])
+    return juncs_merged, weights
+
+
+def plot_box(lon, lat, ipt, dlon, dlat):
+    ii = np.where((lon >= lon[ipt] - dlon / 2.) & (lon < lon[ipt] + dlon / 2.) & (
+            lat >= lat[ipt] - dlat / 2.) & (lat < lat[ipt] + dlat / 2.))[0]
+    plt.plot(lon[ii], lat[ii], 'o')
+    plt.plot(
+        [lon[ipt] - dlon / 2., lon[ipt] - dlon / 2., lon[ipt] + dlon / 2., lon[ipt] + dlon / 2., lon[ipt] - dlon / 2.],
+        [lat[ipt] - dlat / 2., lat[ipt] + dlat / 2., lat[ipt] + dlat / 2., lat[ipt] - dlat / 2., lat[ipt] - dlat / 2.],
+        'ko--')
+
+
+def look_for_divergence(lon, lat, dlon, dlat, ipt, cumdist, loop):
+    ii = np.where((lon >= lon[ipt] - dlon / 2.) & (lon < lon[ipt] + dlon / 2.) & (
+            lat >= lat[ipt] - dlat / 2.) & (lat < lat[ipt] + dlat / 2.))[0]
+    if 2 < len(ii):  # must identify at least 2 indices in dlon dlat box we're investigating
+        # look for non-consecutive indices indicating different segments of route
+        ibreak = np.where((ii - np.roll(ii, 1) + len(lon)) % len(lon) != 1)[0]
+        if len(ibreak) > 0:  # multiple segments detected
+            for ib in ibreak:  # determine if break exceeds gap threshold
+                if loop:  # look forward and backward
+                    break_dist = min([abs(cumdist[ii[ib]] - cumdist[ipt]),
+                                      cumdist[-1] - abs(cumdist[ipt] - cumdist[ii[ib]])])  # cumulative dist from ref
+                else:
+                    break_dist = abs(cumdist[ii[ib]] - cumdist[ipt])
+                if break_dist < set_break_dist:
+                    ibreak = np.delete(ibreak, np.where(ibreak == ib))
+            a = 1
+    return None
+
+
+def get_close_indices(lon, lat, dlon, dlat, ipt, cumdist, loop):
+    if loop:
+        reldist = np.min([abs(cumdist - cumdist[ipt]), cumdist[-1] - (cumdist - cumdist[ipt])], axis=0)
+    else:
+        reldist = abs(cumdist - cumdist[ipt])
+    ii = np.where((lon >= lon[ipt] - dlon / 2.) & (lon < lon[ipt] + dlon / 2.) & (
+            lat >= lat[ipt] - dlat / 2.) & (lat < lat[ipt] + dlat / 2.) & (
+                          reldist > set_break_dist))[0]
+    return ii
+
+
+def solo_seg_scan(lon, lat, dlon, dlat, ipt, cumdist, loop):
+    plt.plot(lon, lat)
+    plt.gca().set_aspect('equal')
+    ijuncs = []
+
+    # look backwards
+    iback, scanback, approachdist, newapproach = ipt, True, np.inf, np.inf
+    while scanback:
+        ii = get_close_indices(lon, lat, dlon, dlat, iback, cumdist, loop)
+        if len(ii) > 0:  # we're near another disjoint segment
+            newapproach = min([dist.distance([lat[i], lon[i]], [lat[iback], lon[iback]]).m for i in ii])
+        if newapproach < approachdist:
+            approachdist = newapproach
+        elif newapproach > approachdist:
+            iback += 1  # reset to closest approach index
+            ijuncs.append(iback)
+            break  # if it ever increases, stop search
+        iback -= 1
+        if iback < 0:
+            if loop:
+                iback = len(lon) - 1  # restart at end of loop and keep scanning
+            else:
+                break
+
+    # look forwards
+    iforw, scanforw, approachdist, newapproach, reachedend = ipt, True, np.inf, np.inf, False
+    while scanforw:
+        ii = get_close_indices(lon, lat, dlon, dlat, iforw, cumdist, loop)
+        if len(ii) > 0:  # we're near another disjoint segment
+            newapproach = min([dist.distance([lat[i], lon[i]], [lat[iforw], lon[iforw]]).m for i in ii])
+            # print(newapproach)
+        if newapproach < approachdist:
+            approachdist = newapproach
+        elif newapproach > approachdist:
+            iforw -= 1  # reset to closest approach index
+            ijuncs.append(iforw)
+            break  # if it ever increases, stop search
+        iforw += 1
+        if iforw >= len(lon):
+            reachedend = True
+            if loop:
+                iforw = 0  # restart at beginning of loop and keep scanning
+            else:
+                break
+
+    return ijuncs, reachedend
+
+
+def self_compare2(seg: BrokenSegment):  # compares a segment with itself to look for junctions
+    lon, lat = seg.lon_arr, seg.lat_arr
+    avlat = np.mean(lat)
+    dlon = rsearch / (rearth * np.cos(avlat * dtor)) / dtor  # [deg]
+    # dist.distance takes [lat, lon] as input
+    delta = np.array([dist.distance([lat[i], lon[i]], [lat[i + 1], lon[i + 1]]).m for i in np.arange(len(lon) - 1)])
+    nsmooth = np.ceil(np.log2(max(delta)))  # subdivide so steps are < 1 m
+    lon, lat, delta = clean_subdivide(lon, lat, delta, nsmooth)  # just adds in midpoints, no smoothing
+    delta = np.append(0., delta)  # throw 0 out front so delta lines up with lat/lon array
+    cumdist = np.nancumsum(delta)  # cumulative route distance
+
+    loop = dist.distance([lat[0], lon[0]], [lat[-1], lon[-1]]).m < rsearch
+
+    juncs = []
+    scanning = True
+    ipos, ijump = 0, 100
+    while scanning:
+        ptstat, _ = determine_pt_status(lon, lat, dlon, dlat, ipos, cumdist, loop)  # , verbose=True)
+        if ptstat == 1:  # found solo segment, identify end junctions
+            ijuncs, reachedend = solo_seg_scan(lon, lat, dlon, dlat, ipos, cumdist, loop)
+            for ij in ijuncs:
+                juncs.append([lon[ij], lat[ij]])
+            if reachedend:
+                break
+            else:
+                ipos = max(ijuncs)  # position at end of solo segment
+        else:
+            ipos += ijump
+        if ipos >= len(lon):
+            break
 
     juncs_merged, weights = [], []
     ijunc2scan = np.arange(len(juncs))

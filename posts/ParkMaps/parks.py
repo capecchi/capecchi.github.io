@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import geopy.distance as dist
 from bs4 import BeautifulSoup
-from parkmap_tools import self_compare, extract_park_runs_coords, segment_on_junctions, dual_compare, fold_together
+from parkmap_tools import self_compare2, extract_park_runs_coords, segment_on_junctions, dual_compare, fold_together
 import uuid
 
 matplotlib.use('TkAgg')  # allows plotting in debug mode
@@ -57,15 +57,17 @@ class Park:
         self.name = name
         self.junctions = []
         self.segments = []
+        self.runs_analyzed = []
         self.analyze_park_runs(park_direc)
 
     def analyze_park_runs(self, park_direc):
         park_runs = extract_park_runs_coords(park_direc)
         for run in park_runs:
-            self.analyze_run(park_runs[run], run)
+            if run not in self.runs_analyzed:  # only go through runs we haven't looked at before
+                self.analyze_run(park_runs[run], run)
 
     def analyze_run(self, coords, runname):
-
+        print('analyzing run')
         # step 1- segment on known junctions
         broken_up_segs = self.segment_on_junctions(coords)
 
@@ -74,15 +76,18 @@ class Park:
             sameas = self.compare_to_known_segments(seg)
             # todo Need to add handling for when new segment diverges from known, creating new junction
             if sameas is None:  # new segment
-                newjuncs, weights = self_compare(seg)  # check for new juncs in new segment
+                newjuncs, weights = self_compare2(seg)  # check for new juncs in new segment
                 if len(newjuncs) == 0:  # no new juncs, add as new segment
-                    self.add_new_segment(seg, runname)
+                    # print(f'found new segment in {runname}!')
+                    self.segments.append(Segment(seg.lat_arr, seg.lon_arr, 1, seg.start_junc, seg.end_junc, runname))
                 else:
                     for (nj, wt) in zip(newjuncs, weights):
+                        # print(f'found new junction in {runname}')
                         self.junctions.append(Junction(nj[1], nj[0], wt, runname))
                     self.analyze_run(coords, runname)  # send through again with new junctions known
             else:
                 self.fold_into(sameas, seg)
+        self.runs_analyzed.append(runname)
 
     def segment_on_junctions(self, coords):
         broken_up_segs = segment_on_junctions(coords, self.junctions)
@@ -90,16 +95,11 @@ class Park:
 
     def compare_to_known_segments(self, segment):
         sameas = None
-        print(f'looking for comparisons to seg: {segment.uid}')
         for kseg in self.segments:
             sameas = dual_compare(kseg, segment)
             if sameas is not None:
                 break  # found same segment, no need to search further
         return sameas
-
-    def add_new_segment(self, seg, runname):
-        print(f'found new segment in {runname}!')
-        self.segments.append(Segment(seg.lat_arr, seg.lon_arr, 1, seg.start_junc, seg.end_junc, runname))
 
     def fold_into(self, segid, seg):
         foldinto = self.segments[np.where(np.array([s.uid for s in self.segments]) == segid)[0][0]]
@@ -125,7 +125,9 @@ class Park:
 
 
 if __name__ == "__main__":
-    park_dir = 'C:/Users/willi/Dropbox/ParkMaps/ElmCreekRuns/'
+    fig, ax = plt.subplots()
+    park_dir = 'C:/Users/willi/PycharmProjects/capecchi.github.io/posts/ParkMaps/ElmCreekRuns/'
     park = Park(park_dir, name='Elm Creek')
     park.plot()
+    plt.show()
     a = 1
