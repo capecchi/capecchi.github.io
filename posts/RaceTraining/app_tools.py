@@ -147,7 +147,8 @@ def get_past_races(racekeys=None):
                   'Hyner 50k 2024': datetime.datetime(2024, 4, 20),
                   'Worlds End 100k 2024': datetime.datetime(2024, 6, 1),
                   'Teanaway 100M 2024': datetime.datetime(2024, 9, 21),
-                  'Black Forest 100k 2024': datetime.datetime(2024, 10, 6)})
+                  'Black Forest 100k 2024': datetime.datetime(2024, 10, 6),
+                  'Grand Canyon R3 2025': datetime.datetime(2025, 4, 21)})
     # road:
     races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
                   'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
@@ -196,21 +197,30 @@ def update_data_file(code, races2analyze=[]):
     carb_cons_arr = list(df['Carbs Consumed (g)'].values)  # to also help plan food
     cal_desc_arr = list(df['Calorie Description'].values)
 
-    scan_for_new_activities_over_dataset = True  # shouldn't need to use often if ever
+    scan_for_new_activities_over_dataset = False  # shouldn't need to use often if ever
     if scan_for_new_activities_over_dataset:
         aft = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(weeks=18)
     else:
         aft = pd.Timestamp(max(date_arr))  # only check for activities since latest in data file
+        print(f'latest: {aft.date()}')
     bef = datetime.datetime.now() + datetime.timedelta(days=1)  # set tomorrow to include all activities today
+    print(f'bef: {bef.date()}')
     client = get_client(code)
+    print(f'{code}')
     activities = get_activities(client, aft, bef)
 
-    activities = activities[::-1]  # put in chronological order
+    # activities = activities[::-1]  # put in chronological order
     # compare_temp_methods(client, runid_arr, temp_arr)
 
+    iact = 0
     for act in activities:
         # if act is missing, add it in
         if act.id not in df['runid'].values:
+            iact += 1  # keep track of how many we're adding
+            if iact >= 10:
+                print(
+                    f'******** Breaking adddition of runs to avoid timeout- rerun analysis to continue adding ********')
+                break  # only do 10 at a time if it has been a while to avoid Strava timeout
             print(f'--> adding runid: {act.id}')
             runid_arr.append(act.id)
             date_arr.append(act.start_date_local)
