@@ -202,11 +202,9 @@ def update_data_file(code, races2analyze=[]):
         aft = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(weeks=18)
     else:
         aft = pd.Timestamp(max(date_arr))  # only check for activities since latest in data file
-        print(f'latest: {aft.date()}')
     bef = datetime.datetime.now() + datetime.timedelta(days=1)  # set tomorrow to include all activities today
-    print(f'bef: {bef.date()}')
+    print(f'looking for activities between {aft.date()} and {bef.date()}')
     client = get_client(code)
-    print(f'{code}')
     activities = get_activities(client, aft, bef)
 
     # activities = activities[::-1]  # put in chronological order
