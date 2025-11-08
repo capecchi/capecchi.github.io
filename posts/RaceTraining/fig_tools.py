@@ -248,18 +248,44 @@ def pace_v_dist_and_duration_splits_wklyavg(df, races):
     wklyav_data.append(go.Scatter(x=dates, y=dist, name='runs', mode='markers'))
 
     for i, (k, v) in enumerate(races.items()):  # add race specific data
-        runs = df[(df['Type'] == 'Run') & (v - wks_18 < df['Date']) & (df['Date'] < v + day_1)]
-        runs = runs[(runs['Dist (mi)'] > 2)]  # & (runs['Pace (min/mi)'] < 15)]
-        rs_dist, rs_pace, rs_dates = runs['Dist (mi)'].values, runs['Pace (min/mi)'].values, runs['Date'].values
-        rs_timevals = rs_pace * rs_dist / 60.  # hr
-        rs_prettydates = [pd.to_datetime(str(rs_dates[i])) for i in range(len(rs_dates))]
-        rs_prettydates = [ts.strftime('%d %b %Y %I:%M:%S %p') for ts in rs_prettydates]
-        rs_hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {rs_prettydates[i]}'
-                        for i, s in enumerate(rs_pace)]
-        pvd_traces.append(
-            go.Scatter(x=rs_dist, y=rs_pace, mode='markers', name=k, text=rs_hovertext, hovertemplate=hovertemp))
-        pvt_traces.append(
-            go.Scatter(x=rs_timevals, y=rs_pace, mode='markers', name=k, text=rs_hovertext, hovertemplate=hovertemp))
+        # new way marking only race date
+        if k != 'Past 18 weeks':
+            race = df[v == df['Date']]
+            try:
+                race_dist, race_pace, race_date = race['Dist (mi)'].values[0], race['Pace (min/mi)'].values[0], \
+                    race['Date'].values[0]
+                cont = 1
+            except IndexError:
+                print(f'Race: {k} is missing from the database')
+                cont = 0
+            if cont:
+                race_duration = race_pace * race_dist / 60.  # hr
+                race_ts = pd.to_datetime(str(race_date))
+                race_prettydate = race_ts.strftime('%d %b %Y %I:%M:%S %p')
+                try:
+                    race_hovertext = f'{k}<br>date: {race_prettydate}<br>pace: {int(race_pace)}:{str(int((race_pace - int(race_pace)) * 60)).zfill(2)} (min/mile)'
+                except ValueError:
+                    a = 1
+                pvd_traces.append(
+                    go.Scatter(x=[race_dist], y=[race_pace], mode='markers', name=k, text=[race_hovertext],
+                               hovertemplate=hovertemp, marker=dict(line=dict(width=1), size=10)))
+                pvt_traces.append(
+                    go.Scatter(x=[race_duration], y=[race_pace], mode='markers', name=k, text=[race_hovertext],
+                               hovertemplate=hovertemp, marker=dict(line=dict(width=1), size=10)))
+
+        # old way with all runs 18 weeks before race
+        # runs = df[(df['Type'] == 'Run') & (v - wks_18 < df['Date']) & (df['Date'] < v + day_1)]
+        # runs = runs[(runs['Dist (mi)'] > 2)]  # & (runs['Pace (min/mi)'] < 15)]
+        # rs_dist, rs_pace, rs_dates = runs['Dist (mi)'].values, runs['Pace (min/mi)'].values, runs['Date'].values
+        # rs_timevals = rs_pace * rs_dist / 60.  # hr
+        # rs_prettydates = [pd.to_datetime(str(rs_dates[i])) for i in range(len(rs_dates))]
+        # rs_prettydates = [ts.strftime('%d %b %Y %I:%M:%S %p') for ts in rs_prettydates]
+        # rs_hovertext = [f'pace: {int(s)}:{str(int((s - int(s)) * 60)).zfill(2)} (min/mile)<br>date: {rs_prettydates[i]}'
+        #                 for i, s in enumerate(rs_pace)]
+        # pvd_traces.append(
+        #     go.Scatter(x=rs_dist, y=rs_pace, mode='markers', name=k, text=rs_hovertext, hovertemplate=hovertemp))
+        # pvt_traces.append(
+        #     go.Scatter(x=rs_timevals, y=rs_pace, mode='markers', name=k, text=rs_hovertext, hovertemplate=hovertemp))
     pvd_traces.append(go.Scatter(x=[recent[0]], y=[recent[1]], mode='markers', name='most recent',
                                  marker=dict(line=dict(width=1), color='rgba(0,0,0,0)', symbol='star-diamond-dot',
                                              size=10), text=[htxt], hovertemplate=htemp))

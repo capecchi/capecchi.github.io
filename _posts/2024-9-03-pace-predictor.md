@@ -3,7 +3,7 @@ layout: post
 title: Pace Predictor
 date: 2024-09-03
 excerpt: Elevation sensitive pacing
-#image: /images/posts/abt_bar.png
+image: /images/posts/pp_bar.png
 tags: GPS
 active: True
 ---

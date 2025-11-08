@@ -6,6 +6,7 @@ excerpt: Links to my scientific publications and presentations
 #image: /images/posts/abt_bar.png
 tags: [science communication, data analysis]
 active: True
+pinned: True
 ---
 
 ---

@@ -23,6 +23,7 @@ fs = 15
 plt.rcParams.update({'font.size': fs})
 fgsz1 = (15, 7)
 fgsz2 = (20, 7)
+fgsz3 = (25, 5)
 gr_binwidth = 2
 pct_thresh = 75  # ignore slowest paces above pct_thresh
 grade_bin_cntrs = np.arange(-100, 102, 2)
@@ -77,6 +78,7 @@ def create_predictor():
 
 def predict_run(pace_model, grade_bin_cntrs, gpx):
     coords = extract_coords_gpx(gpx)  # [lon, lat, elev, dcum, dstep, Nones, Nones]
+    coords = coords.astype(float)  # convert to floats
 
     print('computing grade & interpolating pace from model')
     gp = np.zeros((len(coords[:, 0]) - 1, 3))  # [grade, pace, dstep]
@@ -96,7 +98,8 @@ def predict_run(pace_model, grade_bin_cntrs, gpx):
         seg_pace_spm = seg_pace / spm_minpmile  # convert min/mile to [s/m]
         segment_time.append(seg_pace_spm * seg_dst)
     ttot = np.nancumsum(segment_time)  # total time [s]
-    print(f'predicted finish in: {int(ttot[-1]/3600):02.0f}:{int((ttot[-1]-int(ttot[-1]/3600)*3600)/60):02.0f}')
+    print(
+        f'predicted finish in: {int(ttot[-1] / 3600):02.0f}:{int((ttot[-1] - int(ttot[-1] / 3600) * 3600) / 60):02.0f}')
 
     # compute new segment times assuming constant pace
     avg_speed_mps = coords[-1, 3] / ttot[-1]  # avg speed [m/s] computed from total time and dist
@@ -105,28 +108,23 @@ def predict_run(pace_model, grade_bin_cntrs, gpx):
     for seg_dst in gp[:, 2]:
         avg_segtime.append(seg_dst / avg_speed_mps)
     ttot_avg = np.nancumsum(avg_segtime)
-    t_pred, t_avgpace = np.array(ttot) / 3600., np.array(ttot_avg) / 3600.
-    ax11.plot(t_pred, coords[:, 2], label='predicted')
+    t_pred, t_avgpace = np.array(ttot) / 3600., np.array(ttot_avg) / 3600.  # [hr], [hr]
+
     aids = {'Sasse Ridge': 6.5, 'Gallagher Head': 15.8, 'Van Epps': 21., 'Iron Peak': 27.5, 'Beverly Turnpike': 35.,
             'Miller Peak': 45.5, 'Miller Peak 2': 54.5, 'Beverly Turnpike 2': 65., 'Iron Peak 2': 72.5,
             'Van Epps 2': 79., 'Gallagher Head 2': 84.2, 'Sasse Ridge 2': 93.5, 'Finish': 100.}
     ya = [np.interp(aids[k], list(coords[:, 3] / m_per_mile), list(coords[:, 2])) for k in aids.keys()]
     xa = [np.interp(aids[k], list(coords[:, 3] / m_per_mile), list(t_pred)) for k in aids.keys()]
-    ax11.plot(xa, ya, 'ko')
-    for i, k in enumerate(aids.keys()):
-        ax11.annotate(k, (xa[i], ya[i]), rotation=60)
 
-    ax12.set_axis_off()
-    rows = [k for k in aids.keys()]
-    strt = datetime.datetime(2024, 9, 21, 5)
-    rowv = [[(strt + datetime.timedelta(hours=tas)).strftime('%a %I:%M %p')] for tas in xa]
-    tb = ax12.table(rowv, rowLabels=rows, colLabels=['ETA'], loc='center', colWidths=[.25])
-    tb.scale(1, 2)
+    ax11r.fill_between(coords[:, 3] / m_per_mile, coords[:, 2], facecolor='k', alpha=0.2)
+    ax11.plot(coords[:, 3] / m_per_mile, (t_pred - t_avgpace) * 60)  # ahead/behind pace plot
 
     xa_cp = [np.interp(aids[k], list(coords[:, 3] / m_per_mile), list(t_avgpace)) for k in aids.keys()]
     # xa_diff = [xa[i] - xa_cp[i] for i in range(len(xa))]  # time diff between model and avg pace
     ax21.plot(t_pred, coords[:, 2], label='predicted')
     ax21.plot(t_avgpace, coords[:, 2], label='constant pace')
+    rows = [k for k in aids.keys()]
+    strt = datetime.datetime(2024, 9, 21, 5)
     eta = [(strt + datetime.timedelta(hours=xa[i])).strftime('%a %I:%M %p') for i in range(len(xa))]
     eta_avpace = [(strt + datetime.timedelta(hours=xa_cp[i])).strftime('%a %I:%M %p') for i in range(len(xa))]
     diff = [xa_cp[i] - xa[i] for i in range(len(xa))]
@@ -167,19 +165,40 @@ ax0.set_xlabel('grade (%)')
 ax0.legend()
 ax0.set_aspect('equal')
 
-fig1 = plt.figure(figsize=fgsz2)
-gs = fig1.add_gridspec(1, 2, width_ratios=(2, 1))
-ax11 = fig1.add_subplot(gs[0, 0])
-ax12 = fig1.add_subplot(gs[0, 1])
+# fig1 = plt.figure(figsize=fgsz2)
+# gs = fig1.add_gridspec(1, 2, width_ratios=(2, 1))
+# ax11 = fig1.add_subplot(gs[0, 0])
+# ax12 = fig1.add_subplot(gs[0, 1])
+fig1, ax11 = plt.subplots(figsize=fgsz3)
+ax11.set_xlabel('dist (miles)')
+ax11.set_ylabel('pace predictor\n(minutes)', color=clrs[0])
+ax11.annotate('<--ahead    behind-->', (2, -12), rotation=90, fontsize=15, color=clrs[0])
+ax11.set_xlim((0, 100))
+ax11.set_ylim((-15, 30))
+ax11r = ax11.twinx()
+ax11r.set_ylabel('elevation (meters)')
+ax11.spines['bottom'].set_position(('data', 0))  # move x-axis to y=0
+ax11.spines['top'].set_visible(False)
+ax11r.spines['top'].set_visible(False)
+ax11r.spines['bottom'].set_visible(False)
+xlabels = ax11.get_xticklabels()
+xlabels[0].set_visible(False)
+xlabels[-1].set_visible(False)
+
+yl0, yl1 = ax11.get_ylim()
+zero_pos = (0 - yl0) / (yl1 - yl0)
+rmin, rmax = 0, 4000
+yr0 = rmin + zero_pos * (rmax - rmin)
+ax11r.set_ylim(rmin - yr0, rmax - yr0)
 
 # fig2, (ax21, ax22) = plt.subplots(ncols=2, figsize=fgsz2, sharey='row')
 fig2 = plt.figure(figsize=fgsz2)
 gs = fig2.add_gridspec(1, 2, width_ratios=(2, 1))
 ax21 = fig2.add_subplot(gs[0, 0])
 ax22 = fig2.add_subplot(gs[0, 1])
+
 predict_run(pace_model, grade_bin_cntrs, gpx_predict)  # run_predict = [time, dist, elev, pace]
-ax11.set_xlabel('time (hr)')
-ax11.set_ylabel('elev (m)')
+
 ax21.set_xlabel('time (hr)')
 ax21.set_ylabel('elev (m)')
 ax21.legend()

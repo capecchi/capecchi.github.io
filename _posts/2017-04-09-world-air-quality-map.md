@@ -3,7 +3,7 @@ layout: post
 title: World Air Quality Map
 date: 2017-04-09
 excerpt: Mapping air quality data from around the world.
-image: /images/posts/monthly_data.png
+image: /images/posts/waqm_bar.png
 tags: Mapbox web-scraper pollution geojson
 active: True
 ---

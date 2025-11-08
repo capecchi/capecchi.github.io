@@ -8,9 +8,11 @@ matplotlib.use('TkAgg')  # allows plotting in debug mode
 clrs = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
 races2analyze = ['Superior 50k 2018', 'Driftless 50k 2018', 'Superior 50k 2019', 'Batona (virtual) 33M 2020',
-                 'Dirty German (virtual) 50k 2020', 'Stone Mill 50M 2020', 'Shawangunk Ridge 30M 2022',
-                 'Black Forest 100k 2022', 'Frosty Fat Sass 6H 2023', 'Naked Bavarian 40M 2023', 'Zion 100M 2023',
-                 'Hyner 50k 2024', 'Worlds End 100k 2024', 'Eastern States 100M 2024', 'Black Forest 100k 2024']
+                 'Dirty German (virtual) 50k 2020', 'Stone Mill 50M 2020', 'Queens Half 2022',
+                 'Shawangunk Ridge 30M 2022', 'Black Forest 100k 2022', 'Frosty Fat Sass 6H 2023',
+                 'Naked Bavarian 40M 2023', 'Zion 100M 2023', 'Hyner 50k 2024', 'Worlds End 100k 2024',
+                 'Teanaway 100M 2024', 'Black Forest 100k 2024 (DNF)', 'Grand Canyon R3 2025', 'Superior 100M 2025',
+                 'TC Marathon 2025', 'Past 18 weeks']
 
 fn = get_training_data_file()
 races = get_past_races(racekeys=races2analyze)
@@ -31,7 +33,7 @@ def test_cumulative_v_weeks2race():
 
 def test_pace_v_dist_and_duration_splits_wklyavg():
     f1, f2, f3, f4 = pace_v_dist_and_duration_splits_wklyavg(df, races)
-    # f1.show()
+    f1.show()
     # f2.show()
     # f3.show()
     f4.show()
@@ -57,9 +59,9 @@ def rangeslider_test():
 
 if __name__ == '__main__':
     # test_cumulative_v_weeks2race()
-    test_weighthist_fig()
+    # test_weighthist_fig()
     # test_pace_v_dist()
-    # test_pace_v_dist_and_duration_splits_wklyavg()
+    test_pace_v_dist_and_duration_splits_wklyavg()
     # man_fig_tester()
     # bar_test()
     # rangeslider_test()

@@ -133,27 +133,29 @@ def data_input_popup(date, shoes, mileage):
 def get_past_races(racekeys=None):
     races = OrderedDict({})
     # trail:
-    races.update({'Superior 50k 2018': datetime.datetime(2018, 5, 19),
-                  'Driftless 50k 2018': datetime.datetime(2018, 9, 29),
-                  'Superior 50k 2019': datetime.datetime(2019, 5, 18),
-                  'Batona (virtual) 33M 2020': datetime.datetime(2020, 10, 10),
-                  'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 31),
-                  'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14),
-                  'Shawangunk Ridge 30M 2022': datetime.datetime(2022, 9, 10),
-                  'Black Forest 100k 2022': datetime.datetime(2022, 10, 2),
-                  'Frosty Fat Sass 6H 2023': datetime.datetime(2023, 1, 28),
-                  'Naked Bavarian 40M 2023': datetime.datetime(2023, 3, 4),
-                  'Zion 100M 2023': datetime.datetime(2023, 4, 15),
-                  'Hyner 50k 2024': datetime.datetime(2024, 4, 20),
-                  'Worlds End 100k 2024': datetime.datetime(2024, 6, 1),
-                  'Teanaway 100M 2024': datetime.datetime(2024, 9, 21),
-                  'Black Forest 100k 2024': datetime.datetime(2024, 10, 6),
-                  'Grand Canyon R3 2025': datetime.datetime(2025, 4, 21)})
+    races.update({'Superior 50k 2018': datetime.datetime(2018, 5, 19, 7, 1, 18),
+                  'Driftless 50k 2018': datetime.datetime(2018, 9, 29, 7, 30, 54),
+                  'Superior 50k 2019': datetime.datetime(2019, 5, 18, 7, 0, 46),
+                  'Batona (virtual) 33M 2020': datetime.datetime(2020, 10, 10, 7, 4, 55),
+                  'Dirty German (virtual) 50k 2020': datetime.datetime(2020, 10, 31, 9, 16, 41),
+                  'Stone Mill 50M 2020': datetime.datetime(2020, 11, 14, 5, 35, 13),
+                  'Shawangunk Ridge 30M 2022': datetime.datetime(2022, 9, 10, 9, 2, 31),
+                  'Black Forest 100k 2022': datetime.datetime(2022, 10, 2, 0, 0, 9),
+                  'Frosty Fat Sass 6H 2023': datetime.datetime(2023, 1, 28, 9, 3, 26),
+                  'Naked Bavarian 40M 2023': datetime.datetime(2023, 3, 4, 7, 30, 4),
+                  'Zion 100M 2023': datetime.datetime(2023, 4, 15, 5, 0, 22),
+                  'Hyner 50k 2024': datetime.datetime(2024, 4, 20, 8, 1, 21),
+                  'Worlds End 100k 2024': datetime.datetime(2024, 6, 1, 5, 0, 23),
+                  'Teanaway 100M 2024': datetime.datetime(2024, 9, 21, 5, 0, 13),
+                  'Black Forest 100k 2024 (DNF)': datetime.datetime(2024, 10, 6, 0, 0, 11),
+                  'Grand Canyon R3 2025': datetime.datetime(2025, 4, 21, 3, 57, 2),
+                  'Superior 100M 2025': datetime.datetime(2025, 9, 5, 8, 1, 10)})
     # road:
-    races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5),
-                  'Madison Marathon 2014': datetime.datetime(2014, 11, 9),
-                  'TC Marathon 2015': datetime.datetime(2015, 10, 4),
-                  'Queens Half 2022': datetime.datetime(2022, 4, 10)})
+    races.update({'TC Marathon 2014': datetime.datetime(2014, 10, 5, 8, 9, 1),
+                  'Madison Marathon 2014': datetime.datetime(2014, 11, 9, 7, 2, 17),
+                  'TC Marathon 2015': datetime.datetime(2015, 10, 4, 8, 6, 6),
+                  'Queens Half 2022': datetime.datetime(2022, 4, 10, 8, 0, 25),
+                  'TC Marathon 2025': datetime.datetime(2025, 10, 5)})
     # order chronologically
     races = {k: v for k, v in sorted(races.items(), key=lambda item: item[1])}
 

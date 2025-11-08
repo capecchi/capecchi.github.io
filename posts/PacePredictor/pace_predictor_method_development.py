@@ -173,6 +173,7 @@ if __name__ == '__main__':
     fig1, (ax11, ax12, ax13) = plt.subplots(ncols=3, figsize=fgsz)
 
     run_coords = extract_coords_gpx(gpx, plot=True)  # # [lon, lat, elev, dcum, dstep, tcum, tstep]
+    run_coords = run_coords.astype(float)  # convert to floats
     # NEED to smooth since elev only records rounded to the meter
     coords = smooth_run_coords_distwindow(run_coords, 10)  # dist window halfwidth in [m]
     gp_notsmooth, _ = compute_grade_pace(run_coords)

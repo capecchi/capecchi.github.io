@@ -7,6 +7,7 @@ from wtforms import Form, SubmitField, SelectMultipleField, widgets, HiddenField
 from posts.RaceTraining.app_tools import *
 from posts.RaceTraining.fig_tools import fig_architect
 
+
 # todo: Chunk data on max effort curves into years instead of races
 # todo: FIX markdown(s). deactivate one of them, make sure all plots work, and update fit method description
 # todo: allow for split mileage between shoes (Zion = 50Zion + 50Smaug)
@@ -42,7 +43,8 @@ def do_prepopulate(form: MyForm, code):
                           'Dirty German (virtual) 50k 2020', 'Stone Mill 50M 2020', 'Queens Half 2022',
                           'Shawangunk Ridge 30M 2022', 'Black Forest 100k 2022', 'Frosty Fat Sass 6H 2023',
                           'Naked Bavarian 40M 2023', 'Zion 100M 2023', 'Hyner 50k 2024', 'Worlds End 100k 2024',
-                          'Teanaway 100M 2024', 'Black Forest 100k 2024', 'Grand Canyon R3 2025', 'Past 18 weeks']
+                          'Teanaway 100M 2024', 'Black Forest 100k 2024 (DNF)', 'Grand Canyon R3 2025', 'Superior 100M 2025',
+                          'TC Marathon 2025', 'Past 18 weeks']
         form.plots.data = ['rcumdist', 'rpvd', 'rswt', 'calbytype', 'weighthistory']
     form.code.data = code
     form.message = 'select races/plot options'

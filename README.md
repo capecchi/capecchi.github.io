@@ -8,45 +8,7 @@ navigate to C:/Users/willi/PycharmProjects/capecchi.github.io/
 open http://localhost:4000/ in web browser  
 right click and inspect and look for errors/warnings on top right
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# jekyll-uno
-
-Jekyll-Uno - a minimal, responsive theme for Jekyll based on the [Uno](https://github.com/daleanthony/Uno) theme for Ghost.
-
-> :warning:
-  This theme requires ruby and rubygems installed
-
-### Features
-
-* Clean layout
-* Resposive layout
-* Pagination
-* Syntax highlighting
-* Social links
-* Tags listing page
-* Categories listing page
-* Google Analytics integration
-* Disqus integration
-
----
+# about jekyll-uno
 
 ### Install and Test
 
@@ -57,18 +19,3 @@ Jekyll-Uno - a minimal, responsive theme for Jekyll based on the [Uno](https://g
 4. Start Jekyll server: `bundle exec jekyll serve --watch`
 
 Access via: [http://localhost:4000/jekyll-uno/](http://localhost:4000/jekyll-uno/)
-
----
-
-### Demo and Download
-
-[Demo](http://joshgerdes.com/jekyll-uno/)
-[Download](https://github.com/joshgerdes/jekyll-uno/archive/master.zip)
-
-![jekyll-uno - free Jekyll theme](/screenshot.png)
-
----
-
-### Copyright and license
-
-It is under [the MIT license](/LICENSE).

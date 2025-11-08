@@ -2,9 +2,52 @@
 @import url(monokai.css);
 
 /* Modifications */
+.polaroid {
+  width: 30%;
+  background: white;
+  padding: 12px 18px;
+  text-align: center;
+  float: right;
+  margin: 0 0 1em 1em;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.polaroid img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.polaroid figcaption {
+  margin-top: 6px;
+  font-size: 1em;
+  font-style: italic;
+}
+.journal-entry {
+  font-family: "Papyrus";
+}
+.journal-entry p {  margin-bottom: 0.5em;
+}
+.journal-entry blockquote {
+  margin: 0 0 1.2em 0;
+  padding: 0 0 0 1.2em;
+  border-left: 3px solid #ddd;
+  font-style: italic;
+  line-height: 1em;
+  font-size: 1em;
+  color: #444;
+  font-family: "Roboto Slab" !important;
+  text-align: left;
+}
+.journal-div::after {
+  content: "";
+  display: block;
+  clear: both;
+}
 
 /*CAPTION STUFF*/
 img + strong { display: block; text-align: center;}
+
 video { display: block;
   text-align: center;
   margin: 0 auto;
