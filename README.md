@@ -8,7 +8,7 @@ navigate to C:/Users/willi/PycharmProjects/capecchi.github.io/
 open http://localhost:4000/ in web browser  
 right click and inspect and look for errors/warnings on top right
 
-# about jekyll-uno
+<!--# about jekyll-uno
 
 ### Install and Test
 
@@ -19,3 +19,4 @@ right click and inspect and look for errors/warnings on top right
 4. Start Jekyll server: `bundle exec jekyll serve --watch`
 
 Access via: [http://localhost:4000/jekyll-uno/](http://localhost:4000/jekyll-uno/)
+-->
