@@ -30,8 +30,8 @@ class MyForm(Form):
     plot_options = [('rcumdist', 'Distance vs. Weeks Before (cumulative)'),
                     ('rpvd', 'Pace vs. Distance'),
                     ('rswt', 'Manual Data Analysis (sweatrate, shoe mileage, fluid/calorie intake vs mileage)'),
-                    ('rcalbytype', 'Calories by Activity Type over past 18 weeks (cumulative)'),
-                    ('weighthistory', 'Weight history')]
+                    ('rcalbytype', 'Calories by Activity Type over past 18 weeks (cumulative)')]
+    # ('weighthistory', 'Weight history')]  # form call deprecated 2/25/26, see weight_json_update.py
     code = HiddenField()
     message = StringField(render_kw={'readonly': True})
     plots = MultiCheckboxField(choices=plot_options)
@@ -43,7 +43,8 @@ def do_prepopulate(form: MyForm, code):
                           'Dirty German (virtual) 50k 2020', 'Stone Mill 50M 2020', 'Queens Half 2022',
                           'Shawangunk Ridge 30M 2022', 'Black Forest 100k 2022', 'Frosty Fat Sass 6H 2023',
                           'Naked Bavarian 40M 2023', 'Zion 100M 2023', 'Hyner 50k 2024', 'Worlds End 100k 2024',
-                          'Teanaway 100M 2024', 'Black Forest 100k 2024 (DNF)', 'Grand Canyon R3 2025', 'Superior 100M 2025',
+                          'Teanaway 100M 2024', 'Black Forest 100k 2024 (DNF)', 'Grand Canyon R3 2025',
+                          'Superior 100M 2025',
                           'TC Marathon 2025', 'Past 18 weeks']
         form.plots.data = ['rcumdist', 'rpvd', 'rswt', 'calbytype', 'weighthistory']
     form.code.data = code

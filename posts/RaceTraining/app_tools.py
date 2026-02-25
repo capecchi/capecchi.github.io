@@ -1,4 +1,5 @@
 import datetime
+import json
 import logging
 import os
 import tkinter as tk
@@ -158,6 +159,16 @@ def get_past_races(racekeys=None):
                   'TC Marathon 2025': datetime.datetime(2025, 10, 5)})
     # order chronologically
     races = {k: v for k, v in sorted(races.items(), key=lambda item: item[1])}
+
+    # save as json
+    fjson = get_my_direc('PycharmProjects/capecchi.github.io/posts/RaceTraining/races.json',
+                         err='cannot locate training data file')
+    fmt = '%Y-%m-%dT%H:%M:%S.000000000'
+    race_json = races.copy()
+    for k in races.keys():
+        race_json[k] = datetime.datetime.strftime(races[k], fmt)
+    with open(fjson, 'w') as file:
+        json.dump(race_json, file, indent=2)
 
     # past 18 weeks
     races.update({'Past 18 weeks': datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)})

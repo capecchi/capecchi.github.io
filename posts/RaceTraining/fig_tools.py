@@ -589,7 +589,8 @@ def create_calbytype_fig(df):
     return calbytype_fig
 
 
-def create_weighthist_fig(df, races):
+def create_weighthist_fig(df, races):  # DEPRECATED! Use weight_json_update.py as of 2/25/26
+    raise BillExcept('this was deprecated- why is it being called??')
     weightdf = df.dropna(axis=0, how='any', subset=['Date', 'End Weight (lb)'])
     date_arr = list(weightdf['Date'].values)
     endw_arr = list(weightdf['End Weight (lb)'].values)
