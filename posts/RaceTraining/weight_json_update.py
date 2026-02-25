@@ -7,7 +7,7 @@ import json
 import plotly.graph_objs as go
 import numpy as np
 import datetime
-
+# from app_tools import get_past_races
 day_1 = datetime.timedelta(days=1)
 now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
@@ -27,10 +27,10 @@ img_path = f'{direc}/images/posts/'
 
 
 def update_weighthist_fig():
-    fmt = '%Y-%m-%dT%H:%M:%S.000000000'
+    fmt = '%Y-%m-%dT%H:%M:%S.%f'
     with open(jweight, 'r') as file:
         data = json.load(file)
-        weight_date_arr = [datetime.datetime.strptime(d['timestamp'], fmt) for d in data]
+        weight_date_arr = [datetime.datetime.strptime(d['timestamp'].split('.')[0], fmt) for d in data]
         weight_arr = [d['weight'] for d in data]
     with open(jraces, 'r') as file:
         races = json.load(file)

@@ -163,7 +163,7 @@ def get_past_races(racekeys=None):
     # save as json
     fjson = get_my_direc('PycharmProjects/capecchi.github.io/posts/RaceTraining/races.json',
                          err='cannot locate training data file')
-    fmt = '%Y-%m-%dT%H:%M:%S.000000000'
+    fmt = '%Y-%m-%dT%H:%M:%S'
     race_json = races.copy()
     for k in races.keys():
         race_json[k] = datetime.datetime.strftime(races[k], fmt)
