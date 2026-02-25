@@ -11,7 +11,9 @@ import datetime
 day_1 = datetime.timedelta(days=1)
 now = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
-direc = 'C:/Users/willi/PycharmProjects/capecchi.github.io/'
+direc, run_locally = '', False
+if run_locally:
+    direc = 'C:/Users/willi/PycharmProjects/capecchi.github.io/'
 jweight = f'{direc}posts/RaceTraining/weights.json'
 jraces = f'{direc}posts/RaceTraining/races.json'
 races2analyze = ['Superior 50k 2018', 'Driftless 50k 2018', 'Superior 50k 2019', 'Batona (virtual) 33M 2020',
