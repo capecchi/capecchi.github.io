@@ -30,7 +30,7 @@ def update_weighthist_fig():
     fmt = '%Y-%m-%dT%H:%M:%S.%f'
     with open(jweight, 'r') as file:
         data = json.load(file)
-        weight_date_arr = [datetime.datetime.strptime(d['timestamp'].split('.')[0], fmt) for d in data]
+        weight_date_arr = [datetime.datetime.strptime(d['timestamp'], fmt) for d in data]
         weight_arr = [d['weight'] for d in data]
     with open(jraces, 'r') as file:
         races = json.load(file)
