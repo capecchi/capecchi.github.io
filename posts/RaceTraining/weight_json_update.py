@@ -27,15 +27,16 @@ img_path = f'{direc}/images/posts/'
 
 
 def update_weighthist_fig():
-    fmt = '%Y-%m-%dT%H:%M:%S.%f'
+    wfmt = '%Y-%m-%dT%H:%M:%S.%f'
+    rfmt = '%Y-%m-%dT%H:%M:%S'
     with open(jweight, 'r') as file:
         data = json.load(file)
-        weight_date_arr = [datetime.datetime.strptime(d['timestamp'], fmt) for d in data]
+        weight_date_arr = [datetime.datetime.strptime(d['timestamp'], wfmt) for d in data]
         weight_arr = [d['weight'] for d in data]
     with open(jraces, 'r') as file:
         races = json.load(file)
     for k in races.keys():
-        races[k] = datetime.datetime.strptime(races[k], fmt)
+        races[k] = datetime.datetime.strptime(races[k], rfmt)
 
     # remove races before we have weight history data
     [races.pop(k) for k in list(races.keys()) if races[k] < min(weight_date_arr)]
