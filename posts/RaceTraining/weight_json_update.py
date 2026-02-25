@@ -23,7 +23,7 @@ races2analyze = ['Superior 50k 2018', 'Driftless 50k 2018', 'Superior 50k 2019',
                  'Teanaway 100M 2024', 'Black Forest 100k 2024 (DNF)', 'Grand Canyon R3 2025', 'Superior 100M 2025',
                  'TC Marathon 2025', 'Past 18 weeks']
 # races = get_past_races(racekeys=races2analyze)
-img_path = f'{direc}/images/posts/'
+img_path = f'{direc}images/posts/'
 
 
 def update_weighthist_fig():
