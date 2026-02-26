@@ -1,9 +1,10 @@
 # Alexa control of weight logging:
 ## Alexa Skills
-In the Alexa developer console I created a skill called "weight logger" that when invoked with an intent ("Alexa, tell weight logger...") will send data to an AWS Lambda function  
-Correct language when speaking to Alexa:  
-"Alexa, tell weight logger that I weigh ___ pounds"  
+She's a little sensitive if language processing- use this:  
+"Alexa, **ask** weight logger to record ___ pounds"  
 She should respond with "logged ___ pounds"  
+
+In the Alexa developer console I created a skill called "weight logger" that when invoked with an intent ("Alexa, ask weight logger...") will send data to an AWS Lambda function  
 --> troubleshooting: If she doesn't check the JSON output in the test page of the developer console- if it logged the weight correctly it's likely an issue with lambda  
 ## AWS Lambda
 Lambda gets the weight value from the Alexa Skill and runs some python code to append it to weights.json in my github repository  
