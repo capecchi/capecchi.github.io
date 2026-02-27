@@ -5,8 +5,13 @@ on:
     paths:
       - 'posts/RaceTraining/weights.json'
 
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
 jobs:
   build:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
 
     steps:
@@ -34,8 +39,8 @@ jobs:
 
       - name: Commit updated figure
         run: |
-          git config --global user.name "github-actions"
+          git config --global user.name "github-actions[bot]"
           git config --global user.email "actions@github.com"
-          git add .
-          git commit -m "Auto-update weight figure at $(date + at '%I:%M %p') on $(date +'%d %b %Y')"
+          git add images/posts/rta_weighthist.html
+          git commit -m "github actions auto-update weight figure at $(date +'%I:%M %p') on $(date +'%d %b %Y')" || echo "No changes to commit"
           git push
